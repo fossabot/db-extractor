@@ -1,0 +1,3 @@
+include sources/data_extractor/*.json
+include sources/data_extractor/*.py
+include sources/*.py
