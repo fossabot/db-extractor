@@ -1,5 +1,18 @@
 {
     "Systems": {
+        "Oracle": {
+            "MySQL": {
+                "Server": {
+                    "Your Company Server Group Name": {
+                        "Local": {
+                            "FriendlyName": "Local Oracle MySQL",
+                            "ServerName":   "localost",
+                            "ServerPort":   "3306"
+                        }
+                    }
+                }
+            }
+        }
         "SAP": {
             "HANA": {
                 "Server": {

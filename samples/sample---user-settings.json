@@ -11,8 +11,8 @@
         },
         "Oracle": {
             "MySQL": {
-                "Localhost": {
-                    "Production": {
+                "Your Company Server Group Name": {
+                    "Local": {
                         "Default": {
                             "Name": "Your Full Name Here",
                             "Password": "your_password_goes_here",

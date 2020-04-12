@@ -1,12 +1,55 @@
 [
     {
+        "server-vendor":                                                "Oracle",
+        "server-type":                                                  "MySQL",
+        "server-group":                                                 "Your Company Server Group Name",
+        "server-layer":                                                 "Local",
+        "account-label":                                                "Default",
+        "queries": [
+            {
+                "input-query-file":                                     "generic_query.sql",
+                "sessions": [
+                    {
+                        "additional-columns": [
+                            {
+                                "name":                                 "Calculated Timestamp [UTC]",
+                                "value":                                "utcnow"
+                            }
+                        ],
+                        "output-csv-file":                              "mysql-test.csv",
+                        "output-csv-separator":                         "|",
+                        "parameters": {
+                            "Select Fields":                            [
+                                "*"
+                            ],
+                            "From":                                     "information_schema.COLLATIONS",
+                            "Filter Field":                             "CHARACTER_SET_NAME",
+                            "Filter Values": {
+                                "UTF-8 Unicode":                        "utf8mb4"
+                            }
+                        },
+                        "parameters-handling-rules": {
+                            "dict-values-glue":                         "', '",
+                            "dict-values-prefix":                       "IN ('",
+                            "dict-values-suffix":                       "')",
+                            "list-values-glue":                         ", ",
+                            "list-values-prefix":                       "",
+                            "list-values-suffix":                       ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "server-vendor":                                                "SAP",
         "server-type":                                                  "HANA",
         "server-group":                                                 "Your Company Server Group Name",
         "server-layer":                                                 "Production",
+        "account-label":                                                "Default",
         "queries": [
             {
-                "input-query-file":                                     "list-of-fields.sql",
+                "input-query-file":                                     "generic_query.sql",
                 "sessions": [
                     {
                         "additional-columns": [
