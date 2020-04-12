@@ -6,12 +6,12 @@ import os
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
 # Custom classes specific to this package
-from sources.data_extractor.BasicNeeds import BasicNeeds
-from sources.data_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
-from sources.data_extractor.LoggingNeeds import LoggingNeeds
-from sources.data_extractor.DatabaseTalker import DatabaseTalker
-from sources.data_extractor.ParameterHandling import ParameterHandling
-from sources.data_extractor.DataManipulator import DataManipulator
+from db_extractor.BasicNeeds import BasicNeeds
+from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
+from db_extractor.LoggingNeeds import LoggingNeeds
+from db_extractor.DatabaseTalker import DatabaseTalker
+from db_extractor.ParameterHandling import ParameterHandling
+from db_extractor.DataManipulator import DataManipulator
 
 # get current script name
 current_script_name = os.path.basename(__file__).replace('.py', '')

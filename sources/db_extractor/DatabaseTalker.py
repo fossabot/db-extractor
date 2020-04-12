@@ -6,6 +6,8 @@ to call the main package functions
 """
 # package helping out to work with SAP HANA
 from hdbcli import dbapi
+# package helping out to work with Oracle MySQL
+import mysql.connector
 # package to facilitate time operations
 from datetime import datetime, timedelta
 # package facilitating Data Frames manipulation
@@ -27,9 +29,10 @@ class DatabaseTalker:
             local_logger.info('Additional column(s) have been added to Pandas DataFrame')
             timered.stop()
 
-    def connect_to_sap_hana(self, local_logger, timered, connection_details):
+    def connect_to_database(self, local_logger, timered, connection_details):
         timered.start()
-        local_logger.info('I will attempt to connect to SAP HANA server, layer '
+        local_logger.info('I will attempt to connect to '
+                          + connection_details['server-vendor-and-type'] + ' server, layer '
                           + connection_details['server-layer'] + ' which means ('
                           + 'server ' + connection_details['ServerName']
                           + ', port ' + str(connection_details['ServerPort'])
@@ -37,13 +40,29 @@ class DatabaseTalker:
                           + ' (' + connection_details['Name'] + ')')
         try:
             # create actual connection
-            self.conn = dbapi.connect(
-                address=connection_details['ServerName'],
-                port=connection_details['ServerPort'],
-                user=connection_details['Username'],
-                password=connection_details['Password'],
-            )
-            local_logger.info('Connecting to SAP HANA server completed')
+            if connection_details['server-vendor-and-type'] == 'SAP HANA':
+                self.conn = dbapi.connect(
+                    address=connection_details['ServerName'],
+                    port=connection_details['ServerPort'],
+                    user=connection_details['Username'],
+                    password=connection_details['Password'],
+                )
+            elif connection_details['server-vendor-and-type'] == 'Oracle MySQL':
+                self.conn = mysql.connector.connect(
+                    host=connection_details['ServerName'],
+                    port=connection_details['ServerPort'],
+                    user=connection_details['Username'],
+                    password=connection_details['Password'],
+                    database='mysql',
+                    compress=True,
+                    autocommit=True,
+                    use_unicode=True,
+                    charset='utf8mb4',
+                    get_warnings=True,
+                )
+                self.conn.set_charset_collation('utf8mb4', 'utf8mb4_0900_ai_ci')
+            local_logger.info('Connecting to  ' + connection_details['server-vendor-and-type']
+                              + ' server completed')
             timered.stop()
         except Exception as e:
             local_logger.error('Error in Connection with details: ')
@@ -51,22 +70,15 @@ class DatabaseTalker:
             timered.stop()
 
     @staticmethod
-    def determine_column_names(local_logger, timered, cursor_frame):
-        timered.start()
-        column_names = []
-        for column_name, col2, col3, col4, col5, col6, col7 in cursor_frame.description:
-            column_names.append(column_name)
-        local_logger.info('Result-set column name determination completed')
-        timered.stop()
-        return column_names
-
-    @staticmethod
     def execute_query(local_logger, timered, given_cursor, given_query):
         try:
             timered.start()
             given_cursor.execute(given_query)
-            pt = timedelta(microseconds=(given_cursor.server_processing_time() / 1000))
-            local_logger.info('Query executed successfully ' + format(pt))
+            try:
+                pt = timedelta(microseconds=(given_cursor.server_processing_time() / 1000))
+                local_logger.info('Query executed successfully ' + format(pt))
+            except AttributeError:
+                local_logger.info('Query executed successfully')
             timered.stop()
             return given_cursor
         except TypeError as e:
@@ -84,9 +96,9 @@ class DatabaseTalker:
         return local_result_set
 
     @staticmethod
-    def result_set_to_data_frame(local_logger, timered, given_result_set, given_columns_name):
+    def result_set_to_data_frame(local_logger, timered, given_columns_name, given_result_set):
         timered.start()
-        df = pd.DataFrame(given_result_set, index=None, columns=given_columns_name)
+        df = pd.DataFrame(data=given_result_set, index=None, columns=given_columns_name)
         local_logger.info('Result-set has been loaded into Pandas DataFrame')
         timered.stop()
         return df

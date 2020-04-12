@@ -4,7 +4,7 @@ from datetime import datetime as ClassDT
 from datetime import timedelta
 
 # Custom classes specific to this package
-from sources.data_extractor.BasicNeeds import BasicNeeds
+from db_extractor.BasicNeeds import BasicNeeds
 
 
 class ParameterHandling:
@@ -63,6 +63,18 @@ class ParameterHandling:
         timered.stop()
         return query_to_run
 
+    @staticmethod
+    def manage_parameter_value(given_prefix, given_parameter, given_parameter_rules):
+        element_to_join = ''
+        if given_prefix == 'dict':
+            element_to_join = given_parameter.values()
+        elif given_prefix == 'list':
+            element_to_join = given_parameter
+        return given_parameter_rules[given_prefix + '-values-prefix'] \
+               + given_parameter_rules[given_prefix + '-values-glue'].join(element_to_join) \
+               + given_parameter_rules[given_prefix + '-values-suffix']
+
+
     def stringify_parameters(self, local_logger, tuple_parameters, given_parameter_rules):
         working_list = []
         for ndx, crt_parameter in enumerate(tuple_parameters):
@@ -72,13 +84,11 @@ class ParameterHandling:
                 local_logger.debug('Current Parameter is STR and has the value: ' + crt_parameter)
                 working_list[ndx] = self.special_case_string(local_logger, crt_parameter)
             elif current_parameter_type in ("<class 'list'>", "<class 'dict'>"):
-                prefix = current_parameter_type.replace("<class '").replace("'>")
+                prefix = current_parameter_type.replace("<class '", '').replace("'>", '')
                 local_logger.debug('Current Parameter is ' + prefix.upper()
                                    + ' and has the value: ' + str(crt_parameter))
-                working_list[ndx] = given_parameter_rules[prefix + '-values-prefix'] \
-                                    + given_parameter_rules[prefix + '-values-glue']\
-                                        .join(crt_parameter) \
-                                    + given_parameter_rules[prefix + '-values-suffix']
+                working_list[ndx] = self.manage_parameter_value(prefix.lower(), crt_parameter,
+                                                                given_parameter_rules)
         final_tuple = tuple(working_list)
         local_logger.debug('Final Tuple for Parameters is: ' + str(final_tuple))
         return final_tuple

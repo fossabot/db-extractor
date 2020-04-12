@@ -33,6 +33,7 @@ setup(
     install_requires=[
         'codetiming>=1.1,<=1.2',
         'hdbcli>=2.4.171,<=2.4.191',
+        'mysql-connector-python>=8.0.11,<=8.0.19'
         'pandas>=0.25.3,<=1.0.3'
     ],
     keywords=[
@@ -41,10 +42,10 @@ setup(
     license='LGPL3',
     long_description=long_description_readme,
     long_description_content_type='text/markdown',
-    name='data-management',
-    packages=find_packages('data_extractor'),
+    name='db-extractor',
+    packages=find_packages('db_extractor'),
     package_data={
-        'data_extractor': [
+        'db_extractor': [
             '*.json'
         ]
     },
@@ -56,5 +57,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='0.3.0',
+    version='0.4.0',
 )
