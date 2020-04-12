@@ -1,0 +1,48 @@
+[
+    {
+        "server-vendor":                                                "SAP",
+        "server-type":                                                  "HANA",
+        "server-group":                                                 "Your Company Server Group Name",
+        "server-layer":                                                 "Production",
+        "queries": [
+            {
+                "input-query-file":                                     "list-of-fields.sql",
+                "sessions": [
+                    {
+                        "additional-columns": [
+                            {
+                                "name":                                 "Extracted HANA Layer",
+                                "value":                                "Production"
+                            },
+                            {
+                                "name":                                 "Calculated Timestamp [UTC]",
+                                "value":                                "utcnow"
+                            }
+                        ],
+                        "output-csv-file":                              "list-of-fields.csv",
+                        "parameters": {
+                            "Select Fields":                            [
+                                "\"TABLE_NAME\"",
+                                "\"SCHEMA\""
+                            ],
+                            "From":                                     "\"TABLES\"",
+                            "Filter Field":                             "\"TABLE_NAME\"",
+                            "Filter Values": {
+                                "Customer Master Sales Data":           "KNVV",
+                                "Customer Master Unloading Points":     "KNVA"
+                            }
+                        },
+                        "parameters-handling-rules": {
+                            "dictionary-values-glue":                   "', '",
+                            "dictionary-values-prefix":                 "IN ('",
+                            "dictionary-values-suffix":                 "')",
+                            "list-values-glue":                         ", ",
+                            "list-values-prefix":                       "",
+                            "list-values-suffix":                       ""
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+]

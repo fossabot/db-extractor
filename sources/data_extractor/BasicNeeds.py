@@ -22,15 +22,17 @@ class BasicNeeds:
         # checking log folder first as there's all further messages will be stored
         self.fn_validate_single_value(os.path.dirname(input_parameters.output_log_file),
                                       'folder', 'log file')
-        self.fn_validate_single_value(os.path.dirname(input_parameters.input_directory),
-                                      'folder', 'input directory')
+        self.fn_check_inputs_script_specific(input_parameters, input_script)
+
+    def fn_check_inputs_script_specific(self, input_parameters, input_script):
         # checking script specific inputs
-        if input_script == 'merger':
-            self.fn_validate_single_value(os.path.dirname(input_parameters.output_file),
-                                          'folder', 'output file')
-        elif input_script in ('filter', 'rename_or_move'):
-            self.fn_validate_single_value(os.path.dirname(input_parameters.output_directory),
-                                          'folder', 'output directory')
+        if input_script == 'extractor':
+            self.fn_validate_single_value(input_parameters.input_source_system_file,
+                                          'file', 'source system file')
+            self.fn_validate_single_value(input_parameters.input_credentials_file,
+                                          'file', 'credentials file')
+            self.fn_validate_single_value(input_parameters.input_extracting_sequence_file,
+                                          'file', 'extracting sequence file')
 
     def fn_final_message(self, local_logger, log_file_name, performance_in_seconds):
         total_time_string = str(timedelta(seconds=performance_in_seconds))
@@ -85,6 +87,18 @@ class BasicNeeds:
     def fn_load_configuration(self):
         relevant_file = os.path.join(os.path.dirname(__file__), 'config.json')
         self.cfg_dtls = self.fn_open_file_and_get_content(relevant_file)
+
+    @staticmethod
+    def fn_multi_line_string_to_single_line(input_string):
+        return input_string.replace('\n', ' ').replace('\r', ' ')\
+            .replace('  ', ' ', 5).replace('   ', ' ').strip()
+
+    @staticmethod
+    def fn_numbers_with_leading_zero(self, input_number_as_string, digits):
+        final_number = input_number_as_string
+        if len(input_number_as_string) < digits:
+            final_number = '0' * (digits - len(input_number_as_string)) + input_number_as_string
+        return final_number
 
     def fn_open_file_and_get_content(self, input_file, content_type='json'):
         if os.path.isfile(input_file):

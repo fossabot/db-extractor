@@ -13,9 +13,9 @@ with open('README.md', 'r') as fh:
 this_package_website = 'https://github.com/danielgp/data-extractor'
 
 setup(
-    author = 'Daniel Popiniuc',
-    author_email = 'danielpopiniuc@gmail.com',
-    classifiers = [
+    author='Daniel Popiniuc',
+    author_email='danielpopiniuc@gmail.com',
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: Developers',
@@ -28,31 +28,33 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
-    description = 'Wrapper to ease data management into Tableau Hyper format from CSV files',
-    include_package_data = True,
-    install_requires = [
+    description='Wrapper to ease data management into Tableau Hyper format from CSV files',
+    include_package_data=True,
+    install_requires=[
         'codetiming>=1.1,<=1.2',
+        'hdbcli>=2.4.171,<=2.4.191',
         'pandas>=0.25.3,<=1.0.3'
     ],
-    keywords = [
+    keywords=[
         'csv'
     ],
-    license = 'LGPL3',
-    long_description = long_description_readme,
-    long_description_content_type = 'text/markdown',
-    name = 'data-management',
-    packages = find_packages('data_extractor'),
-    package_data = {
+    license='LGPL3',
+    long_description=long_description_readme,
+    long_description_content_type='text/markdown',
+    name='data-management',
+    packages=find_packages('data_extractor'),
+    package_data={
         'data_extractor': [
             '*.json'
         ]
     },
-    project_urls = {
+    project_urls={
         'Documentation': this_package_website + '/blob/master/README.md',
-        'Issue Tracker': this_package_website + '/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc',
+        'Issue Tracker': this_package_website +
+                         '/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc',
         'Source Code': this_package_website
     },
-    python_requires = '>=3.6',
-    url = this_package_website + '/releases',  # project home page, if any
-    version = '0.1.0',
+    python_requires='>=3.6',
+    url=this_package_website + '/releases',  # project home page, if any
+    version='0.2.0',
 )

@@ -1,114 +1,26 @@
 {
     "input_options": {
-        "filter": {
-            "d": {
+        "data_extractor": {
+            "s": {
                 "default_value"         : "",
-                "option_description"    : "Input directory is %s",
-                "option_long"           : "input-directory",
+                "option_description"    : "Configuration file name with source systems is %s",
+                "option_long"           : "input-source-system-file",
                 "option_required"       : true,
-                "option_sample_value"   : "input-directory-name"
+                "option_sample_value"   : "input-source-system-file-name"
+            },
+            "c": {
+                "default_value"         : "",
+                "option_description"    : "Configuration file name with credentials is %s",
+                "option_long"           : "input-credentials-file",
+                "option_required"       : true,
+                "option_sample_value"   : "input-credentials-file-name"
             },
             "e": {
                 "default_value"         : "",
-                "option_description"    : "Filter expression is %s",
-                "option_long"           : "filter-expression",
+                "option_description"    : "Configuration file name with extracting sequence(es) is %s",
+                "option_long"           : "input-extracting-sequence-file",
                 "option_required"       : true,
-                "option_sample_value"   : "filter-expression-json"
-            },
-            "p": {
-                "default_value"         : "",
-                "option_description"    : "Input file name pattern is %s",
-                "option_long"           : "input-file-pattern",
-                "option_required"       : true,
-                "option_sample_value"   : "input-file-name-pattern"
-            },
-            "l": {
-                "default_value"         : "None",
-                "option_description"    : "Output log file name is %s",
-                "option_long"           : "output-log-file",
-                "option_required"       : false,
-                "option_sample_value"   : "output-log-file-name"
-            },
-            "s": {
-                "default_value"         : ",",
-                "option_description"    : "CSV file separator is %s",
-                "option_long"           : "csv-field-separator",
-                "option_required"       : false,
-                "option_sample_value"   : "csv-field-separator-character"
-            },
-            "o": {
-                "default_value"         : "",
-                "option_description"    : "Output directory is %s",
-                "option_long"           : "output-directory",
-                "option_required"       : true,
-                "option_sample_value"   : "output-directory-name"
-            },
-            "f": {
-                "default_value"         : "",
-                "option_description"    : "Output relative file name is %s",
-                "option_long"           : "output-relative-file",
-                "option_required"       : true,
-                "option_sample_value"   : "output-relative-file-name"
-            }
-        },
-        "merger": {
-            "d": {
-                "default_value"         : "",
-                "option_description"    : "Input directory is %s",
-                "option_long"           : "input-directory",
-                "option_required"       : true,
-                "option_sample_value"   : "input-directory-name"
-            },
-            "p": {
-                "default_value"         : "",
-                "option_description"    : "Input file name pattern is %s",
-                "option_long"           : "input-file-pattern",
-                "option_required"       : true,
-                "option_sample_value"   : "input-file-name-pattern"
-            },
-            "o": {
-                "default_value"         : "",
-                "option_description"    : "Output file name is %s",
-                "option_long"           : "output-file",
-                "option_required"       : true,
-                "option_sample_value"   : "output-file-name"
-            },
-            "l": {
-                "default_value"         : "None",
-                "option_description"    : "Output log file name is %s",
-                "option_long"           : "output-log-file",
-                "option_required"       : false,
-                "option_sample_value"   : "output-log-file-name"
-            },
-            "s": {
-                "default_value"         : ",",
-                "option_description"    : "CSV file separator is %s",
-                "option_long"           : "csv-field-separator",
-                "option_required"       : false,
-                "option_sample_value"   : "csv-field-separator-character"
-            }
-        },
-        "mover": {
-            "d": {
-                "default_value"         : "",
-                "option_description"    : "Input directory is %s",
-                "option_long"           : "input-directory",
-                "option_required"       : true,
-                "option_sample_value"   : "input-directory-name"
-            },
-            "p": {
-                "default_value"         : "",
-                "option_description"    : "Input file name pattern is %s",
-                "option_long"           : "input-file-pattern",
-                "option_required"       : true,
-                "option_sample_value"   : "input-file-name-pattern"
-            },
-            "o": {
-                "default_value"         : "",
-                "option_description"    : "Output directory is %s",
-                "option_long"           : "output-directory",
-                "option_required"       : true,
-                "option_sample_value"   : "output-directory-name"
+                "option_sample_value"   : "input-extracting-sequence-file-name"
             },
             "l": {
                 "default_value"         : "None",
