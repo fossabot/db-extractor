@@ -33,7 +33,7 @@ setup(
     install_requires=[
         'codetiming>=1.1,<=1.2',
         'hdbcli>=2.4.171,<=2.4.191',
-        'mysql-connector-python>=8.0.11,<=8.0.19'
+        'mysql-connector-python>=8.0.11,<=8.0.19',
         'pandas>=0.25.3,<=1.0.3'
     ],
     keywords=[
@@ -57,5 +57,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='0.4.0',
+    version='0.4.1',
 )
