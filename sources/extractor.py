@@ -63,6 +63,8 @@ if __name__ == '__main__':
                                   'SourceSystems file name')
     # instantiate Parameter Handling class
     c_ph = ParameterHandling()
+    # instantiate Data Manipulator class, useful to manipulate data frames
+    c_dm = DataManipulator()
     # cycling through the configurations
     for current_extracting_sequence in extracting_sequences:
         t.start()
@@ -81,7 +83,6 @@ if __name__ == '__main__':
         t.stop()
         # instantiate Database Talker class
         c_dbtkr = DatabaseTalker()
-        '''
         if srv['vdr'] == 'SAP' and srv['typ'] == 'HANA':
             c_dbtkr.connect_to_sap_hana(c_ln.logger, t, {
                 'server-layer': srv['lyr'],
@@ -93,7 +94,6 @@ if __name__ == '__main__':
              })
         # instantiate DB connection handler
         cursor = c_dbtkr.conn.cursor()
-        '''
         for current_query in current_extracting_sequence['queries']:
             t.start()
             initial_query = c_bn.fn_open_file_and_get_content(
@@ -102,42 +102,30 @@ if __name__ == '__main__':
                              + c_bn.fn_multi_line_string_to_single_line(initial_query))
             t.stop()
             for current_session in current_query['sessions']:
-                t.start()
-                if 'parameters' in current_session:
-                    parameter_rules = []
-                    if 'parameters-handling-rules' in current_session:
-                        parameter_rules = current_session['parameters-handling-rules']
-                    tp = c_ph.build_parameters(c_ln.logger, current_session['parameters'],
-                                               parameter_rules)
-                    try:
-                        parameters_expected = initial_query.count('%s')
-                        query_to_run = initial_query % tp
-                        c_ln.logger.info('Query with parameters interpreted is: '
-                                         + c_bn.fn_multi_line_string_to_single_line(query_to_run))
-                    except TypeError as e:
-                        c_ln.logger.debug('Initial query expects ' + str(parameters_expected)
-                                          + ' parameters but only ' + str(len(tp))
-                                          + ' parameters were provided!')
-                        c_ln.logger.error(e)
-                else:
-                    query_to_run = initial_query
-                t.stop()
-                '''
-                t.start()
+                # ensure all potential query parameters are properly injected
+                query_to_run = c_ph.handle_query(c_ln.logger, t, current_session, initial_query)
+                # actual execution of the query
+                cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, query_to_run)
+                # bringing the information from server (data transfer)
+                result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
+                # detecting the column named from result set
+                columns_name = c_dbtkr.determine_column_names(c_ln.logger, t, cursor)
                 c_ln.logger.info('Free DB result-set started')
                 cursor.close()
                 c_ln.logger.info('Free DB result-set completed')
                 t.stop()
-                '''
-            # instantiate Basic Needs class
-            # c_dm = DataManipulator()
-        '''
+                # put result set into a data frame
+                result_data_frame = c_dbtkr.result_set_to_data_frame(c_ln.logger, t,
+                                                                     columns_name, result_set)
+                #
+                c_dm.fn_store_data_frame_to_file(c_ln.logger, t, result_data_frame,
+                                                 current_session['output-csv-file'],
+                                                 current_session['output-csv-separator'])
         t.start()
         c_ln.logger.info('Closing DB connection')
         c_dbtkr.conn.close()
         c_ln.logger.info('Closing DB completed')
         t.stop()
-        '''
     # just final message
     c_bn.fn_final_message(c_ln.logger, parameters_in.output_log_file,
                           t.timers.total('data_extractor'))

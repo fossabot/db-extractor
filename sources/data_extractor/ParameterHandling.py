@@ -8,10 +8,10 @@ from sources.data_extractor.BasicNeeds import BasicNeeds
 
 
 class ParameterHandling:
-    lcl_c_bn = None
+    lcl_bn = None
 
     def __init__(self):
-        self.lcl_c_bn = BasicNeeds()
+        self.lcl_bn = BasicNeeds()
 
     def build_parameters(self, local_logger, query_session_parameters, in_parameter_rules):
         local_logger.debug('Seen Parameters are: ' + str(query_session_parameters))
@@ -35,12 +35,33 @@ class ParameterHandling:
                 current_date = current_date + timedelta(weeks=int(expression_parts[2]))
             week_iso_num = ClassDT.isocalendar(current_date)[1]
             final_string = str(ClassDT.isocalendar(current_date)[0])\
-                           + self.lcl_c_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
+                           + self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
         else:
             local_logger.error('Unknown expression encountered '
                                + str(expression_parts[1]) + '...')
             exit(1)
         return final_string
+
+    def handle_query(self, local_logger, timered, given_session, given_query):
+        timered.start()
+        query_to_run = given_query
+        if 'parameters' in given_session:
+            parameter_rules = []
+            if 'parameters-handling-rules' in given_session:
+                parameter_rules = given_session['parameters-handling-rules']
+            tp = self.build_parameters(local_logger, given_session['parameters'], parameter_rules)
+            parameters_expected = given_query.count('%s')
+            try:
+                query_to_run = given_query % tp
+                local_logger.info('Query with parameters interpreted is: '
+                                  + self.lcl_bn.fn_multi_line_string_to_single_line(query_to_run))
+            except TypeError as e:
+                local_logger.debug('Initial query expects ' + str(parameters_expected)
+                                   + ' parameters but only ' + str(len(tp))
+                                   + ' parameters were provided!')
+                local_logger.error(e)
+        timered.stop()
+        return query_to_run
 
     def stringify_parameters(self, local_logger, tuple_parameters, given_parameter_rules):
         working_list = []

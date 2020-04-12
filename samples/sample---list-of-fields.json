@@ -20,6 +20,7 @@
                             }
                         ],
                         "output-csv-file":                              "list-of-fields.csv",
+                        "output-csv-separator":                         ";",
                         "parameters": {
                             "Select Fields":                            [
                                 "\"TABLE_NAME\"",

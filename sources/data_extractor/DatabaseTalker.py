@@ -61,33 +61,32 @@ class DatabaseTalker:
         return column_names
 
     @staticmethod
-    def execute_query(self, local_logger, timered, query_session_details):
+    def execute_query(local_logger, timered, given_cursor, given_query):
         try:
             timered.start()
-            query_session_details['cursor'].execute(query_session_details['query'])
-            pt = timedelta(microseconds=(query_session_details['cursor'].server_processing_time()
-                                         / 1000))
+            given_cursor.execute(given_query)
+            pt = timedelta(microseconds=(given_cursor.server_processing_time() / 1000))
             local_logger.info('Query executed successfully ' + format(pt))
             timered.stop()
+            return given_cursor
         except TypeError as e:
             local_logger.error('Error running the query: ')
             local_logger.error(e)
             timered.stop()
 
     @staticmethod
-    def fetch_executed_query(local_logger, timered, query_session_details):
+    def fetch_executed_query(local_logger, timered, given_cursor):
         timered.start()
-        result_set = query_session_details['cursor'].fetchall()
+        local_result_set = given_cursor.fetchall()
         local_logger.info('Result-set has been completely fetched and contains '
-                          + str(len(result_set)) + ' rows')
+                          + str(len(local_result_set)) + ' rows')
         timered.stop()
-        return result_set
+        return local_result_set
 
     @staticmethod
-    def resultset_to_dataframe(local_logger, timered, packed_result_set):
+    def result_set_to_data_frame(local_logger, timered, given_result_set, given_columns_name):
         timered.start()
-        df = pd.DataFrame(packed_result_set['result-set'],
-                          index=None,
-                          columns=packed_result_set['csv-columns'])
+        df = pd.DataFrame(given_result_set, index=None, columns=given_columns_name)
         local_logger.info('Result-set has been loaded into Pandas DataFrame')
         timered.stop()
+        return df
