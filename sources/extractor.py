@@ -94,7 +94,7 @@ if __name__ == '__main__':
                 'Username': usr_dtl['Username'],
                 'Name': usr_dtl['Name'],
                 'Password': usr_dtl['Password'],
-             })
+            })
         c_ln.logger.debug('Connection attempt done')
         if c_dbtkr.conn is not None:
             # instantiate DB connection handler
