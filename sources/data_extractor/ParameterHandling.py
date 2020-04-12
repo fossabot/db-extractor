@@ -49,28 +49,26 @@ class ParameterHandling:
             working_list.append(ndx)
             if current_parameter_type == "<class 'str'>":
                 local_logger.debug('Current Parameter is STR and has the value: ' + crt_parameter)
-                if len(crt_parameter) > 14 and crt_parameter[:15] == 'CalculatedDate_':
-                    parameter_value_parts = crt_parameter.split('_')
-                    crt_parameter = self.calculate_date_from_expression(local_logger,
-                                                                        parameter_value_parts)
-                    local_logger.debug('Current Parameter is STR '
-                                       + 'and has been re-interpreted as value: '
-                                       + str(crt_parameter))
-                working_list[ndx] = crt_parameter
-            elif current_parameter_type == "<class 'list'>":
-                local_logger.debug('Current Parameter is LIST and has the value: '
-                                   + str(crt_parameter))
-                working_list[ndx] = given_parameter_rules['list-values-prefix'] \
-                                    + given_parameter_rules['list-values-glue']\
+                working_list[ndx] = self.special_case_string(local_logger, crt_parameter)
+            elif current_parameter_type in ("<class 'list'>", "<class 'dict'>"):
+                prefix = current_parameter_type.replace("<class '").replace("'>")
+                local_logger.debug('Current Parameter is ' + prefix.upper()
+                                   + ' and has the value: ' + str(crt_parameter))
+                working_list[ndx] = given_parameter_rules[prefix + '-values-prefix'] \
+                                    + given_parameter_rules[prefix + '-values-glue']\
                                         .join(crt_parameter) \
-                                    + given_parameter_rules['list-values-suffix']
-            elif current_parameter_type == "<class 'dict'>":
-                local_logger.debug('Current Parameter is DICT and has the value: '
-                                   + str(crt_parameter))
-                working_list[ndx] = given_parameter_rules['dictionary-values-prefix'] \
-                                    + given_parameter_rules['dictionary-values-glue']\
-                                        .join(crt_parameter.values()) \
-                                    + given_parameter_rules['dictionary-values-suffix']
+                                    + given_parameter_rules[prefix + '-values-suffix']
         final_tuple = tuple(working_list)
         local_logger.debug('Final Tuple for Parameters is: ' + str(final_tuple))
         return final_tuple
+
+    def special_case_string(self, local_logger, crt_parameter):
+        resulted_parameter_value = crt_parameter
+        if len(crt_parameter) > 14 and crt_parameter[:15] == 'CalculatedDate_':
+            parameter_value_parts = crt_parameter.split('_')
+            resulted_parameter_value = self.calculate_date_from_expression(local_logger,
+                                                                           parameter_value_parts)
+            local_logger.debug('Current Parameter is STR '
+                               + 'and has been re-interpreted as value: '
+                               + str(crt_parameter))
+        return resulted_parameter_value
