@@ -33,9 +33,9 @@
                             }
                         },
                         "parameters-handling-rules": {
-                            "dictionary-values-glue":                   "', '",
-                            "dictionary-values-prefix":                 "IN ('",
-                            "dictionary-values-suffix":                 "')",
+                            "dict-values-glue":                         "', '",
+                            "dict-values-prefix":                       "IN ('",
+                            "dict-values-suffix":                       "')",
                             "list-values-glue":                         ", ",
                             "list-values-prefix":                       "",
                             "list-values-suffix":                       ""
