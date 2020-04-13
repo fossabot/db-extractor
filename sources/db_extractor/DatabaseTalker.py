@@ -96,6 +96,19 @@ class DatabaseTalker:
         return local_result_set
 
     @staticmethod
+    def get_column_names(local_logger, timered, cursor_frame):
+        timered.start()
+        try:
+            column_names = cursor_frame.column_names
+        except AttributeError:
+            column_names = []
+            for column_name, col2, col3, col4, col5, col6, col7 in cursor_frame.description:
+                column_names.append(column_name)
+        local_logger.info('Result-set column name determination completed')
+        timered.stop()
+        return column_names
+
+    @staticmethod
     def result_set_to_data_frame(local_logger, timered, given_columns_name, given_result_set):
         timered.start()
         df = pd.DataFrame(data=given_result_set, index=None, columns=given_columns_name)

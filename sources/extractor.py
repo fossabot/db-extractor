@@ -115,7 +115,7 @@ if __name__ == '__main__':
                     result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
                     # detecting the column named from result set
                     stats = {
-                        'columns': cursor.column_names,
+                        'columns': c_dbtkr.get_column_names(c_ln.logger, t, cursor),
                         'rows_count': cursor.rowcount,
                     }
                     t.start()
