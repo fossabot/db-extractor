@@ -63,7 +63,8 @@ class BasicNeeds:
                                       + 'expected either "json" or "raw" but got '
                                       + in_content_type)
 
-    def fn_get_file_statistics(self, file_to_evaluate):
+    @staticmethod
+    def fn_get_file_statistics(file_to_evaluate):
         try:
             file_sha512 = hashlib.sha512(open(file=file_to_evaluate, mode='r', encoding='utf-8')\
                                          .read().encode()).hexdigest()
