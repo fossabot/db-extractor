@@ -91,7 +91,7 @@ class BasicNeeds:
     @staticmethod
     def fn_multi_line_string_to_single_line(input_string):
         return input_string.replace('\n', ' ').replace('\r', ' ')\
-            .replace('  ', ' ', 5).replace('   ', ' ').strip()
+            .replace('  ', ' ', 100).replace('   ', ' ').strip()
 
     @staticmethod
     def fn_numbers_with_leading_zero(self, input_number_as_string, digits):
