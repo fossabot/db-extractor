@@ -8,6 +8,7 @@ to call the main package functions
 from hdbcli import dbapi
 # package helping out to work with Oracle MySQL
 import mysql.connector
+from mysql.connector import errorcode
 # package to facilitate time operations
 from datetime import datetime, timedelta
 # package facilitating Data Frames manipulation
@@ -38,37 +39,47 @@ class DatabaseTalker:
                           + ', port ' + str(connection_details['ServerPort'])
                           + ') using the username ' + connection_details['Username']
                           + ' (' + connection_details['Name'] + ')')
+        if connection_details['server-vendor-and-type'] == 'SAP HANA':
+            self.connect_to_database_hana(local_logger, connection_details)
+        elif connection_details['server-vendor-and-type'] == 'Oracle MySQL':
+            self.connect_to_database_mysql(local_logger, connection_details)
+        timered.stop()
+
+    def connect_to_database_hana(self, local_logger, connection_details):
         try:
-            # create actual connection
-            if connection_details['server-vendor-and-type'] == 'SAP HANA':
-                self.conn = dbapi.connect(
-                    address=connection_details['ServerName'],
-                    port=connection_details['ServerPort'],
-                    user=connection_details['Username'],
-                    password=connection_details['Password'],
-                    compress='TRUE',
-                )
-            elif connection_details['server-vendor-and-type'] == 'Oracle MySQL':
-                self.conn = mysql.connector.connect(
-                    host=connection_details['ServerName'],
-                    port=connection_details['ServerPort'],
-                    user=connection_details['Username'],
-                    password=connection_details['Password'],
-                    database='mysql',
-                    compress=True,
-                    autocommit=True,
-                    use_unicode=True,
-                    charset='utf8mb4',
-                    get_warnings=True,
-                )
-                self.conn.set_charset_collation('utf8mb4', 'utf8mb4_0900_ai_ci')
+            self.conn = dbapi.connect(
+                address=connection_details['ServerName'],
+                port=connection_details['ServerPort'],
+                user=connection_details['Username'],
+                password=connection_details['Password'],
+                compress='TRUE',
+            )
             local_logger.info('Connecting to  ' + connection_details['server-vendor-and-type']
                               + ' server completed')
-            timered.stop()
-        except Exception as e:
-            local_logger.error('Error in Connection with details: ')
-            local_logger.error(e)
-            timered.stop()
+        except mysql.connector.Error as err:
+            local_logger.error('Error connecting to MySQL with details: ')
+            local_logger.error(err)
+
+    def connect_to_database_mysql(self, local_logger, connection_details):
+        try:
+            self.conn = mysql.connector.connect(
+                host=connection_details['ServerName'],
+                port=connection_details['ServerPort'],
+                user=connection_details['Username'],
+                password=connection_details['Password'],
+                database='mysql',
+                compress=True,
+                autocommit=True,
+                use_unicode=True,
+                charset='utf8mb4',
+                collation='utf8mb4_0900_ai_ci',
+                get_warnings=True,
+            )
+            local_logger.info('Connecting to  ' + connection_details['server-vendor-and-type']
+                              + ' server completed')
+        except mysql.connector.Error as err:
+            local_logger.error('Error connecting to MySQL with details: ')
+            local_logger.error(err)
 
     @staticmethod
     def execute_query(local_logger, timered, given_cursor, given_query):
