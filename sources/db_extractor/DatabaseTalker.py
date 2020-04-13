@@ -46,6 +46,7 @@ class DatabaseTalker:
                     port=connection_details['ServerPort'],
                     user=connection_details['Username'],
                     password=connection_details['Password'],
+                    compress='TRUE',
                 )
             elif connection_details['server-vendor-and-type'] == 'Oracle MySQL':
                 self.conn = mysql.connector.connect(
@@ -96,13 +97,13 @@ class DatabaseTalker:
         return local_result_set
 
     @staticmethod
-    def get_column_names(local_logger, timered, cursor_frame):
+    def get_column_names(local_logger, timered, given_cursor):
         timered.start()
         try:
-            column_names = cursor_frame.column_names
+            column_names = given_cursor.column_names
         except AttributeError:
             column_names = []
-            for column_name, col2, col3, col4, col5, col6, col7 in cursor_frame.description:
+            for column_name, col2, col3, col4, col5, col6, col7 in given_cursor.description:
                 column_names.append(column_name)
         local_logger.info('Result-set column name determination completed')
         timered.stop()
