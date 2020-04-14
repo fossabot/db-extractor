@@ -19,15 +19,17 @@ class DatabaseTalker:
 
     @staticmethod
     def append_additional_columns_to_data_frame(local_logger, timered, data_frame, session_details):
+        resulted_data_frame = data_frame
         if 'additional-columns' in session_details:
             timered.start()
             for crt_column in session_details['additional-columns']:
                 if crt_column['value'] == 'utcnow': # special case
-                    data_frame[crt_column['name']] = datetime.utcnow()
+                    resulted_data_frame[crt_column['name']] = datetime.utcnow()
                 else:
-                    data_frame[crt_column['name']] = crt_column['value']
+                    resulted_data_frame[crt_column['name']] = crt_column['value']
             local_logger.info('Additional column(s) have been added to Pandas DataFrame')
             timered.stop()
+        return resulted_data_frame
 
     def connect_to_database(self, local_logger, timered, connection_details):
         timered.start()
