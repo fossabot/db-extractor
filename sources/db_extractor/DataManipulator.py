@@ -76,8 +76,14 @@ class DataManipulator:
         timmer.start()
         for current_file in csv_file_names:
             new_file_name = current_file.replace(source_folder, destination_folder)
-            os.rename(current_file, new_file_name)
-            local_logger.info('File ' + current_file + ' has just been renamed as ' + new_file_name)
+            if new_file_name.is_file():
+                os.replace(current_file, new_file_name)
+                local_logger.info('File ' + current_file
+                                  + ' has just been been overwritten  as ' + new_file_name)
+            else:
+                os.rename(current_file, new_file_name)
+                local_logger.info('File ' + current_file
+                                  + ' has just been renamed as ' + new_file_name)
         timmer.stop()
 
     def fn_store_data_frame_to_file(self, local_logger, timmer, input_data_frame,
