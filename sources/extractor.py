@@ -3,6 +3,8 @@ Facilitates moving files from a specified directory and matching pattern to a de
 """
 # package to facilitate operating system operations
 import os
+# package to facilitate working with directories and files
+from pathlib import Path
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
 # Custom classes specific to this package
@@ -107,34 +109,60 @@ if __name__ == '__main__':
                                  + c_bn.fn_multi_line_string_to_single_line(initial_query))
                 t.stop()
                 for current_session in current_query['sessions']:
-                    # ensure all potential query parameters are properly injected
-                    query_to_run = c_ph.handle_query(c_ln.logger, t, current_session, initial_query)
-                    # actual execution of the query
-                    cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, query_to_run)
-                    # bringing the information from server (data transfer)
-                    result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
-                    # detecting the column named from result set
-                    stats = {
-                        'columns': c_dbtkr.get_column_names(c_ln.logger, t, cursor),
-                        'rows_count': cursor.rowcount,
-                    }
-                    t.start()
-                    c_ln.logger.info('Free DB result-set started')
-                    cursor.close()
-                    c_ln.logger.info('Free DB result-set completed')
-                    t.stop()
-                    if stats['rows_count'] > 0:
-                        # put result set into a data frame
-                        result_data_frame = c_dbtkr.result_set_to_data_frame(c_ln.logger, t,
-                                                                             stats['columns'],
-                                                                             result_set)
-                        # store data frame to a specified output file
-                        c_dm.fn_store_data_frame_to_file(c_ln.logger, t, result_data_frame,
-                                                         current_session['output-csv-file'],
-                                                         current_session['output-csv-separator'])
-                        c_bn.fn_store_file_statistics(c_ln.logger, t,
-                                                      current_session['output-csv-file'],
-                                                      'Output file name')
+                    current_session['output-csv-file'] = \
+                        c_ph.special_case_string(c_ln.logger, current_session['output-csv-file'])
+                    extraction_required = False
+                    c_ln.logger.debug('Extract behaviour is set to '
+                                      + current_session['extract-behaviour'])
+                    if current_session['extract-behaviour'] == \
+                            'skip-if-output-file-exists':
+                        if Path(current_session['output-csv-file']).is_file():
+                            c_ln.logger.debug('File ' + current_session['output-csv-file']
+                                              + ' already exists, '
+                                              + 'so database extraction will not be performed')
+                        else:
+                            extraction_required = True
+                            c_ln.logger.debug('File ' + current_session['output-csv-file']
+                                              + ' does not exist, '
+                                              + 'so database extraction has to be performed')
+                    elif current_session['extract-behaviour'] == \
+                            'overwrite-if-output-file-exists':
+                        extraction_required = True
+                        c_ln.logger.debug('Database extraction has to be performed')
+                    if extraction_required:
+                        # ensure all potential query parameters are properly injected
+                        query_to_run = c_ph.handle_query(c_ln.logger, t, current_session,
+                                                         initial_query)
+                        # actual execution of the query
+                        cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, query_to_run)
+                        # bringing the information from server (data transfer)
+                        result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
+                        # detecting the column named from result set
+                        stats = {
+                            'columns': c_dbtkr.get_column_names(c_ln.logger, t, cursor),
+                            'rows_count': cursor.rowcount,
+                        }
+                        t.start()
+                        c_ln.logger.info('Free DB result-set started')
+                        cursor.close()
+                        c_ln.logger.info('Free DB result-set completed')
+                        t.stop()
+                        if stats['rows_count'] > 0:
+                            # put result set into a data frame
+                            result_data_frame = c_dbtkr.result_set_to_data_frame(c_ln.logger, t,
+                                                                                 stats['columns'],
+                                                                                 result_set)
+                            rdf = c_dbtkr.append_additional_columns_to_data_frame(c_ln.logger, t,
+                                                                                  result_data_frame,
+                                                                                  current_session)
+                            # store data frame to a specified output file
+                            c_dm.fn_store_data_frame_to_file(c_ln.logger, t, rdf,
+                                                             current_session['output-csv-file'],
+                                                             current_session['output-csv-separator']
+                                                             )
+                            c_bn.fn_store_file_statistics(c_ln.logger, t,
+                                                          current_session['output-csv-file'],
+                                                          'Output file name')
             t.start()
             c_ln.logger.info('Closing DB connection')
             c_dbtkr.conn.close()

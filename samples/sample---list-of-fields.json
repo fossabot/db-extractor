@@ -16,6 +16,7 @@
                                 "value":                                "utcnow"
                             }
                         ],
+                        "extract-behaviour":                            "overwrite-if-output-file-exists",
                         "output-csv-file":                              "mysql-test.csv",
                         "output-csv-separator":                         "|",
                         "parameters": {
@@ -62,6 +63,7 @@
                                 "value":                                "utcnow"
                             }
                         ],
+                        "extract-behaviour":                            "skip-if-output-file-exists",
                         "output-csv-file":                              "list-of-fields.csv",
                         "output-csv-separator":                         ";",
                         "parameters": {
