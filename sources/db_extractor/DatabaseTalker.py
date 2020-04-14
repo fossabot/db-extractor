@@ -58,6 +58,7 @@ class DatabaseTalker:
                 chopBlanks='TRUE',
                 compress='TRUE',
                 connDownRollbackError='TRUE',
+                statementCacheSize=10,
             )
             local_logger.info('Connecting to  ' + connection_details['server-vendor-and-type']
                               + ' server completed')
@@ -87,17 +88,21 @@ class DatabaseTalker:
             local_logger.error(err)
 
     @staticmethod
-    def execute_query(local_logger, timered, given_cursor, given_query):
+    def execute_query(local_logger, timered, in_cursor, in_query, in_counted_parameters,
+                      in_tuple_parameters):
         try:
             timered.start()
-            given_cursor.execute(given_query)
+            if in_counted_parameters > 0:
+                in_cursor.execute(in_query % in_tuple_parameters)
+            else:
+                in_cursor.execute(in_query)
             try:
-                pt = timedelta(microseconds=(given_cursor.server_processing_time() / 1000))
-                local_logger.info('Query executed successfully ' + format(pt))
+                processing_tm = timedelta(microseconds=(in_cursor.server_processing_time() / 1000))
+                local_logger.info('Query executed successfully ' + format(processing_tm))
             except AttributeError:
                 local_logger.info('Query executed successfully')
             timered.stop()
-            return given_cursor
+            return in_cursor
         except TypeError as e:
             local_logger.error('Error running the query: ')
             local_logger.error(e)

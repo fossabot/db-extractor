@@ -47,26 +47,14 @@ class ParameterHandling:
             exit(1)
         return final_string
 
-    def handle_query(self, local_logger, timered, given_session, given_query):
-        timered.start()
-        query_to_run = given_query
+    def handle_query_parameters(self, local_logger, given_session):
+        tp = None
         if 'parameters' in given_session:
             parameter_rules = []
             if 'parameters-handling-rules' in given_session:
                 parameter_rules = given_session['parameters-handling-rules']
             tp = self.build_parameters(local_logger, given_session['parameters'], parameter_rules)
-            parameters_expected = given_query.count('%s')
-            try:
-                query_to_run = given_query % tp
-                local_logger.info('Query with parameters interpreted is: '
-                                  + self.lcl_bn.fn_multi_line_string_to_single_line(query_to_run))
-            except TypeError as e:
-                local_logger.debug('Initial query expects ' + str(parameters_expected)
-                                   + ' parameters but only ' + str(len(tp))
-                                   + ' parameters were provided!')
-                local_logger.error(e)
-        timered.stop()
-        return query_to_run
+        return tp
 
     @staticmethod
     def manage_parameter_value(given_prefix, given_parameter, given_parameter_rules):
@@ -79,6 +67,34 @@ class ParameterHandling:
                + given_parameter_rules[given_prefix + '-values-glue'].join(element_to_join) \
                + given_parameter_rules[given_prefix + '-values-suffix']
 
+    def simulate_final_query(self, local_logger, timered, in_query, in_parameters_number, in_tp):
+        timered.start()
+        return_query = in_query
+        if in_parameters_number > 0:
+            try:
+                return_query = in_query % in_tp
+                local_logger.info('Query with parameters interpreted is: '
+                                  + self.lcl_bn.fn_multi_line_string_to_single_line(return_query))
+            except TypeError as e:
+                local_logger.debug('Initial query expects ' + str(in_parameters_number)
+                                   + ' parameters but only ' + str(len(in_tp))
+                                   + ' parameters were provided!')
+                local_logger.error(e)
+        timered.stop()
+
+    def special_case_string(self, local_logger, crt_parameter):
+        resulted_parameter_value = crt_parameter
+        matching_rule = re.search(r'(CalculatedDate\_[A-Z]{4}\_(-*)[0-9]{1,2})', crt_parameter)
+        if matching_rule:
+            parameter_value_parts = matching_rule.group().split('_')
+            calculated_parameter_value = self.calculate_date_from_expression(local_logger,
+                                                                             parameter_value_parts)
+            resulted_parameter_value = re.sub(matching_rule.group(), calculated_parameter_value,
+                                              crt_parameter)
+            local_logger.debug('Current Parameter is STR '
+                               + 'and has been re-interpreted as value: '
+                               + str(resulted_parameter_value))
+        return resulted_parameter_value
 
     def stringify_parameters(self, local_logger, tuple_parameters, given_parameter_rules):
         working_list = []
@@ -97,17 +113,3 @@ class ParameterHandling:
         final_tuple = tuple(working_list)
         local_logger.debug('Final Tuple for Parameters is: ' + str(final_tuple))
         return final_tuple
-
-    def special_case_string(self, local_logger, crt_parameter):
-        resulted_parameter_value = crt_parameter
-        matching_rule = re.search(r'(CalculatedDate\_[A-Z]{4}\_(-*)[0-9]{1,2})', crt_parameter)
-        if matching_rule:
-            parameter_value_parts = matching_rule.group().split('_')
-            calculated_parameter_value = self.calculate_date_from_expression(local_logger,
-                                                                             parameter_value_parts)
-            resulted_parameter_value = re.sub(matching_rule.group(), calculated_parameter_value,
-                                              crt_parameter)
-            local_logger.debug('Current Parameter is STR '
-                               + 'and has been re-interpreted as value: '
-                               + str(resulted_parameter_value))
-        return resulted_parameter_value

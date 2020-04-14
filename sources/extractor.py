@@ -130,11 +130,16 @@ if __name__ == '__main__':
                         extraction_required = True
                         c_ln.logger.debug('Database extraction has to be performed')
                     if extraction_required:
-                        # ensure all potential query parameters are properly injected
-                        query_to_run = c_ph.handle_query(c_ln.logger, t, current_session,
-                                                         initial_query)
+                        # get query parameters into a tuple
+                        tuple_parameters = c_ph.handle_query_parameters(c_ln.logger, current_session)
+                        # measure expected number of parameters
+                        parameters_expected = initial_query.count('%s')
+                        # simulate final query to log (useful for debugging purposes)
+                        c_ph.simulate_final_query(c_ln.logger, t, initial_query,
+                                                  parameters_expected, tuple_parameters)
                         # actual execution of the query
-                        cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, query_to_run)
+                        cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, initial_query,
+                                                       parameters_expected, tuple_parameters)
                         # bringing the information from server (data transfer)
                         result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
                         # detecting the column named from result set
