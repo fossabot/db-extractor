@@ -1,10 +1,15 @@
+"""
+Class Parameter Handling
 
-# standard Python packages
+Facilitates handling parameters values
+"""
+# package to handle dates and times
 from datetime import datetime as ClassDT
 from datetime import timedelta
-
-# Custom classes specific to this package
+# package to facilitate common operations
 from db_extractor.BasicNeeds import BasicNeeds
+# package to facilitate regular expressions
+import re
 
 
 class ParameterHandling:
@@ -95,11 +100,14 @@ class ParameterHandling:
 
     def special_case_string(self, local_logger, crt_parameter):
         resulted_parameter_value = crt_parameter
-        if len(crt_parameter) > 14 and crt_parameter[:15] == 'CalculatedDate_':
-            parameter_value_parts = crt_parameter.split('_')
-            resulted_parameter_value = self.calculate_date_from_expression(local_logger,
-                                                                           parameter_value_parts)
+        matching_rule = re.search(r'(CalculatedDate\_[A-Z]{4}\_(-*)[0-9]{1,2})', crt_parameter)
+        if matching_rule:
+            parameter_value_parts = matching_rule.group().split('_')
+            calculated_parameter_value = self.calculate_date_from_expression(local_logger,
+                                                                             parameter_value_parts)
+            resulted_parameter_value = re.sub(matching_rule.group(), calculated_parameter_value,
+                                              crt_parameter)
             local_logger.debug('Current Parameter is STR '
                                + 'and has been re-interpreted as value: '
-                               + str(crt_parameter))
+                               + str(resulted_parameter_value))
         return resulted_parameter_value
