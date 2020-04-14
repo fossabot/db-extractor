@@ -54,7 +54,10 @@ class DatabaseTalker:
                 port=connection_details['ServerPort'],
                 user=connection_details['Username'],
                 password=connection_details['Password'],
+                prefetch='FALSE',
+                chopBlanks='TRUE',
                 compress='TRUE',
+                connDownRollbackError='TRUE',
             )
             local_logger.info('Connecting to  ' + connection_details['server-vendor-and-type']
                               + ' server completed')
@@ -103,9 +106,14 @@ class DatabaseTalker:
     @staticmethod
     def fetch_executed_query(local_logger, timered, given_cursor):
         timered.start()
-        local_result_set = given_cursor.fetchall()
-        local_logger.info('Result-set has been completely fetched and contains '
-                          + str(len(local_result_set)) + ' rows')
+        local_result_set = None
+        try:
+            local_result_set = given_cursor.fetchall()
+            local_logger.info('Result-set has been completely fetched and contains '
+                              + str(len(local_result_set)) + ' rows')
+        except ConnectionError as e:
+            local_logger.info('There was a problem with connection')
+            local_logger.info(e)
         timered.stop()
         return local_result_set
 
