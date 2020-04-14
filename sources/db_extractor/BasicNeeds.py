@@ -116,9 +116,14 @@ class BasicNeeds:
 
     def fn_store_file_statistics(self, local_logger, timmer, file_name, file_meaning):
         timmer.start()
-        local_logger.info(file_meaning + ' file "' + file_name
-                          + '" has the following characteristics: '
-                          + str(self.fn_get_file_statistics(file_name)))
+        file_name_variable_type = str(type(file_name))
+        list_file_names = [file_name]
+        if file_name_variable_type == "<class 'list'>":
+            list_file_names = file_name
+        for current_file_name in list_file_names:
+            local_logger.info(file_meaning + ' file "' + current_file_name
+                              + '" has the following characteristics: '
+                              + str(self.fn_get_file_statistics(current_file_name)))
         timmer.stop()
 
     @staticmethod
