@@ -3,12 +3,10 @@ Facilitates moving files from a specified directory and matching pattern to a de
 """
 # package to facilitate operating system operations
 import os
-# package to facilitate working with directories and files
-from pathlib import Path
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
 # Custom classes specific to this package
-from db_extractor.BasicNeeds import BasicNeeds
+from db_extractor.ExtractorSpecificNeeds import BasicNeeds, ExtractorSpecificNeeds
 from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
 from db_extractor.LoggingNeeds import LoggingNeeds
 from db_extractor.DatabaseTalker import DatabaseTalker
@@ -29,6 +27,10 @@ if __name__ == '__main__':
     parameters_in = c_clam.parse_arguments(c_bn.cfg_dtls['input_options']['db_extractor'])
     # checking inputs, if anything is invalid an exit(1) will take place
     c_bn.fn_check_inputs(parameters_in, current_script_name)
+    # instantiate Extractor Specific Needs class
+    c_esn = ExtractorSpecificNeeds()
+    # checking inputs, if anything is invalid an exit(1) will take place
+    c_esn.fn_check_inputs_specific(parameters_in)
     # instantiate Logger class
     c_ln = LoggingNeeds()
     # initiate logger
@@ -111,27 +113,14 @@ if __name__ == '__main__':
                 for current_session in current_query['sessions']:
                     current_session['output-csv-file'] = \
                         c_ph.special_case_string(c_ln.logger, current_session['output-csv-file'])
-                    extraction_required = False
-                    c_ln.logger.debug('Extract behaviour is set to '
-                                      + current_session['extract-behaviour'])
-                    if current_session['extract-behaviour'] == \
-                            'skip-if-output-file-exists':
-                        if Path(current_session['output-csv-file']).is_file():
-                            c_ln.logger.debug('File ' + current_session['output-csv-file']
-                                              + ' already exists, '
-                                              + 'so database extraction will not be performed')
-                        else:
-                            extraction_required = True
-                            c_ln.logger.debug('File ' + current_session['output-csv-file']
-                                              + ' does not exist, '
-                                              + 'so database extraction has to be performed')
-                    elif current_session['extract-behaviour'] == \
-                            'overwrite-if-output-file-exists':
-                        extraction_required = True
-                        c_ln.logger.debug('Database extraction has to be performed')
+                    extraction_required = c_esn.fn_is_extraction_neccesary(c_ln.logger, {
+                        'extract-behaviour': current_session['extract-behaviour'],
+                        'output-csv-file': current_session['output-csv-file'],
+                    })
                     if extraction_required:
                         # get query parameters into a tuple
-                        tuple_parameters = c_ph.handle_query_parameters(c_ln.logger, current_session)
+                        tuple_parameters = c_ph.handle_query_parameters(c_ln.logger,
+                                                                        current_session)
                         # measure expected number of parameters
                         parameters_expected = initial_query.count('%s')
                         # simulate final query to log (useful for debugging purposes)
