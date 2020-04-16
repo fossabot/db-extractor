@@ -3,17 +3,20 @@ Class Parameter Handling
 
 Facilitates handling parameters values
 """
-# package to handle dates and times
-from datetime import datetime as ClassDT
-from datetime import timedelta
 # package to facilitate common operations
-from db_extractor.BasicNeeds import BasicNeeds
-# package to facilitate regular expressions
-import re
+from db_extractor.BasicNeeds import date, datetime, re, timedelta, BasicNeeds
+# package to allow year and/or month operations based on a reference date
+import datedelta
 
 
 class ParameterHandling:
     lcl_bn = None
+    known_expressions = {
+        'year' : ['CY', 'CurrentYear'],
+        'month': ['CYCM', 'CurrentYearCurrentMonth', 'CM'],
+        'week' : ['CYCW', 'CurrentYearCurrentWeek', 'CW'],
+        'day' : ['CYCMCD', 'CurrentYearCurrentMonthCurrentDay', 'CD']
+    }
 
     def __init__(self):
         self.lcl_bn = BasicNeeds()
@@ -32,20 +35,40 @@ class ParameterHandling:
         local_logger.debug('Initial Tuple for Parameters is: ' + str(tp))
         return self.stringify_parameters(local_logger, tp, in_parameter_rules)
 
+    @staticmethod
+    def calculate_date_deviation(in_date, deviation_type, expression_parts):
+        final_date = in_date
+        if len(expression_parts) >= 3:
+            if deviation_type == 'year':
+                final_date = in_date + datedelta.datedelta(years=int(expression_parts[2]))
+            elif deviation_type == 'month':
+                final_date = in_date + datedelta.datedelta(months=int(expression_parts[2]))
+            elif deviation_type == 'week':
+                final_date = in_date + timedelta(weeks=int(expression_parts[2]))
+            elif deviation_type == 'day':
+                final_date = in_date + timedelta(days=int(expression_parts[2]))
+        return final_date
+
     def calculate_date_from_expression(self, local_logger, expression_parts):
         final_string = ''
-        current_date = ClassDT.today()
-        if expression_parts[1] == 'CYCW':
-            if len(expression_parts) >= 3:
-                current_date = current_date + timedelta(weeks=int(expression_parts[2]))
-            week_iso_num = ClassDT.isocalendar(current_date)[1]
-            final_string = str(ClassDT.isocalendar(current_date)[0])\
-                           + self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
+        all_known_expressions = self.get_flattened_known_expressions()
+        if expression_parts[1] in all_known_expressions:
+            final_string = self.interpret_known_expression(local_logger, expression_parts)
         else:
             local_logger.error('Unknown expression encountered '
                                + str(expression_parts[1]) + '...')
             exit(1)
         return final_string
+
+    def get_flattened_known_expressions(self):
+        flat_values = []
+        index_counter = 0
+        for current_expression_group in self.known_expressions.items():
+            for current_expression in current_expression_group[1]:
+                flat_values.append(index_counter)
+                flat_values[index_counter] = current_expression
+                index_counter += 1
+        return flat_values
 
     def handle_query_parameters(self, local_logger, given_session):
         tp = None
@@ -55,6 +78,48 @@ class ParameterHandling:
                 parameter_rules = given_session['parameters-handling-rules']
             tp = self.build_parameters(local_logger, given_session['parameters'], parameter_rules)
         return tp
+
+    @staticmethod
+    def handle_prefix_for_date_format(date_expression, expected_prefixes, in_date):
+        prefix_for_date_format = ''
+        matching_rule_short = re.search(r'CY', date_expression)
+        matching_rule_long = re.search(r'CurrentYear', date_expression)
+        if matching_rule_short or matching_rule_long:
+            prefix_for_date_format = str(datetime.isocalendar(in_date)[0])
+        if expected_prefixes == 'CYCM':
+            matching_rule2_short = re.search(r'CM', date_expression)
+            matching_rule2_long = re.search(r'CurrentMonth', date_expression)
+            if matching_rule2_short or matching_rule2_long:
+                prefix_for_date_format += datetime.strftime(in_date, '%m')
+        return prefix_for_date_format
+
+    def interpret_known_expression(self, local_logger, expression_parts):
+        final_string = ''
+        current_date = date.today()
+        local_logger.debug('I have just been provided with a known expression "'
+                           + '_'.join(expression_parts) + '" to interpret')
+        if expression_parts[1] in self.known_expressions['year']:
+            finalized_date = self.calculate_date_deviation(current_date, 'year', expression_parts)
+            final_string = datetime.strftime(finalized_date, '%Y')
+        elif expression_parts[1] in self.known_expressions['month']:
+            finalized_date = self.calculate_date_deviation(current_date, 'month', expression_parts)
+            final_string = self.handle_prefix_for_date_format(expression_parts[1], 'CY',
+                                                              finalized_date) \
+                           + datetime.strftime(finalized_date, '%m')
+        elif expression_parts[1] in self.known_expressions['week']:
+            finalized_date = self.calculate_date_deviation(current_date, 'week', expression_parts)
+            week_iso_num = datetime.isocalendar(finalized_date)[1]
+            final_string = self.handle_prefix_for_date_format(expression_parts[1], 'CY',
+                                                              finalized_date) \
+                           + self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
+        elif expression_parts[1] in self.known_expressions['day']:
+            finalized_date = self.calculate_date_deviation(current_date, 'day', expression_parts)
+            final_string = self.handle_prefix_for_date_format(expression_parts[1], 'CYCM',
+                                                              finalized_date) \
+                           + datetime.strftime(finalized_date, '%d')
+        local_logger.debug('Provided known expression "' + '_'.join(expression_parts)
+                           + '" has been determined to be "' + final_string + '"')
+        return final_string
 
     @staticmethod
     def manage_parameter_value(given_prefix, given_parameter, given_parameter_rules):
@@ -84,7 +149,7 @@ class ParameterHandling:
 
     def special_case_string(self, local_logger, crt_parameter):
         resulted_parameter_value = crt_parameter
-        matching_rule = re.search(r'(CalculatedDate\_[A-Z]{4}\_(-*)[0-9]{1,2})', crt_parameter)
+        matching_rule = re.search(r'(CalculatedDate\_[A-Za-z]{2,62}\_*(-*)[0-9]{0,2})', crt_parameter)
         if matching_rule:
             parameter_value_parts = matching_rule.group().split('_')
             calculated_parameter_value = self.calculate_date_from_expression(local_logger,
