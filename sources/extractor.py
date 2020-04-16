@@ -1,12 +1,12 @@
 """
 Facilitates moving files from a specified directory and matching pattern to a destination directory
 """
-# package to facilitate operating system operations
-import os
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
+# package to facilitate operating system operations
+import os
 # Custom classes specific to this package
-from db_extractor.ExtractorSpecificNeeds import BasicNeeds, ExtractorSpecificNeeds
+from db_extractor.BasicNeedsForExtractor import BasicNeeds, BasicNeedsForExtractor
 from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
 from db_extractor.LoggingNeeds import LoggingNeeds
 from db_extractor.DatabaseTalker import DatabaseTalker
@@ -28,9 +28,9 @@ if __name__ == '__main__':
     # checking inputs, if anything is invalid an exit(1) will take place
     c_bn.fn_check_inputs(parameters_in, current_script_name)
     # instantiate Extractor Specific Needs class
-    c_esn = ExtractorSpecificNeeds()
+    c_bnfe = BasicNeedsForExtractor()
     # checking inputs, if anything is invalid an exit(1) will take place
-    c_esn.fn_check_inputs_specific(parameters_in)
+    c_bnfe.fn_check_inputs_specific(parameters_in)
     # instantiate Logger class
     c_ln = LoggingNeeds()
     # initiate logger
@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 for current_session in current_query['sessions']:
                     current_session['output-csv-file'] = \
                         c_ph.special_case_string(c_ln.logger, current_session['output-csv-file'])
-                    extraction_required = c_esn.fn_is_extraction_neccesary(c_ln.logger, {
+                    extraction_required = c_bnfe.fn_is_extraction_neccesary(c_ln.logger, {
                         'extract-behaviour': current_session['extract-behaviour'],
                         'output-csv-file': current_session['output-csv-file'],
                     })

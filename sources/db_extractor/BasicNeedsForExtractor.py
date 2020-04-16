@@ -9,7 +9,7 @@ from pathlib import Path
 from db_extractor.BasicNeeds import BasicNeeds
 
 
-class ExtractorSpecificNeeds:
+class BasicNeedsForExtractor:
     lcl_bn = None
 
     def __init__(self):
