@@ -56,11 +56,17 @@ class BasicNeeds:
     @staticmethod
     def fn_get_file_statistics(file_to_evaluate):
         try:
-            file_content = open(file=file_to_evaluate, mode='r', encoding='utf-8').read().encode()
+            file_handler = open(file=file_to_evaluate, mode='r', encoding='mbcs')
         except UnicodeDecodeError:
-            file_content = open(file=file_to_evaluate, mode='r', encoding='mbcs').read().encode()
-        file_sha512 = hashlib.sha512(file_content).hexdigest()
-        file_content = None
+            file_handler = open(file=file_to_evaluate, mode='r', encoding='utf-8')
+        file_content = file_handler.read().encode()
+        file_handler.close()
+        file_checksums = {
+            'md5': hashlib.md5(file_content).hexdigest(),
+            'sha1': hashlib.sha1(file_content).hexdigest(),
+            'sha256': hashlib.sha256(file_content).hexdigest(),
+            'sha512': hashlib.sha512(file_content).hexdigest(),
+        }
         f_dts = {
             'created': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
             'modified': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
@@ -69,7 +75,9 @@ class BasicNeeds:
             'date when created': datetime.strftime(f_dts['created'], '%Y-%m-%d %H:%M:%S.%f'),
             'date when last modified': datetime.strftime(f_dts['modified'], '%Y-%m-%d %H:%M:%S.%f'),
             'size [bytes]': os.path.getsize(file_to_evaluate),
-            'SHA512-Checksum': file_sha512,
+            'MD5-Checksum': file_checksums['md5'],
+            'SHA256-Checksum': file_checksums['sha256'],
+            'SHA512-Checksum': file_checksums['sha512'],
         }
 
     def fn_load_configuration(self):
