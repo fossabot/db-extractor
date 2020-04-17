@@ -1,0 +1,221 @@
+
+{
+    "year": [
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CY",
+            "expected": "2020"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CY_1",
+            "expected": "2021"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CY_-1",
+            "expected": "2019"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYear",
+            "expected": "2020"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYear_1",
+            "expected": "2021"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYear_-1",
+            "expected": "2019"
+        }
+    ],
+    "month": [
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCM",
+            "expected": "202001"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCM_12",
+            "expected": "202101"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCM_-13",
+            "expected": "201812"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentMonth",
+            "expected": "202001"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentMonth_12",
+            "expected": "202101"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentMonth_-13",
+            "expected": "201812"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentMonth",
+            "expected": "01"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentMonth_12",
+            "expected": "01"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentMonth_-13",
+            "expected": "12"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CM",
+            "expected": "01"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CM_12",
+            "expected": "01"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CM_-13",
+            "expected": "12"
+        }
+    ],
+    "week": [
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCW",
+            "expected": "202005"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCW_12",
+            "expected": "202017"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCW_-13",
+            "expected": "201944"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentWeek",
+            "expected": "202005"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentWeek_12",
+            "expected": "202017"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentWeek_-13",
+            "expected": "201944"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentWeek",
+            "expected": "05"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentWeek_12",
+            "expected": "17"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentWeek_-13",
+            "expected": "44"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CW",
+            "expected": "05"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CW_12",
+            "expected": "17"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CW_-13",
+            "expected": "44"
+        }
+    ],
+    "day": [
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCMCD",
+            "expected": "20200131"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCMCD_12",
+            "expected": "20200212"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CYCMCD_-33",
+            "expected": "20191229"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentMonthCurrentDay",
+            "expected": "20200131"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentMonthCurrentDay_12",
+            "expected": "20200212"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentMonthCurrentDay_-33",
+            "expected": "20191229"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentDay",
+            "expected": "31"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentDay_12",
+            "expected": "12"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CurrentDay_-33",
+            "expected": "29"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CD",
+            "expected": "31"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CD_12",
+            "expected": "12"
+        },
+        {
+            "reference_date": "2020-01-31",
+            "expression": "CalculatedDate_CD_-33",
+            "expected": "29"
+        }
+    ]
+}
