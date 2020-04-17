@@ -1,3 +1,6 @@
+include samples/*.json
 include sources/db_extractor/*.json
 include sources/db_extractor/*.py
 include sources/*.py
+include test/*.json
+include test/*.py
