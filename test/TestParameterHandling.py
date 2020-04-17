@@ -5,7 +5,7 @@ import unittest
 
 class MyTestCase(unittest.TestCase):
 
-    def test_numbers_with_leading_zero(self):
+    def test_interpret_known_expression(self):
         bn = BasicNeeds()
         json_structure = bn.fn_open_file_and_get_content('expressions.json')
         pair_values = []
