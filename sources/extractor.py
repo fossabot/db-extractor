@@ -6,7 +6,8 @@ from codetiming import Timer
 # package to facilitate operating system operations
 import os
 # Custom classes specific to this package
-from db_extractor.BasicNeedsForExtractor import BasicNeeds, BasicNeedsForExtractor
+from db_extractor.BasicNeeds import BasicNeeds
+from db_extractor.BasicNeedsForExtractor import BasicNeedsForExtractor
 from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
 from db_extractor.LoggingNeeds import LoggingNeeds
 from db_extractor.DatabaseTalker import DatabaseTalker
@@ -26,7 +27,7 @@ if __name__ == '__main__':
     c_clam = CommandLineArgumentsManagement()
     parameters_in = c_clam.parse_arguments(c_bn.cfg_dtls['input_options']['db_extractor'])
     # checking inputs, if anything is invalid an exit(1) will take place
-    c_bn.fn_check_inputs(parameters_in, current_script_name)
+    c_bn.fn_check_inputs(parameters_in)
     # instantiate Extractor Specific Needs class
     c_bnfe = BasicNeedsForExtractor()
     # checking inputs, if anything is invalid an exit(1) will take place
@@ -113,8 +114,9 @@ if __name__ == '__main__':
                 for current_session in current_query['sessions']:
                     current_session['output-csv-file'] = \
                         c_ph.special_case_string(c_ln.logger, current_session['output-csv-file'])
-                    extraction_required = c_bnfe.fn_is_extraction_neccesary(c_ln.logger, {
-                        'extract-behaviour': current_session['extract-behaviour'],
+                    extract_behaviour = c_bnfe.fn_set_extract_behaviour(current_session)
+                    extraction_required = c_bnfe.fn_is_extraction_necessary(c_ln.logger, {
+                        'extract-behaviour': extract_behaviour,
                         'output-csv-file': current_session['output-csv-file'],
                     })
                     if extraction_required:
@@ -124,8 +126,11 @@ if __name__ == '__main__':
                         # measure expected number of parameters
                         parameters_expected = initial_query.count('%s')
                         # simulate final query to log (useful for debugging purposes)
-                        c_ph.simulate_final_query(c_ln.logger, t, initial_query,
-                                                  parameters_expected, tuple_parameters)
+                        query_to_run = c_ph.simulate_final_query(c_ln.logger, t, initial_query,
+                                                                 parameters_expected,
+                                                                 tuple_parameters)
+                        c_ln.logger.info('Query with parameters interpreted is: '
+                                         + c_bn.fn_multi_line_string_to_single_line(query_to_run))
                         # actual execution of the query
                         cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, initial_query,
                                                        parameters_expected, tuple_parameters)

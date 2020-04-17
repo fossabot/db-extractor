@@ -5,7 +5,7 @@ This file is ensuring proper package setup is performed to ensure all prerequisi
 and correct execution is possible
 """
 # package to handle files/folders and related metadata/operations
-import os.path
+import os
 # facilitate dependencies management
 from setuptools import setup, find_packages
 
@@ -60,5 +60,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='0.6.1',
+    version='0.6.2',
 )

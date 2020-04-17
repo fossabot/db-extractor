@@ -24,7 +24,21 @@ class BasicNeedsForExtractor:
                                              'file', 'extracting sequence file')
 
     @staticmethod
-    def fn_is_extraction_neccesary(local_logger, relevant_details):
+    def fn_set_extract_behaviour(in_session):
+        default_value = 'skip-if-output-file-exists'
+        allowed_values = [
+            'skip-if-output-file-exists',
+            'overwrite-if-output-file-exists',
+        ]
+        if ('extract-behaviour' not in in_session) \
+                or (in_session['extract-behaviour'] not in allowed_values):
+            value_to_return = default_value
+        else:
+            value_to_return = in_session['extract-behaviour']
+        return value_to_return
+
+    @staticmethod
+    def fn_is_extraction_necessary(local_logger, relevant_details):
         extraction_is_necessary = False
         local_logger.debug('Extract behaviour is set to ' + relevant_details['extract-behaviour'])
         if relevant_details['extract-behaviour'] == \

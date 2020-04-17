@@ -82,5 +82,3 @@ Use [bug_report.md](.github/ISSUE_TEMPLATE/bug_report.md)
 
 ## Build Status
 [![Build Status](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/build-status/master)
-
-

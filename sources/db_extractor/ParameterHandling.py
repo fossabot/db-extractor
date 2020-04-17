@@ -3,15 +3,15 @@ Class Parameter Handling
 
 Facilitates handling parameters values
 """
-from datetime import date
-# package to facilitate common operations
-from db_extractor.BasicNeeds import datetime, re, timedelta, BasicNeeds
+# package to handle date and times
+from datetime import date, datetime, timedelta
+# package regular expressions
+import re
 # package to allow year and/or month operations based on a reference date
 import datedelta
 
 
 class ParameterHandling:
-    lcl_bn = None
     known_expressions = {
         'year': ['CY', 'CurrentYear'],
         'month': ['CYCM', 'CurrentYearCurrentMonth'],
@@ -21,9 +21,6 @@ class ParameterHandling:
         'day': ['CYCMCD', 'CurrentYearCurrentMonthCurrentDay'],
         'just_day': ['CD', 'CurrentDay']
     }
-
-    def __init__(self):
-        self.lcl_bn = BasicNeeds()
 
     def build_parameters(self, local_logger, query_session_parameters, in_parameter_rules):
         local_logger.debug('Seen Parameters are: ' + str(query_session_parameters))
@@ -85,6 +82,14 @@ class ParameterHandling:
                 index_counter += 1
         return flat_values
 
+    @staticmethod
+    def get_week_number_as_two_digits_string(in_date):
+        week_iso_num = datetime.isocalendar(in_date)[1]
+        value_to_return = str(week_iso_num)
+        if week_iso_num < 10:
+            value_to_return = '0' + value_to_return
+        return value_to_return
+
     def handle_query_parameters(self, local_logger, given_session):
         tp = None
         if 'parameters' in given_session:
@@ -101,12 +106,11 @@ class ParameterHandling:
         finalized_date = ref_date
         if len(expression_parts) >= 3:
             finalized_date = self.calculate_date_deviation(ref_date, deviation, expression_parts)
-        week_iso_num = datetime.isocalendar(finalized_date)[1]
+        week_number_string = self.get_week_number_as_two_digits_string(finalized_date)
         if deviation_original == 'week':
-            final_string = str(datetime.isocalendar(finalized_date)[0]) \
-                           + self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
+            final_string = str(datetime.isocalendar(finalized_date)[0]) + week_number_string
         elif deviation_original == 'just_week':
-            final_string = self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
+            final_string = week_number_string
         else:
             standard_formats = {
                 'year': '%Y',
@@ -136,14 +140,13 @@ class ParameterHandling:
         if in_parameters_number > 0:
             try:
                 return_query = in_query % in_tp
-                local_logger.info('Query with parameters interpreted is: '
-                                  + self.lcl_bn.fn_multi_line_string_to_single_line(return_query))
             except TypeError as e:
                 local_logger.debug('Initial query expects ' + str(in_parameters_number)
                                    + ' parameters but only ' + str(len(in_tp))
                                    + ' parameters were provided!')
                 local_logger.error(e)
         timered.stop()
+        return return_query
 
     def special_case_string(self, local_logger, crt_parameter):
         resulted_parameter_value = crt_parameter
