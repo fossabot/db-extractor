@@ -14,9 +14,12 @@ class ParameterHandling:
     lcl_bn = None
     known_expressions = {
         'year': ['CY', 'CurrentYear'],
-        'month': ['CYCM', 'CM', 'CurrentYearCurrentMonth', 'CurrentMonth'],
-        'week': ['CYCW', 'CW', 'CurrentYearCurrentWeek', 'CurrentWeek'],
-        'day': ['CYCMCD', 'CD', 'CurrentYearCurrentMonthCurrentDay', 'CurrentDay']
+        'month': ['CYCM', 'CurrentYearCurrentMonth'],
+        'just_month': ['CM', 'CurrentMonth'],
+        'week': ['CYCW', 'CurrentYearCurrentWeek'],
+        'just_week': ['CW', 'CurrentWeek'],
+        'day': ['CYCMCD', 'CurrentYearCurrentMonthCurrentDay'],
+        'just_day': ['CD', 'CurrentDay']
     }
 
     def __init__(self):
@@ -40,15 +43,14 @@ class ParameterHandling:
     @staticmethod
     def calculate_date_deviation(in_date, deviation_type, expression_parts):
         final_date = in_date
-        if len(expression_parts) >= 3:
-            if deviation_type == 'year':
-                final_date = in_date + datedelta.datedelta(years=int(expression_parts[2]))
-            elif deviation_type == 'month':
-                final_date = in_date + datedelta.datedelta(months=int(expression_parts[2]))
-            elif deviation_type == 'week':
-                final_date = in_date + timedelta(weeks=int(expression_parts[2]))
-            elif deviation_type == 'day':
-                final_date = in_date + timedelta(days=int(expression_parts[2]))
+        if deviation_type == 'year':
+            final_date = in_date + datedelta.datedelta(years=int(expression_parts[2]))
+        elif deviation_type == 'month':
+            final_date = in_date + datedelta.datedelta(months=int(expression_parts[2]))
+        elif deviation_type == 'week':
+            final_date = in_date + timedelta(weeks=int(expression_parts[2]))
+        elif deviation_type == 'day':
+            final_date = in_date + timedelta(days=int(expression_parts[2]))
         return final_date
 
     def calculate_date_from_expression(self, local_logger, expression_parts):
@@ -92,41 +94,29 @@ class ParameterHandling:
             tp = self.build_parameters(local_logger, given_session['parameters'], parameter_rules)
         return tp
 
-    @staticmethod
-    def handle_prefix_for_date_format(date_expression, expected_prefixes, in_date):
-        prefix_for_date_format = ''
-        matching_rule_short = re.search(r'CY', date_expression)
-        matching_rule_long = re.search(r'CurrentYear', date_expression)
-        if matching_rule_short or matching_rule_long:
-            prefix_for_date_format = datetime.strftime(in_date, '%Y')
-        if expected_prefixes == 'CYCM':
-            matching_rule2_short = re.search(r'CM', date_expression)
-            matching_rule2_long = re.search(r'CurrentMonth', date_expression)
-            if matching_rule2_short or matching_rule2_long:
-                prefix_for_date_format += datetime.strftime(in_date, '%m')
-        return prefix_for_date_format
-
     def interpret_known_expression(self, ref_date, expression_parts):
-        final_string = ''
-        if expression_parts[1] in self.known_expressions['year']:
-            finalized_date = self.calculate_date_deviation(ref_date, 'year', expression_parts)
-            final_string = datetime.strftime(finalized_date, '%Y')
-        elif expression_parts[1] in self.known_expressions['month']:
-            finalized_date = self.calculate_date_deviation(ref_date, 'month', expression_parts)
-            final_string = self.handle_prefix_for_date_format(expression_parts[1], 'CY',
-                                                              finalized_date) \
-                           + datetime.strftime(finalized_date, '%m')
-        elif expression_parts[1] in self.known_expressions['week']:
-            finalized_date = self.calculate_date_deviation(ref_date, 'week', expression_parts)
-            week_iso_num = datetime.isocalendar(finalized_date)[1]
-            final_string = self.handle_prefix_for_date_format(expression_parts[1], 'CY',
-                                                              finalized_date) \
+        child_parent_expressions = self.get_child_parent_expressions()
+        deviation_original = child_parent_expressions.get(expression_parts[1])
+        deviation = deviation_original.replace('just_', '')
+        finalized_date = ref_date
+        if len(expression_parts) >= 3:
+            finalized_date = self.calculate_date_deviation(ref_date, deviation, expression_parts)
+        week_iso_num = datetime.isocalendar(finalized_date)[1]
+        if deviation_original == 'week':
+            final_string = str(datetime.isocalendar(finalized_date)[0]) \
                            + self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
-        elif expression_parts[1] in self.known_expressions['day']:
-            finalized_date = self.calculate_date_deviation(ref_date, 'day', expression_parts)
-            final_string = self.handle_prefix_for_date_format(expression_parts[1], 'CYCM',
-                                                              finalized_date) \
-                           + datetime.strftime(finalized_date, '%d')
+        elif deviation_original == 'just_week':
+            final_string = self.lcl_bn.fn_numbers_with_leading_zero(str(week_iso_num), 2)
+        else:
+            standard_formats = {
+                'year': '%Y',
+                'month': '%Y%m',
+                'just_month': '%m',
+                'day': '%Y%m%d',
+                'just_day': '%d',
+            }
+            target_format = standard_formats.get(deviation_original)
+            final_string = datetime.strftime(finalized_date, target_format)
         return final_string
 
     @staticmethod
