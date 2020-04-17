@@ -1,5 +1,6 @@
 include samples/*.json
-include sources/db_extractor/*.json
+include sources/common/*.py
+include sources/config/*.json
 include sources/db_extractor/*.py
 include sources/*.py
 include test/*.json

@@ -5,26 +5,29 @@ Facilitates moving files from a specified directory and matching pattern to a de
 from codetiming import Timer
 # package to facilitate operating system operations
 import os
+# common Custom classes
+from common.BasicNeeds import BasicNeeds
+from common.CommandLineArgumentsManagement import CommandLineArgumentsManagement
+from common.DataManipulator import DataManipulator
+from common.LoggingNeeds import LoggingNeeds
 # Custom classes specific to this package
-from db_extractor.BasicNeeds import BasicNeeds
 from db_extractor.BasicNeedsForExtractor import BasicNeedsForExtractor
-from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
-from db_extractor.LoggingNeeds import LoggingNeeds
 from db_extractor.DatabaseTalker import DatabaseTalker
 from db_extractor.ParameterHandling import ParameterHandling
-from db_extractor.DataManipulator import DataManipulator
-
 # get current script name
-current_script_name = os.path.basename(__file__).replace('.py', '')
+CURRENT_SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
 
 # main execution logic
 if __name__ == '__main__':
     # instantiate Basic Needs class
     c_bn = BasicNeeds()
     # load application configuration (inputs are defined into a json file)
-    c_bn.fn_load_configuration()
+    crt_folder = os.path.dirname(__file__)
+    configuration_file = os.path.join(crt_folder, 'config/db-extractor.json').replace('\\', '/')
+    c_bn.fn_load_configuration(configuration_file)
     # instantiate Command Line Arguments class
     c_clam = CommandLineArgumentsManagement()
+    # get command line parameter values
     parameters_in = c_clam.parse_arguments(c_bn.cfg_dtls['input_options']['db_extractor'])
     # checking inputs, if anything is invalid an exit(1) will take place
     c_bn.fn_check_inputs(parameters_in)

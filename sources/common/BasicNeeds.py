@@ -80,9 +80,8 @@ class BasicNeeds:
             'SHA512-Checksum': file_checksums['sha512'],
         }
 
-    def fn_load_configuration(self):
-        relevant_file = os.path.join(os.path.dirname(__file__), 'config.json')
-        self.cfg_dtls = self.fn_open_file_and_get_content(relevant_file)
+    def fn_load_configuration(self, in_configuration_file):
+        self.cfg_dtls = self.fn_open_file_and_get_content(in_configuration_file)
 
     @staticmethod
     def fn_multi_line_string_to_single_line(input_string):

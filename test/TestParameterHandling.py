@@ -1,4 +1,6 @@
-from sources.db_extractor.ParameterHandling import datetime, BasicNeeds, ParameterHandling
+from datetime import datetime
+from common.BasicNeeds import BasicNeeds
+from db_extractor.ParameterHandling import ParameterHandling
 # package to facilitate multiple operation system operations
 import unittest
 

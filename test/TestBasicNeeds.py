@@ -1,5 +1,5 @@
 import os
-from sources.db_extractor.BasicNeeds import BasicNeeds
+from common.BasicNeeds import BasicNeeds
 # package to facilitate multiple operation system operations
 import platform
 import unittest

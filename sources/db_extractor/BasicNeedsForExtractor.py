@@ -6,7 +6,7 @@ Handling specific needs for Extractor script
 # package to facilitate working with directories and files
 from pathlib import Path
 # package to facilitate common operations
-from db_extractor.BasicNeeds import BasicNeeds
+from common.BasicNeeds import BasicNeeds
 
 
 class BasicNeedsForExtractor:
