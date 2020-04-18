@@ -96,36 +96,32 @@ class BasicNeedsForExtractor:
                                                          mandatory_props_e)
         return is_valid
 
-    def validate_source_systems_file(self, local_logger, in_sequence, in_source_systems):
-        crt_item = in_sequence['server-vendor']
+    def validate_source_systems_file(self, local_logger, in_sequence, in_seq, in_source_systems):
         can_proceed_s = self.fn_validate_mandatory_properties(local_logger, 'Source Systems',
-                                                              in_source_systems, [crt_item])
+                                                              in_source_systems, [in_seq['vdr']])
         can_proceed_s1 = False
         if can_proceed_s:
-            item_checked = in_source_systems[crt_item]
-            crt_item1 = in_sequence['server-type']
+            item_checked = in_source_systems[in_seq['vdr']]
             can_proceed_s1 = self.fn_validate_mandatory_properties(local_logger, 'Source Systems "'
-                                                                   + crt_item + '"',
-                                                                   item_checked, [crt_item1])
+                                                                   + in_seq['vdr'] + '"',
+                                                                   item_checked, [in_seq['typ']])
         can_proceed_s2 = False
         if can_proceed_s1:
-            crt_item2 = in_sequence['server-group']
-            item_checked = in_source_systems[crt_item][crt_item1]['Server']
+            item_checked = in_source_systems[in_seq['vdr']][in_seq['typ']]['Server']
             can_proceed_s2 = self.fn_validate_mandatory_properties(local_logger, 'Source Systems "'
-                                                                   + crt_item
-                                                                   + '", "' + crt_item1
+                                                                   + in_seq['vdr']
+                                                                   + '", "' + in_seq['typ']
                                                                    + '", "Server" ',
-                                                                   item_checked, [crt_item2])
+                                                                   item_checked, [in_seq['grp']])
         can_proceed_s3 = False
         if can_proceed_s2:
-            crt_item3 = in_sequence['server-layer']
-            item_checked = in_source_systems[crt_item][crt_item1]['Server'][crt_item2]
+            item_checked = in_source_systems[in_seq['vdr']][in_seq['typ']]['Server'][in_seq['grp']]
             can_proceed_s3 = self.fn_validate_mandatory_properties(local_logger, 'Source Systems "'
-                                                                   + crt_item
-                                                                   + '", "' + crt_item1
-                                                                   + '", "' + crt_item2
+                                                                   + in_seq['vdr']
+                                                                   + '", "' + in_seq['typ']
+                                                                   + '", "' + in_seq['grp']
                                                                    + '", "Server" ',
-                                                                   item_checked, [crt_item3])
+                                                                   item_checked, [in_seq['lyr']])
         return can_proceed_s and can_proceed_s1 and can_proceed_s2 and can_proceed_s3
 
     def validate_source_system(self, local_logger, str_source_system, in_source_system):

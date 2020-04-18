@@ -84,9 +84,8 @@ if __name__ == '__main__':
     for crt_sequence in extracting_sequences:
         t.start()
         can_proceed_e = c_bnfe.validate_extraction_sequence(c_ln.logger, crt_sequence)
-        can_proceed_s = c_bnfe.validate_source_systems_file(c_ln.logger, crt_sequence,
-                                                            source_systems)
-        can_proceed_ss = False
+        srv = {}
+        can_proceed_s = False
         if can_proceed_e:
             # just few values that's going to be used a lot
             srv = {
@@ -95,6 +94,11 @@ if __name__ == '__main__':
                 'grp': crt_sequence['server-group'],
                 'lyr': crt_sequence['server-layer']
             }
+            can_proceed_s = c_bnfe.validate_source_systems_file(c_ln.logger, crt_sequence, srv,
+                                                                source_systems)
+        src_server = {}
+        can_proceed_ss = False
+        if can_proceed_e and can_proceed_s:
             # variable for source server details
             src_server = source_systems[srv['vdr']][srv['typ']]['Server'][srv['grp']][srv['lyr']]
             str_ss = '"' + '", "'.join(srv.values()) + '"'
