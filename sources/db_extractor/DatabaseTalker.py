@@ -19,7 +19,7 @@ class DatabaseTalker:
     conn = None
 
     @staticmethod
-    def append_additional_columns_to_data_frame(local_logger, timered, data_frame, session_details):
+    def append_additional_columns_to_df(local_logger, timered, data_frame, session_details):
         resulted_data_frame = data_frame
         if 'additional-columns' in session_details:
             timered.start()

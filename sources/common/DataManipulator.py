@@ -37,7 +37,7 @@ class DataManipulator:
                                + '", "'.join(extract_params['filter_values'].values()) \
                                + '"]'
         local_logger.debug('Query expression to apply is: ' + query_expression)
-        data_frame.query(query_expression, inplace = True)
+        data_frame.query(query_expression, inplace=True)
         timmer.stop()
         return data_frame
 
@@ -81,7 +81,7 @@ class DataManipulator:
             save_necessary = False
             for column_to_eliminate in working_dictionary['columns_to_eliminate']:
                 if column_to_eliminate in df:
-                    df.drop(columns = column_to_eliminate, inplace = True)
+                    df.drop(columns=column_to_eliminate, inplace=True)
                     save_necessary = True
             if save_necessary:
                 self.fn_store_data_frame_to_file(local_logger, timmer, df, current_file,
@@ -90,13 +90,13 @@ class DataManipulator:
     @staticmethod
     def fn_load_file_list_to_data_frame(local_logger, timmer, file_list, csv_delimiter):
         timmer.start()
-        combined_csv = pd.concat([pd.read_csv(filepath_or_buffer = current_file,
-                                              delimiter = csv_delimiter,
-                                              cache_dates = True,
-                                              index_col = None,
-                                              memory_map = True,
-                                              low_memory = False,
-                                              encoding = 'utf-8',
+        combined_csv = pd.concat([pd.read_csv(filepath_or_buffer=current_file,
+                                              delimiter=csv_delimiter,
+                                              cache_dates=True,
+                                              index_col=None,
+                                              memory_map=True,
+                                              low_memory=False,
+                                              encoding='utf-8',
                                               ) for current_file in file_list])
         local_logger.info('All relevant files were merged into a Pandas Data Frame')
         timmer.stop()
@@ -121,13 +121,14 @@ class DataManipulator:
         return resulted_files
 
     @staticmethod
-    def fn_store_data_frame_to_file(local_logger, timmer, input_data_frame,
-                                    destination_file_name, csv_delimiter):
+    def fn_store_data_frame_to_file(local_logger, timmer, input_data_frame, input_session):
         timmer.start()
-        input_data_frame.to_csv(path_or_buf = destination_file_name,
-                                sep = csv_delimiter,
-                                header = True,
-                                index = False,
-                                encoding = 'utf-8')
-        local_logger.info('Data frame has just been saved to file "' + destination_file_name + '"')
+        if input_session['output-file']['format'] == 'csv':
+            input_data_frame.to_csv(path_or_buf=input_session['output-file']['name'],
+                                    sep=input_session['output-file']['field-delimiter'],
+                                    header=True,
+                                    index=False,
+                                    encoding='utf-8')
+        local_logger.info('Data frame has just been saved to file "'
+                          + input_session['output-file']['name']['name'] + '"')
         timmer.stop()

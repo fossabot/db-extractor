@@ -17,10 +17,13 @@
                             }
                         ],
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
-                        "output-csv-file":                              "mysql-test.csv",
-                        "output-csv-separator":                         "|",
+                        "output-file": {
+                            "format":                                   "csv",
+                            "name":                                     "mysql-test.csv",
+                            "field-delimiter":                          "|"
+                        },
                         "parameters": {
-                            "Select Fields":                            [
+                            "Select Fields": [
                                 "*"
                             ],
                             "From":                                     "information_schema.COLLATIONS",
@@ -64,10 +67,13 @@
                             }
                         ],
                         "extract-behaviour":                            "skip-if-output-file-exists",
-                        "output-csv-file":                              "list-of-fields.csv",
-                        "output-csv-separator":                         ";",
+                        "output-file": {
+                            "format":                                   "csv",
+                            "name":                                     "mysql-test.csv",
+                            "field-delimiter":                          ";"
+                        },
                         "parameters": {
-                            "Select Fields":                            [
+                            "Select Fields": [
                                 "\"TABLE_NAME\"",
                                 "\"SCHEMA\""
                             ],

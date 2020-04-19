@@ -69,11 +69,22 @@ class BasicNeedsForExtractor:
             value_to_return = in_session['extract-behaviour']
         return value_to_return
 
+    def validate_extraction_query(self, local_logger, in_extraction_sequence):
+        mandatory_props_q = [
+            'input-query-file',
+            'sessions',
+        ]
+        is_valid = self.fn_validate_mandatory_properties(local_logger, 'Extraction Query',
+                                                         in_extraction_sequence,
+                                                         mandatory_props_q)
+        return is_valid
+
     @staticmethod
     def validate_extraction_sequence_file(local_logger, in_extract_sequence):
         is_valid = True
         if str(type(in_extract_sequence)) != "<class 'list'>":
-            local_logger.error('Extraction sequence file name is not a LIST, therefore cannot be used')
+            local_logger.error('Extraction sequence file name is not a LIST, '
+                               + 'therefore cannot be used')
             is_valid = False
         elif len(in_extract_sequence) < 1:
             local_logger.error('Extraction sequence file name is a LIST '
@@ -96,7 +107,27 @@ class BasicNeedsForExtractor:
                                                          mandatory_props_e)
         return is_valid
 
-    def validate_source_systems_file(self, local_logger, in_sequence, in_seq, in_source_systems):
+    def validate_query_session(self, local_logger, str_source_system, in_source_system):
+        mandatory_properties = [
+            'output-file',
+            'ServerPort',
+        ]
+        is_valid = self.fn_validate_mandatory_properties(local_logger,
+                                                         'Source System ' + str_source_system,
+                                                         in_source_system, mandatory_properties)
+        return is_valid
+
+    def validate_source_system(self, local_logger, str_source_system, in_source_system):
+        mandatory_properties = [
+            'ServerName',
+            'ServerPort',
+        ]
+        is_valid = self.fn_validate_mandatory_properties(local_logger,
+                                                         'Source System ' + str_source_system,
+                                                         in_source_system, mandatory_properties)
+        return is_valid
+
+    def validate_source_systems_file(self, local_logger, in_seq, in_source_systems):
         can_proceed_s = self.fn_validate_mandatory_properties(local_logger, 'Source Systems',
                                                               in_source_systems, [in_seq['vdr']])
         can_proceed_s1 = False
@@ -124,12 +155,50 @@ class BasicNeedsForExtractor:
                                                                    item_checked, [in_seq['lyr']])
         return can_proceed_s and can_proceed_s1 and can_proceed_s2 and can_proceed_s3
 
-    def validate_source_system(self, local_logger, str_source_system, in_source_system):
+    def validate_user_secrets(self, local_logger, str_user_secrets, in_user_secrets):
         mandatory_properties = [
-            'ServerName',
-            'ServerPort',
+            'Name',
+            'Username',
+            'Password',
         ]
         is_valid = self.fn_validate_mandatory_properties(local_logger,
-                                                         'Source System ' + str_source_system,
-                                                         in_source_system, mandatory_properties)
+                                                         'User Secrets ' + str_user_secrets,
+                                                         in_user_secrets, mandatory_properties)
+        if in_user_secrets['Name'] in ('login', 'Your Full Name Here'):
+            local_logger.warning(f'For {str_user_secrets} your "Name" has the default value: "'
+                                 + in_user_secrets['Name'] + '" which is unusual')
+        if in_user_secrets['Username'] in ('usrnme', 'your_username_goes_here'):
+            local_logger.warning(f'For {str_user_secrets} your "Username" has the default value: "'
+                                 + in_user_secrets['Username'] + '" which is unusual')
+        if in_user_secrets['Password'] in ('pwd', 'your_password_goes_here'):
+            local_logger.warning(f'For {str_user_secrets} your "Password" has the default value: "'
+                                 + in_user_secrets['Password'] + '" which is unusual')
         return is_valid
+
+    def validate_user_secrets_file(self, local_logger, in_seq, in_user_secrets):
+        can_proceed_u = self.fn_validate_mandatory_properties(local_logger, 'User Secrets',
+                                                              in_user_secrets, [in_seq['vdr']])
+        can_proceed_u1 = False
+        if can_proceed_u:
+            item_checked = in_user_secrets[in_seq['vdr']]
+            can_proceed_u1 = self.fn_validate_mandatory_properties(local_logger, 'User Secrets "'
+                                                                   + in_seq['vdr'] + '"',
+                                                                   item_checked, [in_seq['typ']])
+        can_proceed_u2 = False
+        if can_proceed_u1:
+            item_checked = in_user_secrets[in_seq['vdr']][in_seq['typ']]
+            can_proceed_u2 = self.fn_validate_mandatory_properties(local_logger, 'User Secrets "'
+                                                                   + in_seq['vdr']
+                                                                   + '", "' + in_seq['typ']
+                                                                   + '", "Server" ',
+                                                                   item_checked, [in_seq['grp']])
+        can_proceed_u3 = False
+        if can_proceed_u2:
+            item_checked = in_user_secrets[in_seq['vdr']][in_seq['typ']][in_seq['grp']]
+            can_proceed_u3 = self.fn_validate_mandatory_properties(local_logger, 'User Secrets "'
+                                                                   + in_seq['vdr']
+                                                                   + '", "' + in_seq['typ']
+                                                                   + '", "' + in_seq['grp']
+                                                                   + '", "Server" ',
+                                                                   item_checked, [in_seq['lyr']])
+        return can_proceed_u and can_proceed_u1 and can_proceed_u2 and can_proceed_u3

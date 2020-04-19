@@ -65,6 +65,17 @@ class ParameterHandling:
             exit(1)
         return final_string
 
+    def eval_expression(self, local_logger, crt_parameter):
+        value_to_return = crt_parameter
+        reg_ex = re.search(r'(CalculatedDate\_[A-Za-z]{2,62}\_*(-*)[0-9]{0,2})', crt_parameter)
+        if reg_ex:
+            parameter_value_parts = reg_ex.group().split('_')
+            calculated = self.calculate_date_from_expression(local_logger, parameter_value_parts)
+            value_to_return = re.sub(reg_ex.group(), calculated, crt_parameter)
+            local_logger.debug('Current Parameter is STR and has been re-interpreted as value: '
+                               + str(value_to_return))
+        return value_to_return
+
     def get_child_parent_expressions(self):
         child_parent_values = {}
         for current_expression_group in self.known_expressions.items():
@@ -148,20 +159,6 @@ class ParameterHandling:
         timered.stop()
         return return_query
 
-    def special_case_string(self, local_logger, crt_parameter):
-        resulted_parameter_value = crt_parameter
-        matching_rule = re.search(r'(CalculatedDate\_[A-Za-z]{2,62}\_*(-*)[0-9]{0,2})', crt_parameter)
-        if matching_rule:
-            parameter_value_parts = matching_rule.group().split('_')
-            calculated_parameter_value = self.calculate_date_from_expression(local_logger,
-                                                                             parameter_value_parts)
-            resulted_parameter_value = re.sub(matching_rule.group(), calculated_parameter_value,
-                                              crt_parameter)
-            local_logger.debug('Current Parameter is STR '
-                               + 'and has been re-interpreted as value: '
-                               + str(resulted_parameter_value))
-        return resulted_parameter_value
-
     def stringify_parameters(self, local_logger, tuple_parameters, given_parameter_rules):
         working_list = []
         for ndx, crt_parameter in enumerate(tuple_parameters):
@@ -169,7 +166,7 @@ class ParameterHandling:
             working_list.append(ndx)
             if current_parameter_type == "<class 'str'>":
                 local_logger.debug('Current Parameter is STR and has the value: ' + crt_parameter)
-                working_list[ndx] = self.special_case_string(local_logger, crt_parameter)
+                working_list[ndx] = self.eval_expression(local_logger, crt_parameter)
             elif current_parameter_type in ("<class 'list'>", "<class 'dict'>"):
                 prefix = current_parameter_type.replace("<class '", '').replace("'>", '')
                 local_logger.debug('Current Parameter is ' + prefix.upper()
