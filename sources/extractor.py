@@ -153,10 +153,14 @@ if __name__ == '__main__':
                                     crt_session['output-file']['field-delimiter'] = \
                                         crt_session['output-csv-separator']
                             # conversion logic for legacy extraction sequence files - FINISH
+                            # setting the start of the week as 1 which stands for Monday
+                            if 'start_isoweekday' not in crt_session:
+                                crt_session['start_isoweekday'] = 1
+                            wday_start = crt_session['start_isoweekday']
                             # TODO: validating session is required
                             crt_session['output-file']['name'] = \
                                 c_ph.eval_expression(c_ln.logger,
-                                                     crt_session['output-file']['name'])
+                                                     crt_session['output-file']['name'], wday_start)
                             extract_behaviour = c_bnfe.fn_set_extract_behaviour(crt_session)
                             extraction_required = c_bnfe.fn_is_extraction_necessary(c_ln.logger, {
                                 'extract-behaviour': extract_behaviour,
@@ -165,19 +169,20 @@ if __name__ == '__main__':
                             if extraction_required:
                                 # get query parameters into a tuple
                                 tuple_parameters = c_ph.handle_query_parameters(c_ln.logger,
-                                                                                crt_session)
+                                                                                crt_session,
+                                                                                wday_start)
                                 # measure expected number of parameters
-                                parameters_expected = initial_query.count('%s')
+                                expected_number_of_parameters = initial_query.count('%s')
                                 # simulate final query to log (useful for debugging purposes)
                                 query = c_ph.simulate_final_query(c_ln.logger, t, initial_query,
-                                                                  parameters_expected,
+                                                                  expected_number_of_parameters,
                                                                   tuple_parameters)
                                 c_ln.logger.info('Query with parameters interpreted is: '
                                                  + c_bn.fn_multi_line_string_to_single_line(query))
                                 # actual execution of the query
                                 cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor,
                                                                initial_query,
-                                                               parameters_expected,
+                                                               expected_number_of_parameters,
                                                                tuple_parameters)
                                 # bringing the information from server (data transfer)
                                 result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
