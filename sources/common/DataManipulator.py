@@ -130,5 +130,5 @@ class DataManipulator:
                                     index=False,
                                     encoding='utf-8')
         local_logger.info('Data frame has just been saved to file "'
-                          + input_session['output-file']['name']['name'] + '"')
+                          + input_session['output-file']['name'] + '"')
         timmer.stop()

@@ -1,5 +1,45 @@
 [
     {
+        "server-vendor":                                                "MariaDB Foundation",
+        "server-type":                                                  "MariaDB",
+        "server-group":                                                 "Your Company Server Group Name",
+        "server-layer":                                                 "Local",
+        "account-label":                                                "Default",
+        "queries": [
+            {
+                "input-query-file":                                     "generic_query.sql",
+                "sessions": [
+                    {
+                        "extract-behaviour":                            "overwrite-if-output-file-exists",
+                        "output-file": {
+                            "format":                                   "csv",
+                            "name":                                     "mariadb-test.csv",
+                            "field-delimiter":                          ","
+                        },
+                        "parameters": {
+                            "Select Fields": [
+                                "*"
+                            ],
+                            "From":                                     "information_schema.COLLATIONS",
+                            "Filter Field":                             "CHARACTER_SET_NAME",
+                            "Filter Values": {
+                                "UTF-8 Unicode":                        "utf8mb4"
+                            }
+                        },
+                        "parameters-handling-rules": {
+                            "dict-values-glue":                         "', '",
+                            "dict-values-prefix":                       "IN ('",
+                            "dict-values-suffix":                       "')",
+                            "list-values-glue":                         ", ",
+                            "list-values-prefix":                       "",
+                            "list-values-suffix":                       ""
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "server-vendor":                                                "Oracle",
         "server-type":                                                  "MySQL",
         "server-group":                                                 "Your Company Server Group Name",
@@ -69,7 +109,7 @@
                         "extract-behaviour":                            "skip-if-output-file-exists",
                         "output-file": {
                             "format":                                   "csv",
-                            "name":                                     "mysql-test.csv",
+                            "name":                                     "hana-test.csv",
                             "field-delimiter":                          ";"
                         },
                         "parameters": {

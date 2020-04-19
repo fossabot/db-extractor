@@ -43,7 +43,8 @@ class DatabaseTalker:
                           + ' (' + connection_details['Name'] + ')')
         if connection_details['server-vendor-and-type'] == 'SAP HANA':
             self.connect_to_database_hana(local_logger, connection_details)
-        elif connection_details['server-vendor-and-type'] == 'Oracle MySQL':
+        elif connection_details['server-vendor-and-type'] in ('MariaDB Foundation MariaDB',
+                                                              'Oracle MySQL'):
             self.connect_to_database_mysql(local_logger, connection_details)
         timered.stop()
 
@@ -78,7 +79,7 @@ class DatabaseTalker:
                 autocommit=True,
                 use_unicode=True,
                 charset='utf8mb4',
-                collation='utf8mb4_0900_ai_ci',
+                collation='utf8mb4_unicode_ci',
                 get_warnings=True,
             )
             local_logger.info('Connecting to  ' + connection_details['server-vendor-and-type']

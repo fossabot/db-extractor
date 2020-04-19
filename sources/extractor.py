@@ -115,7 +115,7 @@ if __name__ == '__main__':
         t.stop()
         if can_proceed_e and can_proceed_s and can_proceed_ss and can_proceed_u and can_proceed_uu:
             server_vendor_and_type = srv['vdr'] + ' ' + srv['typ']
-            if server_vendor_and_type in ('Oracle MySQL', 'SAP HANA'):
+            if server_vendor_and_type in ('MariaDB Foundation MariaDB', 'Oracle MySQL', 'SAP HANA'):
                 c_dbtkr.connect_to_database(c_ln.logger, t, {
                     'server-vendor-and-type': server_vendor_and_type,
                     'server-layer': srv['lyr'],
@@ -154,12 +154,13 @@ if __name__ == '__main__':
                                         crt_session['output-csv-separator']
                             # conversion logic for legacy extraction sequence files - FINISH
                             # TODO: validating session is required
-                            crt_session['output-csv-file'] = \
-                                c_ph.eval_expression(c_ln.logger, crt_session['output-csv-file'])
+                            crt_session['output-file']['name'] = \
+                                c_ph.eval_expression(c_ln.logger,
+                                                     crt_session['output-file']['name'])
                             extract_behaviour = c_bnfe.fn_set_extract_behaviour(crt_session)
                             extraction_required = c_bnfe.fn_is_extraction_necessary(c_ln.logger, {
                                 'extract-behaviour': extract_behaviour,
-                                'output-csv-file': crt_session['output-csv-file'],
+                                'output-csv-file': crt_session['output-file']['name'],
                             })
                             if extraction_required:
                                 # get query parameters into a tuple
