@@ -14,7 +14,6 @@ from common.LoggingNeeds import LoggingNeeds
 from db_extractor.BasicNeedsForExtractor import BasicNeedsForExtractor
 from db_extractor.DatabaseTalker import DatabaseTalker
 from db_extractor.ParameterHandling import ParameterHandling
-
 # get current script name
 CURRENT_SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
 
@@ -154,10 +153,25 @@ if __name__ == '__main__':
                                         crt_session['output-csv-separator']
                             # conversion logic for legacy extraction sequence files - FINISH
                             # setting the start of the week as 1 which stands for Monday
-                            if 'start_isoweekday' not in crt_session:
-                                crt_session['start_isoweekday'] = 1
-                            wday_start = crt_session['start_isoweekday']
-                            # TODO: validating session is required
+                            if 'start-isoweekday' not in crt_session:
+                                crt_session['start-isoweekday'] = 1
+                                if 'start_isoweekday' in crt_session:
+                                    crt_session['start-isoweekday'] = \
+                                        crt_session['start_isoweekday']
+                            wday_start = crt_session['start-isoweekday']
+                            if 'parameters' in crt_session:
+                                # assumption is for either DICT or LIST values are numeric
+                                # in case text is given different rules have to be specified
+                                if 'parameters-handling-rules' not in crt_session:
+                                    crt_session['parameters-handling-rules'] = {
+                                        "dict-values-glue":                         ", ",
+                                        "dict-values-prefix":                       "IN (",
+                                        "dict-values-suffix":                       ")",
+                                        "list-values-glue":                         ", ",
+                                        "list-values-prefix":                       "",
+                                        "list-values-suffix":                       ""
+                                    }
+                            can_proceed_ses = c_bnfe.validate_query_session(c_ln.logger)
                             crt_session['output-file']['name'] = \
                                 c_ph.eval_expression(c_ln.logger,
                                                      crt_session['output-file']['name'], wday_start)

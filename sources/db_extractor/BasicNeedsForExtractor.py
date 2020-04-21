@@ -107,14 +107,14 @@ class BasicNeedsForExtractor:
                                                          mandatory_props_e)
         return is_valid
 
-    def validate_query_session(self, local_logger, str_source_system, in_source_system):
+    def validate_query_session(self, local_logger, str_query_session, in_session):
         mandatory_properties = [
+            'extract-behaviour',
             'output-file',
-            'ServerPort',
         ]
         is_valid = self.fn_validate_mandatory_properties(local_logger,
-                                                         'Source System ' + str_source_system,
-                                                         in_source_system, mandatory_properties)
+                                                         'Query Session ' + str_query_session,
+                                                         in_session, mandatory_properties)
         return is_valid
 
     def validate_source_system(self, local_logger, str_source_system, in_source_system):
