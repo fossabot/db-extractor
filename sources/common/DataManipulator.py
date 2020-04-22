@@ -1,20 +1,53 @@
 """
 Data Manipulation class
 """
-# package to facilitate operating system operations
-import os
-# package to facilitate os path manipulations
-import pathlib
+# package to handle date and times
+from datetime import timedelta
 # package facilitating Data Frames manipulation
 import pandas as pd
-# package regular expressions
-import re
 
 
 class DataManipulator:
 
     @staticmethod
-    def fn_apply_query_to_data_frame(local_logger, timmer, data_frame, extract_params):
+    def fn_add_days_within_column_to_data_frame(input_data_frame, dict_expression):
+        input_data_frame['Days Within'] = input_data_frame[dict_expression['End Date']] - \
+                                          input_data_frame[dict_expression['Start Date']] + \
+                                          timedelta(days=1)
+        input_data_frame['Days Within'] = input_data_frame['Days Within'] \
+            .apply(lambda x: int(str(x).replace(' days 00:00:00', '')))
+        return input_data_frame
+
+    @staticmethod
+    def fn_add_minimum_and_maximum_columns_to_data_frame(input_data_frame, dict_expression):
+        grouped_df = input_data_frame.groupby(dict_expression['group_by']) \
+            .agg({dict_expression['calculation']: ['min', 'max']})
+        grouped_df.columns = ['_'.join(col).strip() for col in grouped_df.columns.values]
+        grouped_df = grouped_df.reset_index()
+        if 'map' in dict_expression:
+            grouped_df.rename(columns=dict_expression['map'], inplace=True)
+        return grouped_df
+
+    @staticmethod
+    def fn_add_timeline_evaluation_column_to_data_frame(in_df, dict_expression):
+        ref_date = dict_expression['Reference Date']
+        in_df['P'] = in_df[dict_expression['Start Date']].le(ref_date)
+        in_df['F'] = in_df[dict_expression['End Date']].ge(ref_date)
+        in_df['Timeline Evaluation'] = in_df[['P', 'F']] \
+            .apply(lambda r: 'Current' if r['P'] and r['F'] else 'Past' if r['P'] else 'Future',
+                   axis = 1)
+        in_df.drop(columns=['P', 'F'], inplace=True)
+        return in_df
+
+    @staticmethod
+    def fn_add_weekday_columns_to_data_frame(input_data_frame, columns_list):
+        for current_column in columns_list:
+            input_data_frame['Weekday for ' + current_column] = input_data_frame[current_column] \
+                .apply(lambda x: x.strftime('%A'))
+        return input_data_frame
+
+    @staticmethod
+    def fn_apply_query_to_data_frame(local_logger, timmer, input_data_frame, extract_params):
         timmer.start()
         query_expression = ''
         if extract_params['filter_to_apply'] == 'equal':
@@ -37,41 +70,16 @@ class DataManipulator:
                                + '", "'.join(extract_params['filter_values'].values()) \
                                + '"]'
         local_logger.debug('Query expression to apply is: ' + query_expression)
-        data_frame.query(query_expression, inplace=True)
+        input_data_frame.query(query_expression, inplace=True)
         timmer.stop()
-        return data_frame
-
-    def build_file_list(self, local_logger, timmer, given_input_file):
-        if re.search(r'(\*|\?)*', given_input_file):
-            local_logger.debug('Files pattern has been provided')
-            parent_directory = os.path.dirname(given_input_file)
-            # loading from a specific folder all files matching a given pattern into a file list
-            relevant_files_list = self.fn_build_relevant_file_list(local_logger, timmer,
-                                                                   parent_directory,
-                                                                   given_input_file)
-        else:
-            local_logger.debug('Specific file has been provided')
-            relevant_files_list = [given_input_file]
-        return relevant_files_list
+        return input_data_frame
 
     @staticmethod
-    def fn_build_relevant_file_list(local_logger, timmer, in_folder, matching_pattern):
-        timmer.start()
-        local_logger.info('Will list all files within ' + in_folder
-                          + ' folder looking for ' + matching_pattern + ' as matching pattern')
-        list_files = []
-        file_counter = 0
-        if os.path.isdir(in_folder):
-            working_path = pathlib.Path(in_folder)
-            for current_file in working_path.iterdir():
-                if current_file.is_file() and current_file.match(matching_pattern):
-                    list_files.append(file_counter)
-                    list_files[file_counter] = str(current_file.absolute())
-                    file_counter = file_counter + 1
-        local_logger.info('Relevant CSV files from ' + in_folder + ' folder were identified!')
-        local_logger.info(list_files)
-        timmer.stop()
-        return list_files
+    def fn_convert_columns_to_datetime(input_data_frame, columns_list, columns_format):
+        for current_column in columns_list:
+            input_data_frame[current_column] = pd.to_datetime(input_data_frame[current_column],
+                                                              format=columns_format)
+        return input_data_frame
 
     def fn_drop_certain_columns(self, local_logger, timmer, working_dictionary):
         for current_file in working_dictionary['files']:
@@ -86,6 +94,24 @@ class DataManipulator:
             if save_necessary:
                 self.fn_store_data_frame_to_file(local_logger, timmer, df, current_file,
                                                  working_dictionary['csv_field_separator'])
+
+    @staticmethod
+    def fn_filter_data_frame_by_index(local_logger, in_data_frame, filter_rule):
+        index_current = in_data_frame.query('`Timeline Evaluation` == "Current"', inplace=False)
+        local_logger.info('Current index has been determined to be ' + str(index_current.index))
+        if 'Deviation' in filter_rule:
+            for deviation_type in filter_rule['Deviation']:
+                deviation_number = filter_rule['Deviation'][deviation_type]
+                if deviation_type == 'Lower':
+                    index_to_apply = index_current.index - deviation_number
+                    in_data_frame = in_data_frame[in_data_frame.index >= index_to_apply[0]]
+                elif deviation_type == 'Upper':
+                    index_to_apply = index_current.index + deviation_number
+                    in_data_frame = in_data_frame[in_data_frame.index <= index_to_apply[0]]
+                local_logger.info(deviation_type + ' Deviation Number is ' + str(deviation_number)
+                                  + ' to be applied to Current index, became '
+                                  + str(index_to_apply))
+        return in_data_frame
 
     @staticmethod
     def fn_load_file_list_to_data_frame(local_logger, timmer, file_list, csv_delimiter):
@@ -103,32 +129,14 @@ class DataManipulator:
         return combined_csv
 
     @staticmethod
-    def fn_move_files(local_logger, timmer, source_folder, file_names, destination_folder):
+    def fn_store_data_frame_to_file(local_logger, timmer, input_data_frame, input_file_details):
         timmer.start()
-        resulted_files = []
-        for current_file in file_names:
-            new_file_name = current_file.replace(source_folder, destination_folder)
-            if new_file_name.is_file():
-                os.replace(current_file, new_file_name)
-                local_logger.info('File ' + current_file
-                                  + ' has just been been overwritten  as ' + new_file_name)
-            else:
-                os.rename(current_file, new_file_name)
-                local_logger.info('File ' + current_file
-                                  + ' has just been renamed as ' + new_file_name)
-            resulted_files.append(new_file_name)
-        timmer.stop()
-        return resulted_files
-
-    @staticmethod
-    def fn_store_data_frame_to_file(local_logger, timmer, input_data_frame, input_session):
-        timmer.start()
-        if input_session['output-file']['format'] == 'csv':
-            input_data_frame.to_csv(path_or_buf=input_session['output-file']['name'],
-                                    sep=input_session['output-file']['field-delimiter'],
+        if input_file_details['format'] == 'csv':
+            input_data_frame.to_csv(path_or_buf=input_file_details['name'],
+                                    sep=input_file_details['field-delimiter'],
                                     header=True,
                                     index=False,
                                     encoding='utf-8')
         local_logger.info('Data frame has just been saved to file "'
-                          + input_session['output-file']['name'] + '"')
+                          + input_file_details['name'] + '"')
         timmer.stop()
