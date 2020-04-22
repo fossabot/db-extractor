@@ -26,6 +26,8 @@ class DatabaseTalker:
             for crt_column in session_details['additional-columns']:
                 if crt_column['value'] == 'utcnow': # special case
                     resulted_data_frame[crt_column['name']] = datetime.utcnow()
+                elif crt_column['value'] == 'now': # special case
+                    resulted_data_frame[crt_column['name']] = datetime.now()
                 else:
                     resulted_data_frame[crt_column['name']] = crt_column['value']
             local_logger.info('Additional column(s) have been added to Pandas DataFrame')
