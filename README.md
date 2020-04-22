@@ -3,7 +3,7 @@
 
 ## What is this repository for?
 
-Extract information from databases (MySQL, SAP HANA to start with, other will be implemented later) using a combination of:
+Extract information from databases (MySQL, MariaDB, SAP HANA to start with, other will be implemented later) using a combination of:
 * extraction sequences file (JSON format) that is easy enough to create and maintain but also provide very complex features to be set;
 * source system file (JSON format) to keep a central list of servers and/or databases to connect to that can be shared between people;
 * user settings file (JSON format) to keep a central list of credentials that is not to be shared with anyone or maybe with a small group of people; 
