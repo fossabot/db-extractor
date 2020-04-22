@@ -28,9 +28,9 @@ class ParameterHandling:
         parameters_type = type(query_session_parameters)
         local_logger.debug('Parameters type is ' + str(parameters_type))
         tp = None
-        if str(parameters_type) == "<class 'dict'>":
+        if parameters_type == dict:
             tp = tuple(query_session_parameters.values())
-        elif str(parameters_type) == "<class 'list'>":
+        elif parameters_type == list:
             tp = tuple(query_session_parameters)
         else:
             local_logger.error('Unknown parameter type (expected either Dictionary or List)')
@@ -170,14 +170,14 @@ class ParameterHandling:
                              in_start_isoweekday):
         working_list = []
         for ndx, crt_parameter in enumerate(tuple_parameters):
-            current_parameter_type = str(type(crt_parameter))
+            current_parameter_type = type(crt_parameter)
             working_list.append(ndx)
-            if current_parameter_type == "<class 'str'>":
+            if current_parameter_type == str:
                 local_logger.debug('Current Parameter is STR and has the value: ' + crt_parameter)
                 working_list[ndx] = self.eval_expression(local_logger, crt_parameter,
                                                          in_start_isoweekday)
-            elif current_parameter_type in ("<class 'list'>", "<class 'dict'>"):
-                prefix = current_parameter_type.replace("<class '", '').replace("'>", '')
+            elif current_parameter_type in (list, dict):
+                prefix = str(current_parameter_type).replace("<class '", '').replace("'>", '')
                 local_logger.debug('Current Parameter is ' + prefix.upper()
                                    + ' and has the value: ' + str(crt_parameter))
                 working_list[ndx] = self.manage_parameter_value(prefix.lower(), crt_parameter,
