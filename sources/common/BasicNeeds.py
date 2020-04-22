@@ -5,10 +5,6 @@ This library has functions useful to keep main logic short and simple
 """
 # package to handle date and times
 from datetime import datetime, timedelta
-# package to use for checksum calculations (in this file)
-import hashlib
-# package to handle json files
-import json
 # package to handle files/folders and related metadata/operations
 import os
 # package regular expressions
@@ -16,7 +12,6 @@ import re
 
 
 class BasicNeeds:
-    cfg_dtls = {}
 
     def fn_check_inputs(self, input_parameters):
         if input_parameters.output_log_file is not None:
@@ -35,54 +30,6 @@ class BasicNeeds:
                                       + 'for complete logged details please check '
                                       + log_file_name)
 
-    def fn_get_file_content(self, in_file_handler, in_content_type):
-        if in_content_type == 'json':
-            try:
-                json_interpreted_details = json.load(in_file_handler)
-                self.fn_timestamped_print('I have interpreted JSON structure from given file')
-                return json_interpreted_details
-            except Exception as e:
-                self.fn_timestamped_print('Error encountered when trying to interpret JSON')
-                print(e)
-        elif in_content_type == 'raw':
-            raw_interpreted_file = in_file_handler.read()
-            self.fn_timestamped_print('I have read file entire content')
-            return raw_interpreted_file
-        else:
-            self.fn_timestamped_print('Unknown content type provided, '
-                                      + 'expected either "json" or "raw" but got '
-                                      + in_content_type)
-
-    @staticmethod
-    def fn_get_file_statistics(file_to_evaluate):
-        try:
-            file_handler = open(file=file_to_evaluate, mode='r', encoding='mbcs')
-        except UnicodeDecodeError:
-            file_handler = open(file=file_to_evaluate, mode='r', encoding='utf-8')
-        file_content = file_handler.read().encode()
-        file_handler.close()
-        file_checksums = {
-            'md5': hashlib.md5(file_content).hexdigest(),
-            'sha1': hashlib.sha1(file_content).hexdigest(),
-            'sha256': hashlib.sha256(file_content).hexdigest(),
-            'sha512': hashlib.sha512(file_content).hexdigest(),
-        }
-        f_dts = {
-            'created': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
-            'modified': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
-        }
-        return {
-            'date when created': datetime.strftime(f_dts['created'], '%Y-%m-%d %H:%M:%S.%f'),
-            'date when last modified': datetime.strftime(f_dts['modified'], '%Y-%m-%d %H:%M:%S.%f'),
-            'size [bytes]': os.path.getsize(file_to_evaluate),
-            'MD5-Checksum': file_checksums['md5'],
-            'SHA256-Checksum': file_checksums['sha256'],
-            'SHA512-Checksum': file_checksums['sha512'],
-        }
-
-    def fn_load_configuration(self, in_configuration_file):
-        self.cfg_dtls = self.fn_open_file_and_get_content(in_configuration_file)
-
     @staticmethod
     def fn_multi_line_string_to_single_line(input_string):
         string_to_return = input_string.replace('\n', ' ').replace('\r', ' ')
@@ -95,30 +42,9 @@ class BasicNeeds:
             final_number = '0' * (digits - len(input_number_as_string)) + input_number_as_string
         return final_number
 
-    def fn_open_file_and_get_content(self, input_file, content_type='json'):
-        if os.path.isfile(input_file):
-            with open(input_file, 'r') as file_handler:
-                self.fn_timestamped_print('I have opened file: ' + input_file)
-                return self.fn_get_file_content(file_handler, content_type)
-        else:
-            self.fn_timestamped_print('Given file ' + input_file
-                                      + ' does not exist, please check your inputs!')
-
     def fn_optional_print(self, boolean_variable, string_to_print):
         if boolean_variable:
             self.fn_timestamped_print(string_to_print)
-
-    def fn_store_file_statistics(self, local_logger, timmer, file_name, file_meaning):
-        timmer.start()
-        file_name_variable_type = str(type(file_name))
-        list_file_names = [file_name]
-        if file_name_variable_type == "<class 'list'>":
-            list_file_names = file_name
-        for current_file_name in list_file_names:
-            local_logger.info(file_meaning + ' file "' + current_file_name
-                              + '" has the following characteristics: '
-                              + str(self.fn_get_file_statistics(current_file_name)))
-        timmer.stop()
 
     @staticmethod
     def fn_timestamped_print(string_to_print):
