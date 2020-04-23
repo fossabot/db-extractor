@@ -2,7 +2,6 @@
 Testing key methods from Parameter Handling class
 """
 from datetime import datetime
-from sources.common.BasicNeeds import BasicNeeds
 from sources.common.FileOperations import FileOperations
 from sources.db_extractor.ParameterHandling import ParameterHandling
 import unittest
@@ -12,7 +11,6 @@ class TestParameterHandling(unittest.TestCase):
 
     def test_interpret_known_expression(self):
         fo = FileOperations()
-        bn = BasicNeeds()
         # load testing values from JSON file
         # where all cases are grouped
         json_structure = fo.fn_open_file_and_get_content('expressions.json')
