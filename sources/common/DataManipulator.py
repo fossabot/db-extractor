@@ -32,34 +32,52 @@ class DataManipulator:
         # shorten last method parameter
         de = dict_expression
         # add helpful column to use on "Timeline Evaluation" column determination
-        in_df['rd'] = de['Reference Date']
-        # shorten remaining columns to use on "Timeline Evaluation" column determination
-        se_map = {
-            de['Start Date']: 's',
-            de['End Date']: 'e'
-        }
-        in_df.rename(columns=se_map, inplace=True)
-        # variable to pick relevant columns for "Timeline Evaluation" column determination
-        cols = ['rd', 's', 'e']
+        in_df['Reference Date'] = de['Reference Date']
         # actual "Timeline Evaluation" column determination
+        cols = ['Reference Date', de['Start Date'], de['End Date']]
         in_df['Timeline Evaluation'] = in_df[cols] \
-            .apply(lambda r: 'Current' if r['s'] <= r['rd'] <= r['e'] else 'Past'\
-                   if r['s'] < r['rd'] else 'Future', axis=1)
-        # build dictionary to use for original column names restoration
-        restore_map = {
-            's': de['Start Date'],
-            'e': de['End Date'],
-        }
+            .apply(lambda r: 'Current' if r[de['Start Date']]
+                                          <= r['Reference Date']
+                                          <= r[de['End Date']] else\
+                   'Past' if r[de['Start Date']] < r['Reference Date'] else 'Future', axis=1)
         # decide if the helpful column is to be retained or not
-        removal_needed = self.fn_decide_by_omission_or_specific_false(dict_expression,
-                                                                      'Reference Date Retention')
+        removal_needed = self.fn_decide_by_omission_or_specific_false(de, 'Keep Reference Date')
         if removal_needed:
-            in_df.drop(columns=['rd'], inplace=True)
-        else:
-            restore_map['rd'] = 'Reference Date'
-        # original column names restoration
-        in_df.rename(columns=restore_map, inplace=True)
+            in_df.drop(columns=['Reference Date'], inplace=True)
         return in_df
+
+    def add_value_to_dictionary(self, in_list, adding_value, adding_type, reference_column):
+        add_type = adding_type.lower()
+        total_columns = len(in_list)
+        if add_type == 'last':
+            position_to_cycle_down_to = total_columns
+            position_to_add = total_columns
+        elif add_type == 'first':
+            position_to_cycle_down_to = 0
+            position_to_add = position_to_cycle_down_to
+        elif add_type == 'after':
+            position_to_cycle_down_to = in_list.index(reference_column)
+            position_to_add = position_to_cycle_down_to + 1
+        elif add_type == 'before':
+            position_to_cycle_down_to = in_list.index(reference_column) - 1
+            position_to_add = position_to_cycle_down_to + 1
+        return self.add_value_to_dictionary_by_position({
+            'adding_value': adding_value,
+            'list': in_list,
+            'position_to_add': position_to_add,
+            'position_to_cycle_down_to': position_to_cycle_down_to,
+            'total_columns': total_columns,
+        })
+
+    @staticmethod
+    def add_value_to_dictionary_by_position(adding_dictionary):
+        list_with_values = adding_dictionary['list']
+        list_with_values.append(adding_dictionary['total_columns'])
+        for counter in range(adding_dictionary['total_columns'],
+                             adding_dictionary['position_to_cycle_down_to'], -1):
+            list_with_values[counter] = list_with_values[(counter - 1)]
+        list_with_values[adding_dictionary['position_to_add']] = adding_dictionary['adding_value']
+        return list_with_values
 
     @staticmethod
     def fn_add_weekday_columns_to_data_frame(input_data_frame, columns_list):
@@ -150,6 +168,14 @@ class DataManipulator:
                                   + ' to be applied to Current index, became '
                                   + str(index_to_apply))
         return in_data_frame
+
+    @staticmethod
+    def get_column_index_from_dataframe(data_frame_columns, column_name_to_identify):
+        column_index_to_return = 0
+        for ndx, column_name in enumerate(data_frame_columns):
+            if column_name == column_name_to_identify:
+                column_index_to_return = ndx
+        return column_index_to_return
 
     @staticmethod
     def fn_load_file_list_to_data_frame(local_logger, timmer, file_list, csv_delimiter):
