@@ -28,15 +28,37 @@ class DataManipulator:
             grouped_df.rename(columns=dict_expression['map'], inplace=True)
         return grouped_df
 
-    @staticmethod
-    def fn_add_timeline_evaluation_column_to_data_frame(in_df, dict_expression):
-        ref_date = dict_expression['Reference Date']
-        in_df['P'] = in_df[dict_expression['Start Date']].le(ref_date)
-        in_df['F'] = in_df[dict_expression['End Date']].ge(ref_date)
-        in_df['Timeline Evaluation'] = in_df[['P', 'F']] \
-            .apply(lambda r: 'Current' if r['P'] and r['F'] else 'Past' if r['P'] else 'Future',
-                   axis = 1)
-        in_df.drop(columns=['P', 'F'], inplace=True)
+    def fn_add_timeline_evaluation_column_to_data_frame(self, in_df, dict_expression):
+        # shorten last method parameter
+        de = dict_expression
+        # add helpful column to use on "Timeline Evaluation" column determination
+        in_df['rd'] = de['Reference Date']
+        # shorten remaining columns to use on "Timeline Evaluation" column determination
+        se_map = {
+            de['Start Date']: 's',
+            de['End Date']: 'e'
+        }
+        in_df.rename(columns=se_map, inplace=True)
+        # variable to pick relevant columns for "Timeline Evaluation" column determination
+        cols = ['rd', 's', 'e']
+        # actual "Timeline Evaluation" column determination
+        in_df['Timeline Evaluation'] = in_df[cols] \
+            .apply(lambda r: 'Current' if r['s'] <= r['rd'] <= r['e'] else 'Past'\
+                   if r['s'] < r['rd'] else 'Future', axis=1)
+        # build dictionary to use for original column names restoration
+        restore_map = {
+            's': de['Start Date'],
+            'e': de['End Date'],
+        }
+        # decide if the helpful column is to be retained or not
+        removal_needed = self.fn_decide_by_omission_or_specific_false(dict_expression,
+                                                                      'Reference Date Retention')
+        if removal_needed:
+            in_df.drop(columns=['rd'], inplace=True)
+        else:
+            restore_map['rd'] = 'Reference Date'
+        # original column names restoration
+        in_df.rename(columns=restore_map, inplace=True)
         return in_df
 
     @staticmethod
@@ -75,11 +97,27 @@ class DataManipulator:
         return input_data_frame
 
     @staticmethod
-    def fn_convert_columns_to_datetime(input_data_frame, columns_list, columns_format):
+    def fn_convert_datetime_columns_to_string(input_data_frame, columns_list, columns_format):
+        for current_column in columns_list:
+            input_data_frame[current_column] = \
+                input_data_frame[current_column].map(lambda x: x.strftime(columns_format))
+        return input_data_frame
+
+    @staticmethod
+    def fn_convert_string_columns_to_datetime(input_data_frame, columns_list, columns_format):
         for current_column in columns_list:
             input_data_frame[current_column] = pd.to_datetime(input_data_frame[current_column],
                                                               format=columns_format)
         return input_data_frame
+
+    @staticmethod
+    def fn_decide_by_omission_or_specific_false(in_dictionary, key_decision_factor):
+        removal_needed = False
+        if key_decision_factor not in in_dictionary:
+            removal_needed = True
+        elif not in_dictionary[key_decision_factor]:
+            removal_needed = True
+        return removal_needed
 
     def fn_drop_certain_columns(self, local_logger, timmer, working_dictionary):
         for current_file in working_dictionary['files']:
