@@ -18,4 +18,7 @@ class TestDataManipulator(unittest.TestCase):
             given = c_dm.add_value_to_dictionary(json_structure[add_type]['list'],
                                                  json_structure[add_type]['add'], add_type,
                                                  json_structure[add_type]['reference'])
-            self.assertEqual(given, json_structure[add_type]['expected'])
+            self.assertEqual(given, json_structure[add_type]['expected'], 'For "' + add_type
+                             + '" expected values were: '
+                             + str(json_structure[add_type]['expected'])
+                             + ' but found ' + str(given))
