@@ -99,20 +99,24 @@ class FileOperations:
         }
 
     @staticmethod
-    def fn_move_files(local_logger, timmer, source_folder, file_names, destination_folder):
+    def fn_move_files(local_logger, timmer, file_names, destination_folder):
         timmer.start()
         resulted_files = []
         for current_file in file_names:
+            source_folder = os.path.dirname(current_file)
             new_file_name = current_file.replace(source_folder, destination_folder)
-            if new_file_name.is_file():
+            if os.path.isfile(new_file_name):
+                local_logger.info('File ' + current_file + ' will be overwritten!')
                 os.replace(current_file, new_file_name)
-                local_logger.info('File ' + current_file
-                                  + ' has just been been overwritten  as ' + new_file_name)
+                local_logger.info('File ' + current_file + ' has just been been overwritten  as '
+                                  + str(new_file_name))
             else:
+                local_logger.info('File ' + current_file + ' will be renamed as ' +
+                                  str(new_file_name))
                 os.rename(current_file, new_file_name)
-                local_logger.info('File ' + current_file
-                                  + ' has just been renamed as ' + new_file_name)
-            resulted_files.append(new_file_name)
+                local_logger.info('File ' + current_file + ' has just been renamed as ' +
+                                  str(new_file_name))
+            resulted_files.append(str(new_file_name))
         timmer.stop()
         return resulted_files
 
