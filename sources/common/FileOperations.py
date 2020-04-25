@@ -21,7 +21,7 @@ class FileOperations:
     timestamp_format = '%Y-%m-%d %H:%M:%S.%f %Z'
     lcl = None
 
-    def __init__(self, default_language):
+    def __init__(self, default_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), 'FileOperations_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
