@@ -167,9 +167,11 @@ class DataManipulator:
 
     @staticmethod
     def fn_filter_data_frame_by_index(local_logger, in_data_frame, filter_rule):
-        index_current = in_data_frame.query('`Timeline Evaluation` == "Current"', inplace=False)
+        reference_expression = filter_rule['Query Expression for Reference Index']
+        index_current = in_data_frame.query(reference_expression, inplace=False)
         local_logger.info('Current index has been determined to be ' + str(index_current.index))
-        if 'Deviation' in filter_rule:
+        if str(index_current.index) != "Int64Index([], dtype='int64')" \
+                and 'Deviation' in filter_rule:
             for deviation_type in filter_rule['Deviation']:
                 deviation_number = filter_rule['Deviation'][deviation_type]
                 if deviation_type == 'Lower':
