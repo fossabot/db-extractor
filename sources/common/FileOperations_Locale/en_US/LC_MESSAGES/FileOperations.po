@@ -1,0 +1,77 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the Common_FileOperations package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: FileOperations\n"
+"POT-Creation-Date: 2020-04-25 13:20+0200\n"
+"PO-Revision-Date: 2020-04-25 17:04+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "{file_name} identified"
+msgstr "{file_name} identified"
+
+msgid "{files_counted} file from {in_folder} folder identified"
+msgid_plural "{files_counted} files from {in_folder} folder identified"
+msgstr[0] "{files_counted} file from {in_folder} folder identified"
+msgstr[1] "{files_counted} files from {in_folder} folder identified"
+
+msgid "Checksum"
+msgstr "Checksum"
+
+msgid "Entire file content read"
+msgstr "Entire file content read"
+
+msgid "Error encountered when trying to interpret JSON"
+msgstr "Error encountered when trying to interpret JSON"
+
+msgid "File \"{file_name}\" has the following characteristics: {file_statistics}"
+msgstr "File \"{file_name}\" has the following characteristics: {file_statistics}"
+
+msgid "File matching pattern identified"
+msgstr "File matching pattern identified"
+
+msgid "File {file_name} does not exist"
+msgstr "File {file_name} does not exist"
+
+msgid "File {file_name} has just been opened"
+msgstr "File {file_name} has just been opened"
+
+msgid "File {file_name} has just been overwritten as {new_file_name}"
+msgstr "File {file_name} has just been overwritten as {new_file_name}"
+
+msgid "File {file_name} has just been renamed as {new_file_name}"
+msgstr "File {file_name} has just been renamed as {new_file_name}"
+
+msgid "File {file_name} will be overwritten"
+msgstr "File {file_name} will be overwritten"
+
+msgid "File {file_name} will be renamed as {new_file_name}"
+msgstr "File {file_name} will be renamed as {new_file_name}"
+
+msgid "JSON structure interpreted"
+msgstr "JSON structure interpreted"
+
+msgid "Listing all files within {in_folder} folder looking for {matching_pattern} as matching pattern"
+msgstr "Listing all files within {in_folder} folder looking for {matching_pattern} as matching pattern"
+
+msgid "Specific file name provided"
+msgstr "Specific file name provided"
+
+msgid "Unknown file type provided, expected either \"json\" or \"raw\", but got {in_file_type}"
+msgstr "Unknown file type provided, expected either \"json\" or \"raw\", but got {in_file_type}"
+
+msgid "date when created"
+msgstr "date when created"
+
+msgid "date when last modified"
+msgstr "date when last modified"
+
+msgid "size [bytes]"
+msgstr "size [bytes]"
