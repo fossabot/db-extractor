@@ -1,5 +1,5 @@
 """
-Class Extractor Specific Needs
+Basic Needs For Extractor class
 
 Handling specific needs for Extractor script
 """
