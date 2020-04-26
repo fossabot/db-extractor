@@ -95,21 +95,7 @@ class FileOperations:
                                    + 'expected either "json" or "raw" but got {in_file_type}') \
                   .replace('{in_file_type}', in_file_type))
 
-    def fn_get_file_statistics(self, file_to_evaluate):
-        try:
-            file_handler = open(file=file_to_evaluate, mode='r', encoding='mbcs')
-        except UnicodeDecodeError:
-            file_handler = open(file=file_to_evaluate, mode='r', encoding='utf-8')
-        file_content = file_handler.read().encode()
-        file_handler.close()
-        file_checksums = {
-            'md5': hashlib.md5(file_content).hexdigest(),
-            'sha1': hashlib.sha1(file_content).hexdigest(),
-            'sha224': hashlib.sha224(file_content).hexdigest(),
-            'sha256': hashlib.sha256(file_content).hexdigest(),
-            'sha384': hashlib.sha384(file_content).hexdigest(),
-            'sha512': hashlib.sha512(file_content).hexdigest(),
-        }
+    def fn_get_file_simple_statistics(self, file_to_evaluate):
         f_dts = {
             'created': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
             'modified': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
@@ -118,13 +104,23 @@ class FileOperations:
             'date when created': datetime.strftime(f_dts['created'], self.timestamp_format),
             'date when last modified': datetime.strftime(f_dts['modified'], self.timestamp_format),
             'size [bytes]': os.path.getsize(file_to_evaluate),
-            'MD5 Checksum': file_checksums['md5'],
-            'SHA1 Checksum': file_checksums['sha1'],
-            'SHA224 Checksum': file_checksums['sha224'],
-            'SHA256 Checksum': file_checksums['sha256'],
-            'SHA384 Checksum': file_checksums['sha384'],
-            'SHA512 Checksum': file_checksums['sha512'],
         }
+
+    def fn_get_file_statistics(self, file_to_evaluate):
+        file_statistics = self.fn_get_file_simple_statistics(file_to_evaluate)
+        try:
+            file_handler = open(file=file_to_evaluate, mode='r', encoding='mbcs')
+        except UnicodeDecodeError:
+            file_handler = open(file=file_to_evaluate, mode='r', encoding='utf-8')
+        file_content = file_handler.read().encode()
+        file_handler.close()
+        file_statistics['MD5 Checksum'] = hashlib.md5(file_content).hexdigest()
+        file_statistics['SHA1 Checksum'] = hashlib.sha1(file_content).hexdigest()
+        file_statistics['SHA224 Checksum'] = hashlib.sha224(file_content).hexdigest()
+        file_statistics['SHA256 Checksum'] = hashlib.sha256(file_content).hexdigest()
+        file_statistics['SHA384 Checksum'] = hashlib.sha384(file_content).hexdigest()
+        file_statistics['SHA512 Checksum'] = hashlib.sha512(file_content).hexdigest()
+        return file_statistics
 
     def fn_move_files(self, local_logger, timmer, file_names, destination_folder):
         timmer.start()
@@ -158,13 +154,13 @@ class FileOperations:
         if os.path.isfile(input_file):
             with open(input_file, 'r') as file_handler:
                 print(datetime.utcnow().strftime(self.timestamp_format) +
-                      + self.lcl.gettext('File {file_name} has just been opened') \
-                      .replace('{file_name}', input_file))
+                      self.lcl.gettext('File {file_name} has just been opened') \
+                      .replace('{file_name}', str(input_file)))
                 return self.fn_get_file_content(file_handler, content_type)
         else:
             print(datetime.utcnow().strftime(self.timestamp_format) +
                   self.lcl.gettext('File {file_name} does not exist') \
-                  .replace('{file_name}', input_file))
+                  .replace('{file_name}', str(input_file)))
 
     def fn_store_file_statistics(self, local_logger, timmer, file_name, file_meaning):
         timmer.start()
