@@ -41,6 +41,7 @@ class FileOperations:
 
     def fn_build_file_list(self, local_logger, working_path, matching_pattern):
         resulted_file_list = []
+        file_counter = 0
         for current_file in working_path.iterdir():
             if current_file.is_file() and current_file.match(matching_pattern):
                 resulted_file_list.append(file_counter)
@@ -57,11 +58,10 @@ class FileOperations:
                           .replace('{in_folder}', in_folder) \
                           .replace('{matching_pattern}', matching_pattern))
         list_files = []
-        file_counter = 0
         if os.path.isdir(in_folder):
             working_path = pathlib.Path(in_folder)
             list_files = self.fn_build_file_list(local_logger, working_path, matching_pattern)
-            file_counter = len(file_counter)
+            file_counter = len(list_files)
             local_logger.info(self.lcl.ngettext( \
                 '{files_counted} file from {in_folder} folder identified',
                 '{files_counted} files from {in_folder} folder identified', file_counter) \
