@@ -3,11 +3,21 @@ Data Manipulation class
 """
 # package to handle date and times
 from datetime import timedelta
+# package to add support for multi-language (i18n)
+import gettext
+# package to handle files/folders and related metadata/operations
+import os
 # package facilitating Data Frames manipulation
 import pandas as pd
 
 
 class DataManipulator:
+    lcl = None
+
+    def __init__(self, default_language='en_US'):
+        current_script = os.path.basename(__file__).replace('.py', '')
+        lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
+        self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
     @staticmethod
     def fn_add_days_within_column_to_data_frame(input_data_frame, dict_expression):
@@ -114,30 +124,34 @@ class DataManipulator:
                 .apply(lambda x: x.strftime('%A'))
         return input_data_frame
 
-    @staticmethod
-    def fn_apply_query_to_data_frame(local_logger, timmer, input_data_frame, extract_params):
+    def fn_apply_query_to_data_frame(self, local_logger, timmer, input_data_frame, extract_params):
         timmer.start()
         query_expression = ''
+        generic_pre_feedback = self.lcl.gettext('Will retain only values {filter_type} '
+                                                + '"{filter_values}" within the field '
+                                                + '"{column_to_filter}"') \
+            .replace('{column_to_filter}', extract_params['column_to_filter'])
         if extract_params['filter_to_apply'] == 'equal':
-            local_logger.debug('Will retain only values equal with "'
-                               + extract_params['filter_values'] + '" within the field "'
-                               + extract_params['column_to_filter'] + '"')
+            local_logger.debug(generic_pre_feedback \
+                               .replace('{filter_type}', self.lcl.gettext('equal with')) \
+                               .replace('{filter_values}', extract_params['filter_values']))
             query_expression = '`' + extract_params['column_to_filter'] + '` == "' \
                                + extract_params['filter_values'] + '"'
         elif extract_params['filter_to_apply'] == 'different':
-            local_logger.debug('Will retain only values different than "'
-                               + extract_params['filter_values'] + '" within the field "'
-                               + extract_params['column_to_filter'] + '"')
+            local_logger.debug(generic_pre_feedback \
+                               .replace('{filter_type}', self.lcl.gettext('different than')) \
+                               .replace('{filter_values}', extract_params['filter_values']))
             query_expression = '`' + extract_params['column_to_filter'] + '` != "' \
                                + extract_params['filter_values'] + '"'
         elif extract_params['filter_to_apply'] == 'multiple_match':
-            local_logger.debug('Will retain only values equal with "'
-                               + extract_params['filter_values'] + '" within the field "'
-                               + extract_params['column_to_filter'] + '"')
-            query_expression = '`' + extract_params['column_to_filter'] + '` in ["' \
-                               + '", "'.join(extract_params['filter_values'].values()) \
-                               + '"]'
-        local_logger.debug('Query expression to apply is: ' + query_expression)
+            multiple_values = '["' + '", "'.join(extract_params['filter_values'].values()) + '"]'
+            local_logger.debug(generic_pre_feedback \
+                               .replace('{filter_type}',
+                                        self.lcl.gettext('matching any of these values')) \
+                               .replace('{filter_values}', multiple_values))
+            query_expression = '`' + extract_params['column_to_filter'] + '` in ' + multiple_values
+        local_logger.debug(self.lcl.gettext('Query expression to apply is: {query_expression}') \
+                           .replace('{query_expression}', query_expression))
         input_data_frame.query(query_expression, inplace=True)
         timmer.stop()
         return input_data_frame
@@ -165,11 +179,12 @@ class DataManipulator:
             removal_needed = True
         return removal_needed
 
-    @staticmethod
-    def fn_filter_data_frame_by_index(local_logger, in_data_frame, filter_rule):
+    def fn_filter_data_frame_by_index(self, local_logger, in_data_frame, filter_rule):
         reference_expression = filter_rule['Query Expression for Reference Index']
         index_current = in_data_frame.query(reference_expression, inplace=False)
-        local_logger.info('Current index has been determined to be ' + str(index_current.index))
+        local_logger.info(self.lcl.gettext( \
+            'Current index has been determined to be {index_current_value}') \
+                          .replace('{index_current_value}', str(index_current.index)))
         if str(index_current.index) != "Int64Index([], dtype='int64')" \
                 and 'Deviation' in filter_rule:
             for deviation_type in filter_rule['Deviation']:
@@ -180,9 +195,12 @@ class DataManipulator:
                 elif deviation_type == 'Upper':
                     index_to_apply = index_current.index + deviation_number
                     in_data_frame = in_data_frame[in_data_frame.index <= index_to_apply[0]]
-                local_logger.info(deviation_type + ' Deviation Number is ' + str(deviation_number)
-                                  + ' to be applied to Current index, became '
-                                  + str(index_to_apply))
+                local_logger.info(self.lcl.gettext( \
+                    '{deviation_type} Deviation Number is {deviation_number} '
+                    + 'to be applied to Current index, became {index_to_apply}') \
+                                  .replace('{deviation_type}', deviation_type) \
+                                  .replace('{deviation_number}', str(deviation_number)) \
+                                  .replace('{index_to_apply}', str(index_to_apply)))
         return in_data_frame
 
     @staticmethod
@@ -193,8 +211,7 @@ class DataManipulator:
                 column_index_to_return = ndx
         return column_index_to_return
 
-    @staticmethod
-    def fn_load_file_list_to_data_frame(local_logger, timmer, file_list, csv_delimiter):
+    def fn_load_file_list_to_data_frame(self, local_logger, timmer, file_list, csv_delimiter):
         timmer.start()
         combined_csv = pd.concat([pd.read_csv(filepath_or_buffer=current_file,
                                               delimiter=csv_delimiter,
@@ -204,12 +221,14 @@ class DataManipulator:
                                               low_memory=False,
                                               encoding='utf-8',
                                               ) for current_file in file_list])
-        local_logger.info('All relevant files were merged into a Pandas Data Frame')
+        local_logger.info(self.lcl.gettext( \
+            'All relevant files ({files_counted}) were merged into a Pandas Data Frame') \
+                          .replace('{files_counted}', str(len(file_list))))
         timmer.stop()
         return combined_csv
 
-    @staticmethod
-    def fn_store_data_frame_to_file(local_logger, timmer, input_data_frame, input_file_details):
+    def fn_store_data_frame_to_file(self, local_logger, timmer, input_data_frame,
+                                    input_file_details):
         timmer.start()
         if input_file_details['format'] == 'csv':
             input_data_frame.to_csv(path_or_buf=input_file_details['name'],
@@ -217,6 +236,9 @@ class DataManipulator:
                                     header=True,
                                     index=False,
                                     encoding='utf-8')
-        local_logger.info('Data frame has just been saved to file "'
-                          + input_file_details['name'] + '"')
+        local_logger.info(self.lcl.gettext( \
+            'Pandas Data Frame has just been saved to file "{file_name}", '
+            + 'considering {file_type} as file type') \
+                          .replace('{file_name}', input_file_details['name']) \
+                          .replace('{file_type}', input_file_details['format']))
         timmer.stop()
