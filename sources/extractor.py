@@ -17,22 +17,23 @@ from db_extractor.DatabaseTalker import DatabaseTalker
 from db_extractor.ParameterHandling import ParameterHandling
 # get current script name
 CURRENT_SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
+SCRIPT_LANGUAGE = 'ro_RO'
 
 # main execution logic
 if __name__ == '__main__':
     # instantiate File Operations class
-    c_fo = FileOperations()
+    c_fo = FileOperations(SCRIPT_LANGUAGE)
     # load application configuration (inputs are defined into a json file)
     crt_folder = os.path.dirname(__file__)
     configuration_file = os.path.join(crt_folder, 'config/db-extractor.json').replace('\\', '/')
     configuration_details = c_fo.fn_open_file_and_get_content(configuration_file)
     # instantiate Command Line Arguments class
-    c_clam = CommandLineArgumentsManagement()
+    c_clam = CommandLineArgumentsManagement(SCRIPT_LANGUAGE)
     # get command line parameter values
     input_parameters = \
         c_clam.parse_arguments(configuration_details['input_options']['db_extractor'])
     # instantiate Basic Needs class
-    c_bn = BasicNeeds()
+    c_bn = BasicNeeds(SCRIPT_LANGUAGE)
     # checking inputs, if anything is invalid an exit(1) will take place
     c_bn.fn_check_inputs(input_parameters)
     # instantiate Extractor Specific Needs class
@@ -78,9 +79,9 @@ if __name__ == '__main__':
     c_fo.fn_store_file_statistics(c_ln.logger, t, input_parameters.input_source_system_file,
                                   'SourceSystems file name')
     # instantiate Parameter Handling class
-    c_ph = ParameterHandling()
+    c_ph = ParameterHandling(SCRIPT_LANGUAGE)
     # instantiate Data Manipulator class, useful to manipulate data frames
-    c_dm = DataManipulator()
+    c_dm = DataManipulator(SCRIPT_LANGUAGE)
     # instantiate Database Talker class
     c_dbtkr = DatabaseTalker()
     # cycling through the configurations
