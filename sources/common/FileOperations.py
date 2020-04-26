@@ -23,7 +23,7 @@ class FileOperations:
 
     def __init__(self, default_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
-        lang_folder = os.path.join(os.path.dirname(__file__), 'FileOperations_Locale')
+        lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
     def build_file_list(self, local_logger, timmer, given_input_file):

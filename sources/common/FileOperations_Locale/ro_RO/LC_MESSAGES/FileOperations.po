@@ -19,8 +19,8 @@ msgstr "{file_name} identificat"
 
 msgid "{files_counted} file from {in_folder} folder identified"
 msgid_plural "{files_counted} files from {in_folder} folder identified"
-msgstr[0] "{files_counted} fișiere din dosarul {in_folder} identificate"
-msgstr[1] "{files_counted} fișier din dosarul {in_folder} identificat"
+msgstr[0] "{files_counted} fișier din dosarul {in_folder} identificat"
+msgstr[1] "{files_counted} fișiere din dosarul {in_folder} identificate"
 msgstr[2] "{files_counted} fișiere din dosarul {in_folder} identificate"
 
 msgid "Checksum"
