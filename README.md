@@ -72,6 +72,14 @@ Once the package is installed is quite important to keep up with latest releases
 
 Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 
+## Features already raised
+
+### Work in Progress
+* Multi-language (English, Italian, Romanian);
+
+### Requested
+* Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given;
+
 ## Features to request template
 
 Use [feature_request.md](.github/ISSUE_TEMPLATE/feature_request.md)
