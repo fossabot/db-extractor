@@ -78,7 +78,7 @@ Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 * Multi-language (English, Italian, Romanian);
 
 ### Requested
-* Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given;
+* Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given, as this is very useful when extracting large amount of data over VPN in small pieces and VPN drops (could mean already extracted pieces would be already skipped as not older than threshold imposed);
 
 ## Features to request template
 
