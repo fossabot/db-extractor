@@ -39,6 +39,17 @@ class FileOperations:
             relevant_files_list = [given_input_file]
         return relevant_files_list
 
+    def fn_build_file_list(self, local_logger, working_path, matching_pattern):
+        resulted_file_list = []
+        for current_file in working_path.iterdir():
+            if current_file.is_file() and current_file.match(matching_pattern):
+                resulted_file_list.append(file_counter)
+                resulted_file_list[file_counter] = str(current_file.absolute())
+                local_logger.info(self.lcl.gettext('{file_name} identified') \
+                                  .replace('{file_name}', str(current_file.absolute())))
+                file_counter = file_counter + 1
+        return resulted_file_list
+
     def fn_build_relevant_file_list(self, local_logger, timmer, in_folder, matching_pattern):
         timmer.start()
         local_logger.info(self.lcl.gettext('Listing all files within {in_folder} folder '
@@ -49,18 +60,16 @@ class FileOperations:
         file_counter = 0
         if os.path.isdir(in_folder):
             working_path = pathlib.Path(in_folder)
-            for current_file in working_path.iterdir():
-                if current_file.is_file() and current_file.match(matching_pattern):
-                    list_files.append(file_counter)
-                    list_files[file_counter] = str(current_file.absolute())
-                    local_logger.info(self.lcl.gettext('{file_name} identified') \
-                                      .replace('{file_name}', str(current_file.absolute())))
-                    file_counter = file_counter + 1
-        local_logger.info(self.lcl.ngettext( \
-            '{files_counted} file from {in_folder} folder identified',
-            '{files_counted} files from {in_folder} folder identified', file_counter) \
-                          .replace('{files_counted}', str(file_counter)) \
-                          .replace('{in_folder}', in_folder))
+            list_files = self.fn_build_file_list(local_logger, working_path, matching_pattern)
+            file_counter = len(file_counter)
+            local_logger.info(self.lcl.ngettext( \
+                '{files_counted} file from {in_folder} folder identified',
+                '{files_counted} files from {in_folder} folder identified', file_counter) \
+                              .replace('{files_counted}', str(file_counter)) \
+                              .replace('{in_folder}', in_folder))
+        else:
+            local_logger.error(self.lcl.gettext('Folder {folder_name} does not exist') \
+                               .replace('{folder_name}', in_folder))
         timmer.stop()
         return list_files
 

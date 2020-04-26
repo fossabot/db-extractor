@@ -55,6 +55,9 @@ msgstr "File {file_name} will be overwritten"
 msgid "File {file_name} will be renamed as {new_file_name}"
 msgstr "File {file_name} will be renamed as {new_file_name}"
 
+msgid "Folder {folder_name} does not exist"
+msgstr "Folder {folder_name} does not exist"
+
 msgid "JSON structure interpreted"
 msgstr "JSON structure interpreted"
 

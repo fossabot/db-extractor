@@ -56,6 +56,9 @@ msgstr "Fișierul {file_name} va fi suprascris"
 msgid "File {file_name} will be renamed as {new_file_name}"
 msgstr "Fișierul {file_name} va fi redenumit ca și {new_file_name}"
 
+msgid "Folder {folder_name} does not exist"
+msgstr "Dosarul {folder_name} nu există"
+
 msgid "JSON structure interpreted"
 msgstr "structura JSON interpretată"
 

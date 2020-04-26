@@ -55,6 +55,9 @@ msgstr "Il file {nome_file} verrà sovrascritto"
 msgid "File {file_name} will be renamed as {new_file_name}"
 msgstr "Il file {file_name} verrà rinominato come {new_file_name}"
 
+msgid "Folder {folder_name} does not exist"
+msgstr "La cartella {folder_name} non esiste"
+
 msgid "JSON structure interpreted"
 msgstr "Struttura JSON interpretata"
 
