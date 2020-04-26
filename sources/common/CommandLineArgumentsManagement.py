@@ -6,18 +6,28 @@ to call the main package functions
 """
 # package to handle arguments from command line
 import argparse
+# package to add support for multi-language (i18n)
+import gettext
+# package to facilitate operating system operations
+import os
 
 
 class CommandLineArgumentsManagement:
+    lcl = None
 
-    @staticmethod
-    def listing_parameter_values(local_logger, timmer, title, configuration_details,
+    def __init__(self, default_language='en_US'):
+        current_script = os.path.basename(__file__).replace('.py', '')
+        lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
+        self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
+
+    def listing_parameter_values(self, local_logger, timmer, title, configuration_details,
                                  given_parameter_values):
         timmer.start()
         local_logger.info('='*50)
-        local_logger.info(title + ' has started')
+        local_logger.info(self.lcl.gettext('{application_name} has started') \
+                          .replace('{application_name}', title))
         local_logger.info('~' * 50)
-        local_logger.info('Overview of input parameter given values')
+        local_logger.info(self.lcl.gettext('Overview of input parameter given values'))
         local_logger.info('~' * 50)
         parameter_values_dictionary = given_parameter_values.__dict__
         for input_key, attributes in configuration_details.items():
