@@ -41,8 +41,8 @@ msgstr "Il tipo di parametri è {parameter_type}"
 msgid "Seen Parameters are: {parameters}"
 msgstr "I parametri visti sono: {parameters}"
 
-msgid "Unexpected parameter type, either Dictionary or List expected but seen was {parameter_type}"
-msgstr "Tipo di parametro imprevisto, previsto dizionario o elenco ma visto {parametro_tipo}"
+msgid "Unexpected parameter type, either Dictionary or List expected, but seen was {parameter_type}"
+msgstr "Tipo di parametro imprevisto, previsto dizionario o elenco, ma visto {parametro_tipo}"
 
 msgid "Unknown expression encountered: provided was \"{given_expression}\" which is not among known ones: \"{all_known_expressions}\""
 msgstr "Espressione sconosciuta rilevata: fornito era \"{given_expression}\" che non è tra quelli noti: \"{all_known_expressions}\""

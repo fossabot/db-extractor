@@ -41,8 +41,8 @@ msgstr "Tipul parametrilor este {parameter_type}"
 msgid "Seen Parameters are: {parameters}"
 msgstr "Parametrii văzuți sunt: {parameters}"
 
-msgid "Unexpected parameter type, either Dictionary or List but seen was {parameter_type}"
-msgstr "Tipul de parametru neașteptat, fie Dicționar, fie Listă, dar văzut a fost {parameter_type}"
+msgid "Unexpected parameter type, either Dictionary or List expected, but seen was {parameter_type}"
+msgstr "Tipul de parametru neașteptat, fie Dicționar, fie Listă așteptat, dar văzut a fost {parameter_type}"
 
 msgid "Unknown expression encountered: provided was \"{given_expression}\" which is not among known ones: \"{all_known_expressions}\""
 msgstr "Expresie necunoscută întâlnită: oferită a fost \"{given_expression}\" care nu se numără printre cele cunoscute: \"{all_known_expressions}\""

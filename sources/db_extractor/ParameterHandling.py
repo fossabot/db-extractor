@@ -4,7 +4,7 @@ Class Parameter Handling
 Facilitates handling parameters values
 """
 # package to handle date and times
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 # package to allow year and/or month operations based on a reference date
 import datedelta
 # package to add support for multi-language (i18n)
@@ -25,6 +25,14 @@ class ParameterHandling:
         'day': ['CYCMCD', 'CurrentYearCurrentMonthCurrentDay'],
         'just_day': ['CD', 'CurrentDay'],
         'hour': ['CYCMCDCH', 'CurrentYearCurrentMonthCurrentDayCurrentHour'],
+    }
+    output_standard_formats = {
+        'year': '%Y',
+        'month': '%Y%m',
+        'just_month': '%m',
+        'day': '%Y%m%d',
+        'just_day': '%d',
+        'hour': '%Y%m%d%H',
     }
     lcl = None
 
@@ -47,7 +55,7 @@ class ParameterHandling:
             tp = tuple(query_session_parameters)
         else:
             local_logger.error(self.lcl.gettext( \
-                'Unexpected parameter type, either Dictionary or List expected '
+                'Unexpected parameter type, either Dictionary or List expected, '
                 + 'but seen is {parameter_type}') \
                                .replace('{parameter_type}', str(parameters_type)))
             exit(1)
@@ -77,7 +85,7 @@ class ParameterHandling:
             local_logger.debug(self.lcl.gettext( \
                 'A known expression "{expression_parts}" has to be interpreted') \
                                .replace('{expression_parts}', str_expression))
-            final_string = self.interpret_known_expression(date.today(), expression_parts,
+            final_string = self.interpret_known_expression(datetime.now(), expression_parts,
                                                            in_start_isoweekday)
             local_logger.debug(self.lcl.gettext( \
                 'Known expression "{expression_parts}" has been interpreted as {final_string}') \
@@ -157,16 +165,8 @@ class ParameterHandling:
         elif deviation_original == 'just_week':
             final_string = week_number_string
         else:
-            standard_formats = {
-                'year': '%Y',
-                'month': '%Y%m',
-                'just_month': '%m',
-                'day': '%Y%m%d',
-                'just_day': '%d',
-                'hour': '%Y%m%d%H',
-            }
-            target_format = standard_formats.get(deviation_original)
-            final_string = datetime.strftime(finalized_date, target_format)
+            final_string = datetime.strftime(finalized_date,
+                                             self.output_standard_formats.get(deviation_original))
         return final_string
 
     def manage_parameter_value(self, local_logger, given_prefix, given_parameter,
