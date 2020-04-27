@@ -11,6 +11,11 @@
                 "sessions": [
                     {
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
+                        "extract-overwrite-condition":  {
+                            "file-datetime":                            "last_modified",
+                            "reference-expresion":                      "CalculatedDate_CYCMCDCH_-1",
+                            "rule":                                     "older"
+                        },
                         "output-file": {
                             "format":                                   "csv",
                             "name":                                     "mariadb-test.csv",
@@ -57,6 +62,11 @@
                             }
                         ],
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
+                        "extract-overwrite-condition":  {
+                            "file-datetime":                            "last_modified",
+                            "reference-expresion":                      "CalculatedDate_CYCMCDCH",
+                            "rule":                                     "older"
+                        },
                         "output-file": {
                             "format":                                   "csv",
                             "name":                                     "mysql-test.csv",

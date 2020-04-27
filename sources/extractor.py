@@ -3,6 +3,8 @@ Facilitates moving files from a specified directory and matching pattern to a de
 """
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
+# package to handle date and times
+from datetime import datetime
 # package to facilitate operating system operations
 import os
 # common Custom classes
@@ -183,10 +185,21 @@ if __name__ == '__main__':
                                 c_ph.eval_expression(c_ln.logger,
                                                      crt_session['output-file']['name'], wday_start)
                             extract_behaviour = c_bnfe.fn_set_extract_behaviour(crt_session)
+                            resulted_file = crt_session['output-file']['name']
                             extraction_required = c_bnfe.fn_is_extraction_necessary(c_ln.logger, {
                                 'extract-behaviour': extract_behaviour,
-                                'output-csv-file': crt_session['output-file']['name'],
+                                'output-csv-file': resulted_file,
                             })
+                            if extract_behaviour == 'overwrite-if-output-file-exists':
+                                if 'extract-overwrite-condition' in crt_session:
+                                    fv = c_bnfe.fn_is_extraction_neccesary_additional(c_ln.logger,
+                                                                                      c_ph,
+                                                                                      c_fo,
+                                                                                      crt_session)
+                                    if fv == c_fo.lcl.gettext('older'):
+                                        extraction_required = True
+                                    else:
+                                        extraction_required = False
                             if extraction_required:
                                 # get query parameters into a tuple
                                 tuple_parameters = c_ph.handle_query_parameters(c_ln.logger,
@@ -227,7 +240,6 @@ if __name__ == '__main__':
                                                                                   crt_session)
                                     c_dm.fn_store_data_frame_to_file(c_ln.logger, t, rdf,
                                                                      crt_session['output-file'])
-                                    resulted_file = crt_session['output-file']['name']
                                     c_fo.fn_store_file_statistics(c_ln.logger, t, resulted_file,
                                                                   'Output file name')
                 t.start()

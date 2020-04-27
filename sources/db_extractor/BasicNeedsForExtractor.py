@@ -3,6 +3,7 @@ Basic Needs For Extractor class
 
 Handling specific needs for Extractor script
 """
+from datetime import datetime
 # package to facilitate working with directories and files
 from pathlib import Path
 # package to facilitate common operations
@@ -38,8 +39,7 @@ class BasicNeedsForExtractor:
     def fn_is_extraction_necessary(local_logger, relevant_details):
         extraction_is_necessary = False
         local_logger.debug('Extract behaviour is set to ' + relevant_details['extract-behaviour'])
-        if relevant_details['extract-behaviour'] == \
-                'skip-if-output-file-exists':
+        if relevant_details['extract-behaviour'] == 'skip-if-output-file-exists':
             if Path(relevant_details['output-csv-file']).is_file():
                 local_logger.debug('File ' + relevant_details['output-csv-file']
                                    + ' already exists, '
@@ -49,11 +49,21 @@ class BasicNeedsForExtractor:
                 local_logger.debug('File ' + relevant_details['output-csv-file']
                                    + ' does not exist, '
                                    + 'so database extraction has to be performed')
-        elif relevant_details['extract-behaviour'] == \
-                'overwrite-if-output-file-exists':
+        elif relevant_details['extract-behaviour'] == 'overwrite-if-output-file-exists':
             extraction_is_necessary = True
             local_logger.debug('Database extraction has to be performed')
         return extraction_is_necessary
+
+    def fn_is_extraction_neccesary_additional(self, local_logger, c_ph, c_fo, crt_session):
+        ref_expr = crt_session['extract-overwrite-condition']['reference-expresion']
+        reference_datetime = c_ph.eval_expression(local_logger, ref_expr,
+                                                  crt_session['start-isoweekday'])
+        child_parent_expressions = c_ph.get_child_parent_expressions()
+        deviation_original = child_parent_expressions.get(ref_expr.split('_')[1])
+        r_dt = datetime.strptime(reference_datetime,
+                                 c_ph.output_standard_formats.get(deviation_original))
+        return c_fo.fn_get_file_datetime_verdict(local_logger, crt_session['output-file']['name'],
+                                                 'last modified', r_dt)
 
     @staticmethod
     def fn_set_extract_behaviour(in_session):
