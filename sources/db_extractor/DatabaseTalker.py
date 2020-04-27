@@ -14,6 +14,8 @@ import mysql.connector.errors
 import os
 # package facilitating Data Frames manipulation
 import pandas as pd
+# package to bring ability to check hostnames availability
+import socket
 
 
 class DatabaseTalker:
@@ -54,14 +56,19 @@ class DatabaseTalker:
                                    connection_details['server-vendor-and-type']) \
                           .replace('{server_layer}', connection_details['server-layer']) \
                           .replace('{server_name}', connection_details['ServerName']) \
-                          .replace('{server_port}', connection_details['ServerPort']) \
+                          .replace('{server_port}', str(connection_details['ServerPort'])) \
                           .replace('{username}', connection_details['Username']) \
                           .replace('{name_of_user}', connection_details['Name']))
-        if connection_details['server-vendor-and-type'] == 'SAP HANA':
-            self.connect_to_database_hana(local_logger, connection_details)
-        elif connection_details['server-vendor-and-type'] in ('MariaDB Foundation MariaDB',
-                                                              'Oracle MySQL'):
-            self.connect_to_database_mysql(local_logger, connection_details)
+        try:
+            host = socket.gethostbyname(connection_details['ServerName'])
+            if connection_details['server-vendor-and-type'] == 'SAP HANA':
+                self.connect_to_database_hana(local_logger, connection_details)
+            elif connection_details['server-vendor-and-type'] in ('MariaDB Foundation MariaDB',
+                                                                  'Oracle MySQL'):
+                self.connect_to_database_mysql(local_logger, connection_details)
+        except socket.gaierror as err:
+            local_logger.error('Hostname not found, connection will not be established')
+            local_logger.error(err)
         timered.stop()
 
     def connect_to_database_hana(self, local_logger, connection_details):
