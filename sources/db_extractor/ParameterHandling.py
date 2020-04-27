@@ -32,7 +32,7 @@ class ParameterHandling:
         'just_month': '%m',
         'day': '%Y%m%d',
         'just_day': '%d',
-        'hour': '%Y%m%d%H',
+        'hour': '%Y%m%d%H%M%S%f',
     }
     lcl = None
 

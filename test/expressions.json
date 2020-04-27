@@ -222,13 +222,13 @@
             "reference_format": "%Y-%m-%d %H:%M:%S",
             "reference_value": "2020-01-31 19:00:00",
             "expression": "CalculatedDate_CYCMCDCH",
-            "expected_value": "2020013119"
+            "expected_value": "20200131190000000000"
         },
         {
             "reference_format": "%Y-%m-%d %H:%M:%S",
             "reference_value": "2020-01-31 19:00:00",
             "expression": "CalculatedDate_CYCMCDCH_-3",
-            "expected_value": "2020013116"
+            "expected_value": "20200131160000000000"
         }
     ]
 }
