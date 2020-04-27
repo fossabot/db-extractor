@@ -15,9 +15,9 @@ class TestDataManipulator(unittest.TestCase):
         for add_type in json_structure:
             if 'reference' not in json_structure[add_type]:
                 json_structure[add_type]['reference'] = None
-            given = c_dm.add_value_to_dictionary(json_structure[add_type]['list'],
-                                                 json_structure[add_type]['add'], add_type,
-                                                 json_structure[add_type]['reference'])
+            given = c_dm.fn_add_value_to_dictionary(json_structure[add_type]['list'],
+                                                    json_structure[add_type]['add'], add_type,
+                                                    json_structure[add_type]['reference'])
             self.assertEqual(given, json_structure[add_type]['expected'], 'For "' + add_type
                              + '" expected values were: '
                              + str(json_structure[add_type]['expected'])
