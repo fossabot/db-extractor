@@ -35,6 +35,9 @@ msgstr "Eroare întâmpinată la încercarea interpretării JSON"
 msgid "File \"{file_name}\" has the following characteristics: {file_statistics}"
 msgstr "Fișierul \"{file_name}\" are următoarele caracteristici: {file_statistics}"
 
+msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" compared with \"{reference_datetime}\" has a verdict = {verdict}"
+msgstr ""
+
 msgid "File matching pattern identified"
 msgstr "Model de potrivire fișiere identificat"
 
@@ -68,14 +71,32 @@ msgstr "Listarea tuturor fișierelor din folderul {in_folder} în căutare de {m
 msgid "Specific file name provided"
 msgstr "Nume de fișier specific furnizat"
 
+msgid "Unknown file datetime choice, expected is one of the following choices \"{implemented_choices}\" but provided was \"{created_or_modified}\"..."
+msgstr ""
+
 msgid "Unknown file type provided, expected either \"json\" or \"raw\", but got {in_file_type}"
 msgstr "Tip de fișier necunoscut, așteptat fie \"json\" sau \"raw\", dar primit {in_file_type}"
+
+msgid "created"
+msgstr ""
 
 msgid "date when created"
 msgstr "data la care a fost creat"
 
 msgid "date when last modified"
 msgstr "data la care a fost modificat ultima dată"
+
+msgid "newer"
+msgstr ""
+
+msgid "old"
+msgstr ""
+
+msgid "last modified"
+msgstr ""
+
+msgid "same"
+msgstr ""
 
 msgid "size [bytes]"
 msgstr "dimensiunea [bytes]"

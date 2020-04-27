@@ -95,14 +95,20 @@ class FileOperations:
                                    + 'expected either "json" or "raw" but got {in_file_type}') \
                   .replace('{in_file_type}', in_file_type))
 
-    def fn_get_file_simple_statistics(self, file_to_evaluate):
-        f_dts = {
-            'created': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
-            'modified': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
-        }
+    @staticmethod
+    def fn_get_file_dates(file_to_evaluate):
         return {
-            'date when created': datetime.strftime(f_dts['created'], self.timestamp_format),
-            'date when last modified': datetime.strftime(f_dts['modified'], self.timestamp_format),
+            'created': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
+            'modified': datetime.fromtimestamp(os.path.getmtime(file_to_evaluate)),
+        }
+
+    def fn_get_file_simple_statistics(self, file_to_evaluate):
+        file_date_time = self.fn_get_file_dates(file_to_evaluate)
+        return {
+            'date when created': datetime.strftime(file_date_time['created'],
+                                                   self.timestamp_format).strip(),
+            'date when last modified': datetime.strftime(file_date_time['modified'],
+                                                         self.timestamp_format).strip(),
             'size [bytes]': os.path.getsize(file_to_evaluate),
         }
 
@@ -121,6 +127,39 @@ class FileOperations:
         file_statistics['SHA384 Checksum'] = hashlib.sha384(file_content).hexdigest()
         file_statistics['SHA512 Checksum'] = hashlib.sha512(file_content).hexdigest()
         return file_statistics
+
+    def fn_get_file_datetime_verdict(self, local_logger, file_to_evaluate,
+                                     created_or_modified, reference_datetime):
+        implemented_choices = ['created', 'last modified']
+        file_date_time = self.fn_get_file_dates(file_to_evaluate)
+        try:
+            which_datetime = file_date_time.get(created_or_modified)
+        except Exception as err:
+            verdict = self.lcl.gettext('unknown')
+            local_logger.error(self.lcl.gettext( \
+                    'Unknown file datetime choice, '
+                    + 'expected is one of the following choices "{implemented_choices}" '
+                    + 'but provided was "{created_or_modified}"...') \
+                               .replace('{implemented_choices}', '", "'.join(implemented_choices)) \
+                               .replace('{created_or_modified}', created_or_modified))
+        if created_or_modified in implemented_choices:
+            verdict = self.lcl.gettext('old')
+            if which_datetime > reference_datetime:
+                verdict = self.lcl.gettext('newer')
+            elif which_datetime == reference_datetime:
+                verdict = self.lcl.gettext('same')
+        str_file_datetime = datetime.strftime(which_datetime, self.timestamp_format).strip()
+        str_reference = datetime.strftime(reference_datetime, self.timestamp_format).strip()
+        local_logger.debug(self.lcl.gettext( \
+                'File "{file_name}" which has the {created_or_modified} datetime '
+                + 'as "{file_datetime}" vs. "{reference_datetime}" '
+                + 'has a verdict = {verdict}') \
+                          .replace('{file_name}', str(file_to_evaluate)) \
+                          .replace('{created_or_modified}', self.lcl.gettext(created_or_modified)) \
+                          .replace('{reference_datetime}', str_reference) \
+                          .replace('{file_datetime}', str_file_datetime) \
+                          .replace('{verdict}', verdict))
+        return verdict
 
     def fn_move_files(self, local_logger, timmer, file_names, destination_folder):
         timmer.start()
