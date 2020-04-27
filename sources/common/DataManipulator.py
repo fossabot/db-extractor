@@ -19,6 +19,33 @@ class DataManipulator:
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
+    def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame, input_details):
+        for current_input_details in input_details:
+            timmer.start()
+            col_name_to_add = current_input_details['New Column']
+            offset_sign = -1
+            if current_input_details['Direction'] == 'down':
+                offset_sign = 1
+            col_offset = offset_sign * current_input_details['Deviation']
+            input_data_frame[col_name_to_add] = \
+                input_data_frame[current_input_details['Original Column']]
+            input_data_frame[col_name_to_add] = input_data_frame[col_name_to_add].shift(col_offset)
+            fill_value = current_input_details['Empty Values Replacement']
+            input_data_frame[col_name_to_add] = input_data_frame[col_name_to_add].apply(
+                lambda x: str(x).replace('.0', '')).apply(lambda x: str(x).replace('nan',
+                                                                                   fill_value))
+            local_logger.info(self.lcl.gettext( \
+                'A new column named "{new_column_name}" as copy from "{original_column}" '
+                + 'then shifted by {shifting_rows} to relevant data frame '
+                + '(filling any empty value as {empty_values_replacement})') \
+                              .replace('{new_column_name}', col_name_to_add) \
+                              .replace('{original_column}',
+                                       current_input_details['Original Column']) \
+                              .replace('{shifting_rows}', str(col_offset)) \
+                              .replace('{empty_values_replacement}', fill_value))
+            timmer.stop()
+        return input_data_frame
+
     @staticmethod
     def fn_add_days_within_column_to_data_frame(input_data_frame, dict_expression):
         input_data_frame['Days Within'] = input_data_frame[dict_expression['End Date']] - \
@@ -210,6 +237,15 @@ class DataManipulator:
             if column_name == column_name_to_identify:
                 column_index_to_return = ndx
         return column_index_to_return
+
+    @staticmethod
+    def fn_get_first_current_and_last_column_value_from_data_frame(in_data_frame, in_column_name):
+        return {
+            'first': in_data_frame.iloc[0][in_column_name],
+            'current': in_data_frame.query('`Timeline Evaluation` == "Current"',
+                                           inplace=False)[in_column_name].max(),
+            'last': in_data_frame.iloc[(len(in_data_frame) - 1)][in_column_name],
+        }
 
     def fn_load_file_list_to_data_frame(self, local_logger, timmer, file_list, csv_delimiter):
         timmer.start()
