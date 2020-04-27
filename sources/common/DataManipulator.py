@@ -56,7 +56,7 @@ class DataManipulator:
             in_df.drop(columns=['Reference Date'], inplace=True)
         return in_df
 
-    def add_value_to_dictionary(self, in_list, adding_value, adding_type, reference_column):
+    def fn_add_value_to_dictionary(self, in_list, adding_value, adding_type, reference_column):
         add_type = adding_type.lower()
         total_columns = len(in_list)
         if reference_column is None:
@@ -204,7 +204,7 @@ class DataManipulator:
         return in_data_frame
 
     @staticmethod
-    def get_column_index_from_dataframe(data_frame_columns, column_name_to_identify):
+    def fn_get_column_index_from_dataframe(data_frame_columns, column_name_to_identify):
         column_index_to_return = 0
         for ndx, column_name in enumerate(data_frame_columns):
             if column_name == column_name_to_identify:
