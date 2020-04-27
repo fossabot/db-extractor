@@ -99,7 +99,7 @@ class FileOperations:
     def fn_get_file_dates(file_to_evaluate):
         return {
             'created': datetime.fromtimestamp(os.path.getctime(file_to_evaluate)),
-            'modified': datetime.fromtimestamp(os.path.getmtime(file_to_evaluate)),
+            'last modified': datetime.fromtimestamp(os.path.getmtime(file_to_evaluate)),
         }
 
     def fn_get_file_simple_statistics(self, file_to_evaluate):
@@ -107,7 +107,7 @@ class FileOperations:
         return {
             'date when created': datetime.strftime(file_date_time['created'],
                                                    self.timestamp_format).strip(),
-            'date when last modified': datetime.strftime(file_date_time['modified'],
+            'date when last modified': datetime.strftime(file_date_time['last modified'],
                                                          self.timestamp_format).strip(),
             'size [bytes]': os.path.getsize(file_to_evaluate),
         }
@@ -131,34 +131,34 @@ class FileOperations:
     def fn_get_file_datetime_verdict(self, local_logger, file_to_evaluate,
                                      created_or_modified, reference_datetime):
         implemented_choices = ['created', 'last modified']
+        verdict = self.lcl.gettext('unknown')
         file_date_time = self.fn_get_file_dates(file_to_evaluate)
-        try:
+        if created_or_modified in implemented_choices:
             which_datetime = file_date_time.get(created_or_modified)
-        except Exception as err:
-            verdict = self.lcl.gettext('unknown')
+            verdict = self.lcl.gettext('older')
+            if which_datetime > reference_datetime:
+                verdict = self.lcl.gettext('newer')
+            elif which_datetime == reference_datetime:
+                verdict = self.lcl.gettext('same')
+            str_file_datetime = datetime.strftime(which_datetime, self.timestamp_format).strip()
+            str_reference = datetime.strftime(reference_datetime, self.timestamp_format).strip()
+            local_logger.debug(self.lcl.gettext( \
+                    'File "{file_name}" which has the {created_or_modified} datetime '
+                    + 'as "{file_datetime}" vs. "{reference_datetime}" '
+                    + 'has a verdict = {verdict}') \
+                              .replace('{file_name}', str(file_to_evaluate)) \
+                              .replace('{created_or_modified}',
+                                       self.lcl.gettext(created_or_modified)) \
+                              .replace('{reference_datetime}', str_reference) \
+                              .replace('{file_datetime}', str_file_datetime) \
+                              .replace('{verdict}', verdict))
+        else:
             local_logger.error(self.lcl.gettext( \
                     'Unknown file datetime choice, '
                     + 'expected is one of the following choices "{implemented_choices}" '
                     + 'but provided was "{created_or_modified}"...') \
                                .replace('{implemented_choices}', '", "'.join(implemented_choices)) \
                                .replace('{created_or_modified}', created_or_modified))
-        if created_or_modified in implemented_choices:
-            verdict = self.lcl.gettext('old')
-            if which_datetime > reference_datetime:
-                verdict = self.lcl.gettext('newer')
-            elif which_datetime == reference_datetime:
-                verdict = self.lcl.gettext('same')
-        str_file_datetime = datetime.strftime(which_datetime, self.timestamp_format).strip()
-        str_reference = datetime.strftime(reference_datetime, self.timestamp_format).strip()
-        local_logger.debug(self.lcl.gettext( \
-                'File "{file_name}" which has the {created_or_modified} datetime '
-                + 'as "{file_datetime}" vs. "{reference_datetime}" '
-                + 'has a verdict = {verdict}') \
-                          .replace('{file_name}', str(file_to_evaluate)) \
-                          .replace('{created_or_modified}', self.lcl.gettext(created_or_modified)) \
-                          .replace('{reference_datetime}', str_reference) \
-                          .replace('{file_datetime}', str_file_datetime) \
-                          .replace('{verdict}', verdict))
         return verdict
 
     def fn_move_files(self, local_logger, timmer, file_names, destination_folder):

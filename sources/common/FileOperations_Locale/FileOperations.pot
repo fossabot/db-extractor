@@ -87,7 +87,7 @@ msgstr ""
 msgid "newer"
 msgstr ""
 
-msgid "old"
+msgid "older"
 msgstr ""
 
 msgid "last modified"
@@ -97,4 +97,7 @@ msgid "same"
 msgstr ""
 
 msgid "size [bytes]"
+msgstr ""
+
+msgid "unknown"
 msgstr ""
