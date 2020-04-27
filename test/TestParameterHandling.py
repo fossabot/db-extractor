@@ -2,7 +2,7 @@
 Testing key methods from Parameter Handling class
 """
 from datetime import datetime
-from sources.common.FileOperations import FileOperations
+from sources.common.FileOperations import os, FileOperations
 from sources.db_extractor.ParameterHandling import ParameterHandling
 import unittest
 
@@ -13,7 +13,7 @@ class TestParameterHandling(unittest.TestCase):
         fo = FileOperations()
         # load testing values from JSON file
         # where all cases are grouped
-        json_structure = fo.fn_open_file_and_get_content('expressions.json')
+        json_structure = fo.fn_open_file_and_get_content(os.path.join(os.path.dirname(__file__), 'expressions.json'))
         # flatten out all testing values
         pair_values = []
         index_counter = 0
