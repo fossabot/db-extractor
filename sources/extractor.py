@@ -119,7 +119,8 @@ if __name__ == '__main__':
                 src_srvr = source_systems[srv['vdr']][srv['typ']]['Server'][srv['grp']][srv['lyr']]
                 str_ss = '"' + '", "'.join(srv.values()) + '"'
                 can_proceed_ss = c_bnfe.validate_source_system(c_ln.logger, str_ss, src_srvr)
-                can_proceed_u = c_bnfe.validate_user_secrets_file(c_ln.logger, srv, configured_secrets)
+                can_proceed_u = c_bnfe.validate_user_secrets_file(c_ln.logger, srv,
+                                                                  configured_secrets)
             if can_proceed_s and can_proceed_ss and can_proceed_u:
                 ac_lbl = crt_sequence['account-label']
                 # variable with credentials for source server
@@ -177,7 +178,7 @@ if __name__ == '__main__':
                                 if 'start_isoweekday' in crt_session:
                                     crt_session['start-isoweekday'] = \
                                         crt_session['start_isoweekday']
-                            wday_start = crt_session['start-isoweekday']
+                            weekday_start = crt_session['start-isoweekday']
                             if 'parameters' in crt_session:
                                 # assumption is for either DICT or LIST values are numeric
                                 # in case text is given different rules have to be specified
@@ -194,7 +195,8 @@ if __name__ == '__main__':
                                                                             crt_session)
                             crt_session['output-file']['name'] = \
                                 c_ph.eval_expression(c_ln.logger,
-                                                     crt_session['output-file']['name'], wday_start)
+                                                     crt_session['output-file']['name'],
+                                                     weekday_start)
                             extract_behaviour = c_bnfe.fn_set_extract_behaviour(crt_session)
                             resulted_file = crt_session['output-file']['name']
                             extraction_required = c_bnfe.fn_is_extraction_necessary(c_ln.logger, {
@@ -214,7 +216,7 @@ if __name__ == '__main__':
                                 # get query parameters into a tuple
                                 tuple_parameters = c_ph.handle_query_parameters(c_ln.logger,
                                                                                 crt_session,
-                                                                                wday_start)
+                                                                                weekday_start)
                                 # measure expected number of parameters
                                 expected_number_of_parameters = str(initial_query).count('%s')
                                 # simulate final query to log (useful for debugging purposes)
