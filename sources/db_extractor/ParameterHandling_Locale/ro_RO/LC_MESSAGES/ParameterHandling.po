@@ -14,11 +14,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
 
-msgid "Current Parameter is STR and has the value: \"{str_value}\""
-msgstr "Parametrul curent este ȘIR și are valoarea: \"{str_value}\""
+msgid "Current Parameter is {parameter_type} and has the value: \"{str_value}\""
+msgstr "Parametrul curent este {parameter_type} și are valoarea: \"{str_value}\""
 
 msgid "Current Parameter is STR and has been re-interpreted as value: \"{str_value}\""
 msgstr "Parametrul curent este ȘIR și a fost reinterpretat ca valoare: \"{str_value}\""
+
+msgid "DICT"
+msgstr "DICȚIONAR"
 
 msgid "Final Tuple for Parameters is: {final_tuple}"
 msgstr "Tuple-ul final pentru parametri este: {final_tuple}"
@@ -35,8 +38,14 @@ msgstr "Expresia cunoscută \"{expression_parts}\" a fost interpretată ca {fina
 msgid "Known expression \"{expression_parts}\" has to be interpreted"
 msgstr "Expresia cunoscută \"{expression_parts}\" trebuie interpretată"
 
+msgid "LIST"
+msgstr "LISTĂ"
+
 msgid "Parameters type is {parameter_type}"
 msgstr "Tipul parametrilor este {parameter_type}"
+
+msgid "STR"
+msgstr "ȘIR"
 
 msgid "Seen Parameters are: {parameters}"
 msgstr "Parametrii văzuți sunt: {parameters}"

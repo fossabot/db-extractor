@@ -177,8 +177,8 @@ class ParameterHandling:
         elif given_prefix == 'list':
             element_to_join = given_parameter
         local_logger.debug(self.lcl.gettext( \
-            'Current Parameter is {parameter_type} and has the value: {str_value}') \
-                           .replace('{parameter_type}', given_prefix.upper()) \
+            'Current Parameter is {parameter_type} and has the value: "{str_value}"') \
+                           .replace('{parameter_type}', self.lcl.gettext(given_prefix.upper())) \
                            .replace('{str_value}', str(element_to_join)))
         return given_parameter_rules[given_prefix + '-values-prefix'] \
                + given_parameter_rules[given_prefix + '-values-glue'].join(element_to_join) \
@@ -209,7 +209,8 @@ class ParameterHandling:
             working_list.append(ndx)
             if current_parameter_type == str:
                 local_logger.debug(self.lcl.gettext( \
-                    'Current Parameter is STR and has the value: {str_value}') \
+                    'Current Parameter is {parameter_type} and has the value: "{str_value}"') \
+                                   .replace('{parameter_type}', self.lcl.gettext('STR')) \
                                    .replace('{str_value}', crt_parameter))
                 working_list[ndx] = self.eval_expression(local_logger, crt_parameter,
                                                          in_start_isoweekday)

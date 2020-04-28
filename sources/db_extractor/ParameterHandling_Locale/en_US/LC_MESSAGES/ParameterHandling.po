@@ -14,11 +14,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Current Parameter is STR and has the value: \"{str_value}\""
-msgstr "Current Parameter is STR and has the value: \"{str_value}\""
+msgid "Current Parameter is {parameter_type} and has the value: \"{str_value}\""
+msgstr "Current Parameter is {parameter_type} and has the value: \"{str_value}\""
 
 msgid "Current Parameter is STR and has been re-interpreted as value: \"{str_value}\""
 msgstr "Current Parameter is STR and has been re-interpreted as value: \"{str_value}\""
+
+msgid "DICT"
+msgstr "DICT"
 
 msgid "Final Tuple for Parameters is: {final_tuple}"
 msgstr "Final Tuple for Parameters is: {final_tuple}"
@@ -35,8 +38,14 @@ msgstr "Known expression \"{expression_parts}\" has been interpreted as {final_s
 msgid "Known expression \"{expression_parts}\" has to be interpreted"
 msgstr "Known expression \"{expression_parts}\" has to be interpreted"
 
+msgid "LIST"
+msgstr "LIST"
+
 msgid "Parameters type is {parameter_type}"
 msgstr "Parameters type is {parameter_type}"
+
+msgid "STR"
+msgstr "STR"
 
 msgid "Seen Parameters are: {parameters}"
 msgstr "Seen Parameters are: {parameters}"

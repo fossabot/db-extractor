@@ -40,7 +40,8 @@ class DatabaseTalker:
                     resulted_data_frame[crt_column['name']] = crt_column['value']
             local_logger.info(self.lcl.ngettext( \
                 'Additional {additional_columns_counted} column added to Pandas Data Frame',
-                'Additional {additional_columns_counted} columns added to Pandas Data Frame') \
+                'Additional {additional_columns_counted} columns added to Pandas Data Frame',
+                    len(session_details['additional-columns'])) \
                               .replace('{additional_columns_counted}',
                                        str(len(session_details['additional-columns']))))
             timered.stop()

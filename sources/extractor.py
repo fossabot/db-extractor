@@ -3,10 +3,10 @@ Facilitates moving files from a specified directory and matching pattern to a de
 """
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
-# package to handle date and times
-from datetime import datetime
 # package to facilitate operating system operations
 import os
+# package to facilitate working with directories and files
+from pathlib import Path
 # common Custom classes
 from common.FileOperations import FileOperations
 from common.BasicNeeds import BasicNeeds
@@ -190,16 +190,15 @@ if __name__ == '__main__':
                                 'extract-behaviour': extract_behaviour,
                                 'output-csv-file': resulted_file,
                             })
-                            if extract_behaviour == 'overwrite-if-output-file-exists':
-                                if 'extract-overwrite-condition' in crt_session:
-                                    fv = c_bnfe.fn_is_extraction_neccesary_additional(c_ln.logger,
-                                                                                      c_ph,
-                                                                                      c_fo,
-                                                                                      crt_session)
-                                    if fv == c_fo.lcl.gettext('older'):
-                                        extraction_required = True
-                                    else:
-                                        extraction_required = False
+                            if extract_behaviour == 'overwrite-if-output-file-exists' \
+                                and 'extract-overwrite-condition' in crt_session \
+                                    and Path(resulted_file).is_file():
+                                fv = c_bnfe.fn_is_extraction_neccesary_additional(c_ln.logger,
+                                                                                  c_ph, c_fo,
+                                                                                  crt_session)
+                                extraction_required = False
+                                if fv == c_fo.lcl.gettext('older'):
+                                    extraction_required = True
                             if extraction_required:
                                 # get query parameters into a tuple
                                 tuple_parameters = c_ph.handle_query_parameters(c_ln.logger,

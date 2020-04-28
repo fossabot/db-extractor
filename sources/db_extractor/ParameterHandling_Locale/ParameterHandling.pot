@@ -13,10 +13,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Current Parameter is STR and has the value: \"{str_value}\""
+msgid "Current Parameter is {parameter_type} and has the value: \"{str_value}\""
 msgstr ""
 
 msgid "Current Parameter is STR and has been re-interpreted as value: \"{str_value}\""
+msgstr ""
+
+msgid "DICT"
 msgstr ""
 
 msgid "Final Tuple for Parameters is: {final_tuple}"
@@ -34,7 +37,13 @@ msgstr ""
 msgid "Known expression \"{expression_parts}\" has to be interpreted"
 msgstr ""
 
+msgid "LIST"
+msgstr ""
+
 msgid "Parameters type is {parameter_type}"
+msgstr ""
+
+msgid "STR"
 msgstr ""
 
 msgid "Seen Parameters are: {parameters}"

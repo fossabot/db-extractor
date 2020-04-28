@@ -268,7 +268,7 @@ class DataManipulator:
         timmer.start()
         if input_file_details['format'] == 'csv':
             input_data_frame.to_csv(path_or_buf=input_file_details['name'],
-                                    sep=input_file_details['field_delimiter'],
+                                    sep=input_file_details['field-delimiter'],
                                     header=True,
                                     index=False,
                                     encoding='utf-8')
