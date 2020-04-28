@@ -3,6 +3,8 @@ Facilitates moving files from a specified directory and matching pattern to a de
 """
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
+# package to add support for multi-language (i18n)
+import gettext
 # package to facilitate operating system operations
 import os
 # package to facilitate working with directories and files
@@ -33,7 +35,7 @@ if __name__ == '__main__':
     c_clam = CommandLineArgumentsManagement(SCRIPT_LANGUAGE)
     # get command line parameter values
     input_parameters = \
-        c_clam.parse_arguments(configuration_details['input_options']['db_extractor'])
+        c_clam.parse_arguments(configuration_details['input_options'][CURRENT_SCRIPT_NAME])
     # instantiate Basic Needs class
     c_bn = BasicNeeds(SCRIPT_LANGUAGE)
     # checking inputs, if anything is invalid an exit(1) will take place
@@ -45,21 +47,28 @@ if __name__ == '__main__':
     # instantiate Logger class
     c_ln = LoggingNeeds()
     # initiate logger
-    c_ln.initiate_logger(input_parameters.output_log_file, 'db_extractor')
+    c_ln.initiate_logger(input_parameters.output_log_file, CURRENT_SCRIPT_NAME)
+    # initiate localization specific for this script
+    lang_folder = os.path.join(os.path.dirname(__file__), CURRENT_SCRIPT_NAME + '_Locale')
+    script_lcl = gettext.translation(CURRENT_SCRIPT_NAME, lang_folder, languages=[SCRIPT_LANGUAGE])
     # define global timer to use
-    t = Timer('db_extractor', text='Time spent is {seconds} ', logger=c_ln.logger.debug)
+    t = Timer(CURRENT_SCRIPT_NAME,
+              text=script_lcl.gettext('Time spent is {seconds}'),
+              logger=c_ln.logger.debug)
     # reflect title and input parameters given values in the log
-    c_clam.listing_parameter_values(c_ln.logger, t, 'Data extractor',
-                                    configuration_details['input_options']['db_extractor'],
+    c_clam.listing_parameter_values(c_ln.logger, t, 'Database Extractor',
+                                    configuration_details['input_options'][CURRENT_SCRIPT_NAME],
                                     input_parameters)
     # loading extracting sequence details
     t.start()
     extracting_sequences = c_fo.fn_open_file_and_get_content(
         input_parameters.input_extracting_sequence_file, 'json')
-    c_ln.logger.info('Extraction sequence file name with extracting sequence(es) has been loaded')
+    c_ln.logger.info(script_lcl.gettext( \
+        'Configuration file name with extracting sequence(es) has been loaded'))
     t.stop()
     c_fo.fn_store_file_statistics(c_ln.logger, t, input_parameters.input_extracting_sequence_file,
-                                  'Configuration file name with extracting sequence(es)')
+                                  script_lcl.gettext('Configuration file name '
+                                                     + 'with extracting sequence(es)'))
     # validation of the extraction sequence file
     file_is_valid = c_bnfe.validate_extraction_sequence_file(c_ln.logger, extracting_sequences)
     if not file_is_valid:
@@ -68,24 +77,24 @@ if __name__ == '__main__':
     t.start()
     source_systems = c_fo.fn_open_file_and_get_content(input_parameters.input_source_system_file,
                                                        'json')['Systems']
-    c_ln.logger.info('Source Systems file name has been loaded')
+    c_ln.logger.info(script_lcl.gettext('Source Systems file name has been loaded'))
     t.stop()
     c_fo.fn_store_file_statistics(c_ln.logger, t, input_parameters.input_source_system_file,
-                                  'SourceSystems file name')
+                                  script_lcl.gettext('Source Systems file name'))
     # get the source system details from provided file
     t.start()
     configured_secrets = c_fo.fn_open_file_and_get_content(input_parameters.input_credentials_file,
                                                            'json')['Credentials']
-    c_ln.logger.info('Configuration file name with credentials has been loaded')
+    c_ln.logger.info(script_lcl.gettext('Configuration file name with credentials has been loaded'))
     t.stop()
-    c_fo.fn_store_file_statistics(c_ln.logger, t, input_parameters.input_source_system_file,
-                                  'SourceSystems file name')
+    c_fo.fn_store_file_statistics(c_ln.logger, t, input_parameters.input_credentials_file,
+                                  script_lcl.gettext('Configuration file name with credentials'))
     # instantiate Parameter Handling class
     c_ph = ParameterHandling(SCRIPT_LANGUAGE)
     # instantiate Data Manipulator class, useful to manipulate data frames
     c_dm = DataManipulator(SCRIPT_LANGUAGE)
     # instantiate Database Talker class
-    c_dbtkr = DatabaseTalker()
+    c_dbtkr = DatabaseTalker(SCRIPT_LANGUAGE)
     # cycling through the configurations
     int_extracting_sequence = 1
     for crt_sequence in extracting_sequences:
@@ -104,21 +113,22 @@ if __name__ == '__main__':
                 'lyr': crt_sequence['server-layer']
             }
             can_proceed_s = c_bnfe.validate_source_systems_file(c_ln.logger, srv, source_systems)
+            can_proceed_u = False
             if can_proceed_s:
                 # variable for source server details
                 src_srvr = source_systems[srv['vdr']][srv['typ']]['Server'][srv['grp']][srv['lyr']]
                 str_ss = '"' + '", "'.join(srv.values()) + '"'
                 can_proceed_ss = c_bnfe.validate_source_system(c_ln.logger, str_ss, src_srvr)
-            c_ln.logger.info('Validation of the 3 JSON files involved '
-                             + '(Extraction Sequence, Source systems and User Secrets) '
-                             + 'has been completed')
-            can_proceed_u = c_bnfe.validate_user_secrets_file(c_ln.logger, srv, configured_secrets)
-            if can_proceed_u and can_proceed_s:
+                can_proceed_u = c_bnfe.validate_user_secrets_file(c_ln.logger, srv, configured_secrets)
+            if can_proceed_s and can_proceed_ss and can_proceed_u:
                 ac_lbl = crt_sequence['account-label']
                 # variable with credentials for source server
                 usr_dtl = configured_secrets[srv['vdr']][srv['typ']][srv['grp']][srv['lyr']][ac_lbl]
                 can_proceed_uu = c_bnfe.validate_user_secrets(c_ln.logger, str_ss, usr_dtl)
-        c_ln.logger.info('Preparing connection details has been completed')
+            c_ln.logger.info(script_lcl.gettext('Validation of the 3 JSON files involved '
+                             + '(Extraction Sequence, Source systems and User Secrets) '
+                             + 'has been completed'))
+        c_ln.logger.info(script_lcl.gettext('Preparing connection details has been completed'))
         t.stop()
         if can_proceed_e and can_proceed_s and can_proceed_ss and can_proceed_u and can_proceed_uu:
             server_vendor_and_type = srv['vdr'] + ' ' + srv['typ']
@@ -132,7 +142,7 @@ if __name__ == '__main__':
                     'Name': usr_dtl['Name'],
                     'Password': usr_dtl['Password'],
                 })
-            c_ln.logger.debug('Connection attempt done')
+            c_ln.logger.debug(script_lcl.gettext('Connection attempt done'))
             if c_dbtkr.conn is not None:
                 # instantiate DB connection handler
                 cursor = c_dbtkr.conn.cursor()
@@ -144,8 +154,9 @@ if __name__ == '__main__':
                         t.start()
                         initial_query = c_fo.fn_open_file_and_get_content(
                             crt_query['input-query-file'], 'raw')
-                        c_ln.logger.info('Generic query is: '
-                                         + c_bn.fn_multi_line_string_to_single_line(initial_query))
+                        fdbck = script_lcl.gettext('Generic query is: %s') \
+                            .replace('%s', c_bn.fn_multi_line_string_to_single_line(initial_query))
+                        c_ln.logger.info(fdbck)
                         t.stop()
                         for crt_session in crt_query['sessions']:
                             # conversion logic for legacy extraction sequence files - START
@@ -172,12 +183,12 @@ if __name__ == '__main__':
                                 # in case text is given different rules have to be specified
                                 if 'parameters-handling-rules' not in crt_session:
                                     crt_session['parameters-handling-rules'] = {
-                                        "dict-values-glue":                         ", ",
-                                        "dict-values-prefix":                       "IN (",
-                                        "dict-values-suffix":                       ")",
-                                        "list-values-glue":                         ", ",
-                                        "list-values-prefix":                       "",
-                                        "list-values-suffix":                       ""
+                                        "dict-values-glue"  : ", ",
+                                        "dict-values-prefix": "IN (",
+                                        "dict-values-suffix": ")",
+                                        "list-values-glue"  : ", ",
+                                        "list-values-prefix": "",
+                                        "list-values-suffix": ""
                                     }
                             can_proceed_ses = c_bnfe.validate_query_session(c_ln.logger, str_ss,
                                                                             crt_session)
@@ -210,8 +221,10 @@ if __name__ == '__main__':
                                 query = c_ph.simulate_final_query(c_ln.logger, t, initial_query,
                                                                   expected_number_of_parameters,
                                                                   tuple_parameters)
-                                c_ln.logger.info('Query with parameters interpreted is: '
-                                                 + c_bn.fn_multi_line_string_to_single_line(query))
+                                fdbck = script_lcl.gettext(\
+                                    'Query with parameters interpreted is: %s') \
+                                    .replace('%s', c_bn.fn_multi_line_string_to_single_line(query))
+                                c_ln.logger.info(fdbck)
                                 # actual execution of the query
                                 cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor,
                                                                initial_query,
@@ -225,9 +238,9 @@ if __name__ == '__main__':
                                     'rows_count': cursor.rowcount,
                                 }
                                 t.start()
-                                c_ln.logger.info('Free DB result-set started')
+                                c_ln.logger.info(script_lcl.gettext('Free DB result-set started'))
                                 cursor.close()
-                                c_ln.logger.info('Free DB result-set completed')
+                                c_ln.logger.info(script_lcl.gettext('Free DB result-set completed'))
                                 t.stop()
                                 if stats['rows_count'] > 0:
                                     # put result set into a data frame
@@ -240,13 +253,14 @@ if __name__ == '__main__':
                                     c_dm.fn_store_data_frame_to_file(c_ln.logger, t, rdf,
                                                                      crt_session['output-file'])
                                     c_fo.fn_store_file_statistics(c_ln.logger, t, resulted_file,
-                                                                  'Output file name')
+                                                                  script_lcl.gettext( \
+                                                                      'Output file name'))
                 t.start()
-                c_ln.logger.info('Closing DB connection')
+                c_ln.logger.info(script_lcl.gettext('Closing DB connection'))
                 c_dbtkr.conn.close()
-                c_ln.logger.info('Closing DB completed')
+                c_ln.logger.info(script_lcl.gettext('Closing DB completed'))
                 t.stop()
             int_extracting_sequence += 1
     # just final message
     c_bn.fn_final_message(c_ln.logger, input_parameters.output_log_file,
-                          t.timers.total('db_extractor'))
+                          t.timers.total(CURRENT_SCRIPT_NAME))

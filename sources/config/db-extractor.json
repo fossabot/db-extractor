@@ -1,6 +1,6 @@
 {
     "input_options": {
-        "db_extractor": {
+        "extractor": {
             "s": {
                 "default_value"         : "",
                 "option_description"    : "Configuration file name with source systems is %s",
