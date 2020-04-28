@@ -40,7 +40,8 @@ class CommandLineArgumentsManagement:
             value_to_consider = parameter_values_dictionary[key_value_to_consider]
             # we build the parameter feedback considering "option_description"
             # and replacing %s with parameter value
-            feedback = attributes['option_description'] % value_to_consider
+            feedback = self.lcl.gettext(attributes['option_description']) \
+                .replace('%s', value_to_consider)
             # we finally write the feedback to logger
             local_logger.info(feedback)
         local_logger.info('~' * 50)

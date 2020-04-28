@@ -16,5 +16,50 @@ msgstr ""
 msgid "{application_name} has started"
 msgstr ""
 
+msgid "CSV field separator is %s"
+msgstr ""
+
+msgid "Columns to eliminate JSON expression is %s"
+msgstr ""
+
+msgid "Configuration file name with credentials is %s"
+msgstr ""
+
+msgid "Configuration file name with extracting sequence(es) is %s"
+msgstr ""
+
+msgid "Configuration file name with source systems is %s"
+msgstr ""
+
+msgid "Filter expression is %s"
+msgstr ""
+
+msgid "Input file name (simple or with matching pattern) is %s"
+msgstr ""
+
+msgid "Output directory is %s"
+msgstr ""
+
+msgid "Output file name %s"
+msgstr ""
+
+msgid "Output log file name is %s"
+msgstr ""
+
 msgid "Overview of input parameter given values"
+msgstr ""
+
+msgid "Publishing mode is %s"
+msgstr ""
+
+msgid "Tableau Project is %s"
+msgstr ""
+
+msgid "Tableau Server to consider is %s"
+msgstr ""
+
+msgid "Tableau Site is %s"
+msgstr ""
+
+msgid "Unique values to analyze is limited to %s"
 msgstr ""
