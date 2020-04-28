@@ -1,12 +1,20 @@
 # db-extractor
 
-
 ## What is this repository for?
 
 Extract information from databases (MySQL, MariaDB, SAP HANA to start with, other will be implemented later) using a combination of:
 * extraction sequences file (JSON format) that is easy enough to create and maintain but also provide very complex features to be set;
 * source system file (JSON format) to keep a central list of servers and/or databases to connect to that can be shared between people;
 * user settings file (JSON format) to keep a central list of credentials that is not to be shared with anyone or maybe with a small group of people; 
+
+## Features implemented
+
+* Ability to extract from a single source system or multiple using 1 JSON extraction sequence file;
+* Ability to extract a single or multiple query for each source system using same JSON extraction sequence file;
+* Ability to extract a single or multiple files using sessions for each query where parameters can be specified (currently on CSV file format is supported, other will follow);
+* Multi-language (English, Italian, Romanian);
+* Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given, as this is very useful when extracting large amount of data over VPN in small pieces and VPN drops (could mean already extracted pieces would be already skipped as not older than threshold imposed);
+
 
 ## Who do I talk to?
 
@@ -74,11 +82,11 @@ Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 
 ## Features already raised
 
-### Work in Progress
-* Multi-language (English, Italian, Romanian);
-
-### Requested
-* Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given, as this is very useful when extracting large amount of data over VPN in small pieces and VPN drops (could mean already extracted pieces would be already skipped as not older than threshold imposed);
+* Implement ability to store extracted result-set into Excel files;
+* Implement ability to store extracted result-set into HTML format file;
+* Implement ability to store extracted result-set into JSON file;
+* Implement ability to store extracted result-set into Parquet format file (popular among data scientists);
+* Implement ability to store extracted result-set into Pickle format file (popular among data scientists);
 
 ## Features to request template
 
