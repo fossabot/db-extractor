@@ -58,7 +58,7 @@ class BasicNeeds:
 
     @staticmethod
     def fn_timestamped_print(string_to_print):
-        print(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f %Z") + ' - ' + string_to_print)
+        print(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f %Z") + '- ' + string_to_print)
 
     def fn_validate_one_value(self, value_to_validate, validation_type, name_meaning):
         is_invalid = False
