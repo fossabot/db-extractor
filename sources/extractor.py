@@ -41,7 +41,7 @@ if __name__ == '__main__':
     # checking inputs, if anything is invalid an exit(1) will take place
     c_bn.fn_check_inputs(input_parameters)
     # instantiate Extractor Specific Needs class
-    c_bnfe = BasicNeedsForExtractor()
+    c_bnfe = BasicNeedsForExtractor(SCRIPT_LANGUAGE)
     # checking inputs, if anything is invalid an exit(1) will take place
     c_bnfe.fn_check_inputs_specific(input_parameters)
     # instantiate Logger class

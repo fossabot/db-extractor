@@ -1,0 +1,72 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the BasicNeedsForExtractor package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: BasicNeedsForExtractor\n"
+"POT-Creation-Date: 2020-04-29 12:29+0200\n"
+"PO-Revision-Date: 2020-04-29 01:53+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "{who} does not contain \"{current_property}\" which is mandatory, therefore extraction sequence will be ignored"
+msgstr "{who} does not contain \"{current_property}\" which is mandatory, therefore extraction sequence will be ignored"
+
+msgid "Extract behaviour is set to {extract_behaviour}"
+msgstr "Extract behaviour is set to {extract_behaviour}"
+
+msgid "Extraction Query"
+msgstr "Extraction Query"
+
+msgid "Extraction Sequence"
+msgstr "Extraction Sequence"
+
+msgid "Extraction sequence file name is not a LIST and must be, therefore cannot be used"
+msgstr "Extraction sequence file name is not a LIST and must be, therefore cannot be used"
+
+msgid "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
+msgstr "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
+
+msgid "File {file_name} already exists, so database extraction will not be performed"
+msgstr "File {file_name} already exists, so database extraction will not be performed"
+
+msgid "File {file_name} does not exist, so database extraction has to be performed"
+msgstr "File {file_name} does not exist, so database extraction has to be performed"
+
+msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
+msgstr "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
+
+msgid "For {str_user_secrets} your \"Password\" property has the default value: \"{default_password_value}\" which is unusual"
+msgstr "For {str_user_secrets} your \"Password\" property has the default value: \"{default_password_value}\" which is unusual"
+
+msgid "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
+msgstr "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
+
+msgid "Query Session"
+msgstr "Query Session"
+
+msgid "Query extraction should be performed"
+msgstr "Query extraction should be performed"
+
+msgid "Source System"
+msgstr "Source System"
+
+msgid "Source Systems"
+msgstr "Source Systems"
+
+msgid "User Secrets"
+msgstr "User Secrets"
+
+msgid "credentials file"
+msgstr "credentials file"
+
+msgid "extracting sequence file"
+msgstr "extracting sequence file"
+
+msgid "source system file"
+msgstr "source system file"
