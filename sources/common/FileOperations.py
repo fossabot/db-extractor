@@ -77,20 +77,20 @@ class FileOperations:
         if in_file_type == 'json':
             try:
                 json_interpreted_details = json.load(in_file_handler)
-                print(datetime.utcnow().strftime(self.timestamp_format) +
+                print(datetime.utcnow().strftime(self.timestamp_format) + '- ' +
                       self.lcl.gettext('JSON structure interpreted'))
                 return json_interpreted_details
             except Exception as e:
-                print(datetime.utcnow().strftime(self.timestamp_format) +
+                print(datetime.utcnow().strftime(self.timestamp_format) + '- ' +
                       self.lcl.gettext('Error encountered when trying to interpret JSON'))
                 print(e)
         elif in_file_type == 'raw':
             raw_interpreted_file = in_file_handler.read()
-            print(datetime.utcnow().strftime(self.timestamp_format) +
+            print(datetime.utcnow().strftime(self.timestamp_format) + '- ' +
                   self.lcl.gettext('Entire file content read'))
             return raw_interpreted_file
         else:
-            print(datetime.utcnow().strftime(self.timestamp_format) +
+            print(datetime.utcnow().strftime(self.timestamp_format) + '- ' +
                   self.lcl.gettext('Unknown file type provided, '
                                    + 'expected either "json" or "raw" but got {in_file_type}') \
                   .replace('{in_file_type}', in_file_type))
@@ -192,12 +192,12 @@ class FileOperations:
     def fn_open_file_and_get_content(self, input_file, content_type='json'):
         if os.path.isfile(input_file):
             with open(input_file, 'r') as file_handler:
-                print(datetime.utcnow().strftime(self.timestamp_format) +
+                print(datetime.utcnow().strftime(self.timestamp_format) + '- ' +
                       self.lcl.gettext('File {file_name} has just been opened') \
                       .replace('{file_name}', str(input_file)))
                 return self.fn_get_file_content(file_handler, content_type)
         else:
-            print(datetime.utcnow().strftime(self.timestamp_format) +
+            print(datetime.utcnow().strftime(self.timestamp_format) + '- ' +
                   self.lcl.gettext('File {file_name} does not exist') \
                   .replace('{file_name}', str(input_file)))
 
