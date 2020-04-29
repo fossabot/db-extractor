@@ -33,11 +33,12 @@ setup(
     description='Wrapper to ease data management into Tableau Hyper format from CSV files',
     include_package_data=True,
     install_requires=[
-        'codetiming>=1.1,<=2.0',
-        'datedelta>=1.3,<=2.0',
-        'hdbcli>=2.4.171,<=2.5',
-        'mysql-connector-python>=8.0.11,<=8.1',
-        'pandas>=0.25.3,<=1.1'
+        'codetiming>=1.1,<2.0',
+        'datedelta>=1.3,<2.0',
+        'hdbcli>=2.4.171,<2.5',
+        'mysql-connector-python>=8.0.11,<8.1',
+        'pandas>=0.25.3,<1.1',
+        'xlsxwriter>=1.2.8,<1.3'
     ],
     keywords=[
         'csv'
