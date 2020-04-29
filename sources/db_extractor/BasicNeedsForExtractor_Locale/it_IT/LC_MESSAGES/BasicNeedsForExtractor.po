@@ -8,10 +8,10 @@ msgstr ""
 "PO-Revision-Date: 2020-04-29 01:53+0300\n"
 "Last-Translator: danielppiniuc@gmail.com\n"
 "Language-Team: Italian\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: it\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "{who} does not contain \"{current_property}\" which is mandatory, therefore extraction sequence will be ignored"
@@ -35,8 +35,8 @@ msgstr "Il nome del file di sequenza di estrazione è un LIST ma non contiene al
 msgid "File {file_name} already exists, so database extraction will not be performed"
 msgstr "Il file {file_name} esiste già, quindi l'estrazione del database non verrà eseguita"
 
-msgid "File {file_name} does not exist, so database extraction has to be performed"
-msgstr "Il file {file_name} non esiste, quindi l'estrazione del database deve essere eseguita"
+msgid "File File {file_name} does not exist, so database extraction has to be performed"
+msgstr ""
 
 msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
 msgstr "Per {str_user_secrets} la proprietà \"Name\" ha il valore predefinito: \"{default_name_value}\" che è insolito"

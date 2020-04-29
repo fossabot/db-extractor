@@ -112,7 +112,8 @@ class BasicNeedsForExtractor:
                                + 'but does not contain at least 1 extraction sequence, '
                                + 'therefore cannot be used'))
             is_valid = False
-        return is_valid
+        if not is_valid:
+            exit(1)
 
     def validate_extraction_sequence(self, local_logger, in_extraction_sequence):
         mandatory_props_e = [

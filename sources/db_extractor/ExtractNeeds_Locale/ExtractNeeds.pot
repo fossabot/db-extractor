@@ -4,7 +4,7 @@
 #,fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: extractor\n"
+"Project-Id-Version: ExtractNeeds\n"
 "POT-Creation-Date: 2020-04-26 14:29+0200\n"
 "PO-Revision-Date: 2020-04-26 15:20+0200\n"
 "Last-Translator: danielppiniuc@gmail.com\n"
