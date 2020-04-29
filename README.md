@@ -11,7 +11,7 @@ Extract information from databases (MySQL, MariaDB, SAP HANA to start with, othe
 
 * Ability to extract from a single source system or multiple using 1 JSON extraction sequence file;
 * Ability to extract a single or multiple query for each source system using same JSON extraction sequence file;
-* Ability to extract a single or multiple files using sessions for each query where parameters can be specified (currently on CSV file format is supported, other will follow);
+* Ability to extract a single or multiple files using sessions for each query where parameters can be specified (currently on CSV and Excel file format are supported, other will follow);
 * Multi-language (English, Italian, Romanian);
 * Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given, as this is very useful when extracting large amount of data over VPN in small pieces and VPN drops (could mean already extracted pieces would be already skipped as not older than threshold imposed);
 
@@ -82,7 +82,6 @@ Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 
 ## Features already raised
 
-* Implement ability to store extracted result-set into Excel files;
 * Implement ability to store extracted result-set into HTML format file;
 * Implement ability to store extracted result-set into JSON file;
 * Implement ability to store extracted result-set into Parquet format file (popular among data scientists);
