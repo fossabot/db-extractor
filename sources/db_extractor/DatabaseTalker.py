@@ -140,7 +140,7 @@ class DatabaseTalker:
                 local_logger.info(self.lcl.gettext('Query executed successfully'))
             timered.stop()
             return in_cursor
-        except TypeError as e:
+        except dbapi.ProgrammingError as e:
             local_logger.error(self.lcl.gettext('Error running the query:'))
             local_logger.error(e)
             timered.stop()
