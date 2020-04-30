@@ -27,6 +27,26 @@ class BasicNeeds:
             self.fn_validate_single_value(os.path.dirname(input_parameters.output_log_file),
                                           'folder', self.lcl.gettext('log file'))
 
+    def fn_evaluate_dict_values(self, in_dict):
+        true_counted = 0
+        for crt_value in in_dict:
+            if in_dict[crt_value]:
+                true_counted += 1
+        all_true = False
+        if true_counted == len(in_dict):
+            all_true = True
+        return all_true
+
+    def fn_evaluate_list_values(self, in_list):
+        true_counted = 0
+        for crt_value in in_list:
+            if crt_value:
+                true_counted += 1
+        all_true = False
+        if true_counted == len(in_list):
+            all_true = True
+        return all_true
+
     def fn_final_message(self, local_logger, log_file_name, performance_in_seconds):
         total_time_string = str(timedelta(seconds=performance_in_seconds))
         if log_file_name == 'None':
@@ -41,7 +61,7 @@ class BasicNeeds:
                                       .replace('{log_file_name}', log_file_name))
 
     @staticmethod
-    def fn_multi_line_string_to_single_line(input_string):
+    def fn_multi_line_string_to_single(input_string):
         string_to_return = input_string.replace('\n', ' ').replace('\r', ' ')
         return re.sub(r'\s{2,100}', ' ', string_to_return).replace(' , ', ', ').strip()
 
