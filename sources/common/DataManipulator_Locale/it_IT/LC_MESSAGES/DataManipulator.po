@@ -20,11 +20,20 @@ msgstr "Il Numero di Deviazione {deviation_type} è {deviation_number} da applic
 msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
 msgstr "Tutti i file rilevanti ({files_counted}) sono stati uniti in una Strutura di Dati Pandas"
 
-msgid "Lower"
-msgstr "Inferiore"
-
 msgid "Current index has been determined to be {index_current_value}"
 msgstr "L'indice corrente è stato determinato per essere {index_current_value}"
+
+msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
+msgstr "L'attributo file \"format\" ha un valore di \"{format_value}\" che non è tra i valori attualmente implementati: \"{implemented_file_formats}\", quindi il salvataggio del file non è possibile"
+
+msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
+msgstr "L'attributo file \"formato\" è obbligatorio nell'impostazione del file, ma manca, pertanto non è possibile salvare il file"
+
+msgid "File format is CSV and that required a \"field-delimiter\" attribute with value specified, and that is missing, therefore file saving is not going to be performed"
+msgstr "Il formato del file è CSV e che ha richiesto un attributo \"field-delimiter\" con valore specificato e che manca, pertanto il salvataggio del file non verrà eseguito"
+
+msgid "Lower"
+msgstr "Inferiore"
 
 msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"
 msgstr "La Strutura di Dati Pandas è stato appena salvato nel file \"{file_name}\", considerando {file_type} come tipo di file"

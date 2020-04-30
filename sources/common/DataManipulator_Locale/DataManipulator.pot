@@ -19,10 +19,19 @@ msgstr ""
 msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
 msgstr ""
 
-msgid "Lower"
+msgid "Current index has been determined to be {index_current_value}"
 msgstr ""
 
-msgid "Current index has been determined to be {index_current_value}"
+msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
+msgstr ""
+
+msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
+msgstr ""
+
+msgid "File format is CSV and that required a \"field-delimiter\" attribute with value specified, and that is missing, therefore file saving is not going to be performed"
+msgstr ""
+
+msgid "Lower"
 msgstr ""
 
 msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"

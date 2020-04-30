@@ -301,14 +301,25 @@ class DataManipulator:
         if 'format' in in_file_details:
             given_format = in_file_details['format'].lower()
             if given_format not in implemented_file_formats:
-                local_logger.error(self.lcl.gettext('File "format" attribute has a value of "{format_value}" which is not among currently implemented values ("{implemented_file_formats}", therefore file saving is not possible').replace('{format_value}', given_format).replace('{implemented_file_formats}', '", "'.join(implemented_file_formats)))
+                local_logger.error(self.lcl.gettext( \
+                        'File "format" attribute has a value of "{format_value}" '
+                        + 'which is not among currently implemented values: '
+                        + '"{implemented_file_formats}", therefore file saving is not possible') \
+                                   .replace('{format_value}', given_format) \
+                                   .replace('{implemented_file_formats}',
+                                            '", "'.join(implemented_file_formats)))
             elif given_format == 'csv':
                 if 'field-delimiter' in in_file_details:
                     are_settings_ok = given_format
                 else:
-                    local_logger.error(self.lcl.gettext('File format is CSV and that required an "field-delimiter" attribute with value, and that is missing, therfore file saving is not going to be performed'))
+                    local_logger.error(self.lcl.gettext( \
+                            'File format is CSV and that required a "field-delimiter" attribute '
+                            + 'with value specified, and that is missing, '
+                            + 'therefore file saving is not going to be performed'))
             elif given_format in ('excel', 'pickle'):
                 are_settings_ok = given_format
         else:
-            local_logger.error(self.lcl.gettext('File "format" attribute is mandatory in the file setting, but missing, therefore file saving is not possible'))
+            local_logger.error(self.lcl.gettext('File "format" attribute is mandatory '
+                                                + 'in the file setting, but missing, '
+                                                + 'therefore file saving is not possible'))
         return are_settings_ok
