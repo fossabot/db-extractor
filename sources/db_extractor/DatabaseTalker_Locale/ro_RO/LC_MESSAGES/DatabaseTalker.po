@@ -42,7 +42,7 @@ msgid "Query executed successfully having a server processing time of {processin
 msgstr "Interogare executată cu succes având un timp de procesare a serverului de {processing_time}"
 
 msgid "Result-set column name determination completed: {columns_name}"
-msgstr "Determinarea numelor de coloane din setul de rezultate încheiată: {column_name}"
+msgstr "Determinarea numelor de coloane din setul de rezultate încheiată: {columns_name}"
 
 msgid "Result-set has been completely fetched and contains {rows_counted} rows"
 msgstr "Setul de rezultate a fost complet preluat și conține {rows_counted} rânduri"

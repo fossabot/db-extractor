@@ -34,8 +34,8 @@ msgstr "Si è verificato un errore durante il tentativo di interpretare JSON"
 msgid "File \"{file_name}\" has the following characteristics: {file_statistics}"
 msgstr "Il file \"{file_name}\" ha le seguenti caratteristiche: {file_statistics}"
 
-msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" compared with \"{reference_datetime}\" has a verdict = {verdict}"
-msgstr "Il file \"{file_name}\" che ha il {create_or_modified} datetime come \"{file_datetime}\" rispetto a \"{reference_datetime}\" ha un verdetto = {verdetto}"
+msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" vs. \"{reference_datetime}\" has a verdict = {verdict}"
+msgstr ""
 
 msgid "File matching pattern identified"
 msgstr "Identificazione del modello corrispondente dei file"
@@ -102,3 +102,6 @@ msgstr "dimensione [bytes]"
 
 msgid "unknown"
 msgstr "sconosciuta"
+
+#~ msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" compared with \"{reference_datetime}\" has a verdict = {verdict}"
+#~ msgstr "Il file \"{file_name}\" che ha il {create_or_modified} datetime come \"{file_datetime}\" contro \"{reference_datetime}\" ha un verdetto = {verdetto}"

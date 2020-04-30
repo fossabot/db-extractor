@@ -35,8 +35,8 @@ msgstr "Eroare întâmpinată la încercarea interpretării JSON"
 msgid "File \"{file_name}\" has the following characteristics: {file_statistics}"
 msgstr "Fișierul \"{file_name}\" are următoarele caracteristici: {file_statistics}"
 
-msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" compared with \"{reference_datetime}\" has a verdict = {verdict}"
-msgstr "Fișierul \"{file_name}\" care are data {created_or_modified} ca \"{file_datetime}\" în comparație cu \"{reference_datetime}\" are un verdict = {verdict}"
+msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" vs. \"{reference_datetime}\" has a verdict = {verdict}"
+msgstr "Fișierul \"{file_name}\" care are data {created_or_modified} ca \"{file_datetime}\" versus \"{reference_datetime}\" are un verdict = {verdict}"
 
 msgid "File matching pattern identified"
 msgstr "Model de potrivire fișiere identificat"

@@ -14,6 +14,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "A known expression \"{expression_parts}\" has to be interpreted"
+msgstr "A known expression \"{expression_parts}\" has to be interpreted"
+
 msgid "Current Parameter is {parameter_type} and has the value: \"{str_value}\""
 msgstr "Current Parameter is {parameter_type} and has the value: \"{str_value}\""
 
