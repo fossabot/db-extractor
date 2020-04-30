@@ -34,14 +34,14 @@ class DataManipulator:
             input_data_frame[col_name_to_add] = input_data_frame[col_name_to_add].apply(
                 lambda x: str(x).replace('.0', '')).apply(lambda x: str(x).replace('nan',
                                                                                    fill_value))
-            local_logger.info(self.lcl.gettext( \
+            local_logger.info(self.lcl.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
-                + '(filling any empty value as {empty_values_replacement})') \
-                              .replace('{new_column_name}', col_name_to_add) \
+                + '(filling any empty value as {empty_values_replacement})')
+                              .replace('{new_column_name}', col_name_to_add)
                               .replace('{original_column}',
-                                       current_input_details['Original Column']) \
-                              .replace('{shifting_rows}', str(col_offset)) \
+                                       current_input_details['Original Column'])
+                              .replace('{shifting_rows}', str(col_offset))
                               .replace('{empty_values_replacement}', fill_value))
             timmer.stop()
         return input_data_frame
@@ -69,14 +69,17 @@ class DataManipulator:
         # shorten last method parameter
         de = dict_expression
         # add helpful column to use on "Timeline Evaluation" column determination
-        in_df['Reference Date'] = de['Reference Date']
+        in_df['rd'] = de['Reference Date']
+        # rename some columns to cope with long expression
+        in_df.rename(columns={'Start Date': 'sd', 'End Date': 'ed'}, inplace=True)
         # actual "Timeline Evaluation" column determination
-        cols = ['Reference Date', de['Start Date'], de['End Date']]
-        in_df['Timeline Evaluation'] = in_df[cols] \
-            .apply(lambda r: 'Current' if r[de['Start Date']]
-                                          <= r['Reference Date']
-                                          <= r[de['End Date']] else\
-                   'Past' if r[de['Start Date']] < r['Reference Date'] else 'Future', axis=1)
+        cols = ['rd', de['sd'], de['ed']]
+        in_df['te'] = \
+            in_df[cols].apply(lambda r: 'C' if r[de['sd']] <= r['rd'] <= r[de['ed']] else
+                              'P' if r[de['sd']] < r['rd'] else 'F', axis=1)
+        # rename back columns
+        in_df.rename(columns={'sd': 'Start Date', 'ed': 'End Date', 'rd': 'Reference Date'},
+                     inplace=True)
         # decide if the helpful column is to be retained or not
         removal_needed = self.fn_decide_by_omission_or_specific_false(de, 'Keep Reference Date')
         if removal_needed:
@@ -86,18 +89,11 @@ class DataManipulator:
     def fn_add_value_to_dictionary(self, in_list, adding_value, adding_type, reference_column):
         add_type = adding_type.lower()
         total_columns = len(in_list)
-        if reference_column is None:
-            reference_indexes = {
-                'add': {
-                    'after': 0,
-                    'before': 0,
-                },
-                'cycle_down_to': {
-                    'after': 0,
-                    'before': 0,
-                },
-            }
-        else:
+        reference_indexes = {
+            'add': {'after': 0, 'before': 0},
+            'cycle_down_to': {'after': 0, 'before': 0}
+        }
+        if type(reference_column) is int:
             reference_indexes = {
                 'add': {
                     'after': in_list.copy().index(reference_column) + 1,
@@ -106,7 +102,7 @@ class DataManipulator:
                 'cycle_down_to': {
                     'after': in_list.copy().index(reference_column),
                     'before': in_list.copy().index(reference_column),
-                },
+                }
             }
         positions = {
             'after': {
@@ -159,25 +155,25 @@ class DataManipulator:
                                                 + '"{column_to_filter}"') \
             .replace('{column_to_filter}', extract_params['column_to_filter'])
         if extract_params['filter_to_apply'] == 'equal':
-            local_logger.debug(generic_pre_feedback \
-                               .replace('{filter_type}', self.lcl.gettext('equal with')) \
+            local_logger.debug(generic_pre_feedback
+                               .replace('{filter_type}', self.lcl.gettext('equal with'))
                                .replace('{filter_values}', extract_params['filter_values']))
             query_expression = '`' + extract_params['column_to_filter'] + '` == "' \
                                + extract_params['filter_values'] + '"'
         elif extract_params['filter_to_apply'] == 'different':
-            local_logger.debug(generic_pre_feedback \
-                               .replace('{filter_type}', self.lcl.gettext('different than')) \
+            local_logger.debug(generic_pre_feedback
+                               .replace('{filter_type}', self.lcl.gettext('different than'))
                                .replace('{filter_values}', extract_params['filter_values']))
             query_expression = '`' + extract_params['column_to_filter'] + '` != "' \
                                + extract_params['filter_values'] + '"'
         elif extract_params['filter_to_apply'] == 'multiple_match':
             multiple_values = '["' + '", "'.join(extract_params['filter_values'].values()) + '"]'
-            local_logger.debug(generic_pre_feedback \
+            local_logger.debug(generic_pre_feedback
                                .replace('{filter_type}',
-                                        self.lcl.gettext('matching any of these values')) \
+                                        self.lcl.gettext('matching any of these values'))
                                .replace('{filter_values}', multiple_values))
             query_expression = '`' + extract_params['column_to_filter'] + '` in ' + multiple_values
-        local_logger.debug(self.lcl.gettext('Query expression to apply is: {query_expression}') \
+        local_logger.debug(self.lcl.gettext('Query expression to apply is: {query_expression}')
                            .replace('{query_expression}', query_expression))
         input_data_frame.query(query_expression, inplace=True)
         timmer.stop()
@@ -209,24 +205,25 @@ class DataManipulator:
     def fn_filter_data_frame_by_index(self, local_logger, in_data_frame, filter_rule):
         reference_expression = filter_rule['Query Expression for Reference Index']
         index_current = in_data_frame.query(reference_expression, inplace=False)
-        local_logger.info(self.lcl.gettext( \
-            'Current index has been determined to be {index_current_value}') \
+        local_logger.info(self.lcl.gettext(
+            'Current index has been determined to be {index_current_value}')
                           .replace('{index_current_value}', str(index_current.index)))
         if str(index_current.index) != "Int64Index([], dtype='int64')" \
                 and 'Deviation' in filter_rule:
             for deviation_type in filter_rule['Deviation']:
                 deviation_number = filter_rule['Deviation'][deviation_type]
+                index_to_apply = index_current.index
                 if deviation_type == 'Lower':
                     index_to_apply = index_current.index - deviation_number
                     in_data_frame = in_data_frame[in_data_frame.index >= index_to_apply[0]]
                 elif deviation_type == 'Upper':
                     index_to_apply = index_current.index + deviation_number
                     in_data_frame = in_data_frame[in_data_frame.index <= index_to_apply[0]]
-                local_logger.info(self.lcl.gettext( \
+                local_logger.info(self.lcl.gettext(
                     '{deviation_type} Deviation Number is {deviation_number} '
-                    + 'to be applied to Current index, became {index_to_apply}') \
-                                  .replace('{deviation_type}', deviation_type) \
-                                  .replace('{deviation_number}', str(deviation_number)) \
+                    + 'to be applied to Current index, became {index_to_apply}')
+                                  .replace('{deviation_type}', deviation_type)
+                                  .replace('{deviation_number}', str(deviation_number))
                                   .replace('{index_to_apply}', str(index_to_apply)))
         return in_data_frame
 
@@ -257,23 +254,35 @@ class DataManipulator:
                                               low_memory=False,
                                               encoding='utf-8',
                                               ) for current_file in file_list])
-        local_logger.info(self.lcl.gettext( \
-            'All relevant files ({files_counted}) were merged into a Pandas Data Frame') \
+        local_logger.info(self.lcl.gettext(
+            'All relevant files ({files_counted}) were merged into a Pandas Data Frame')
                           .replace('{files_counted}', str(len(file_list))))
         timmer.stop()
         return combined_csv
 
+    @staticmethod
+    def fn_save_data_frame_to_csv(in_data_frame, in_file_details):
+        if 'field-delimiter' not in in_file_details:
+            in_file_details['field-delimiter'] = os.pathsep
+        in_data_frame.to_csv(path_or_buf=in_file_details['name'],
+                             sep=in_file_details['field-delimiter'],
+                             header=True,
+                             index=False,
+                             encoding='utf-8')
+
+    @staticmethod
+    def fn_save_data_frame_to_pickle(in_data_frame, in_file_details):
+        if 'compression' not in in_file_details:
+            in_file_details['compression'] = 'gzip'
+        in_data_frame.to_pickle(path=in_file_details['name'],
+                                compression=in_file_details['compression'])
+
     def fn_store_data_frame_to_file(self, local_logger, timmer, in_data_frame, in_file_details):
         timmer.start()
         is_file_saved = False
-        given_format = self.fn_store_data_frame_to_file_validation(local_logger, in_data_frame,
-                                                                   in_file_details)
+        given_format = self.fn_store_data_frame_to_file_validation(local_logger, in_file_details)
         if given_format == 'csv':
-            in_data_frame.to_csv(path_or_buf=in_file_details['name'],
-                                 sep=in_file_details['field-delimiter'],
-                                 header=True,
-                                 index=False,
-                                 encoding='utf-8')
+            self.fn_save_data_frame_to_csv(in_data_frame, in_file_details)
             is_file_saved = True
         elif given_format == 'excel':
             in_data_frame.to_excel(excel_writer=in_file_details['name'],
@@ -282,42 +291,31 @@ class DataManipulator:
                                    verbose=True)
             is_file_saved = True
         elif given_format == 'pickle':
-            if 'compression' not in in_file_details:
-                in_file_details['compression'] = 'gzip'
-            in_data_frame.to_pickle(path=in_file_details['name'],
-                                    compression=in_file_details['compression'])
+            self.fn_save_data_frame_to_pickle(in_data_frame, in_file_details)
             is_file_saved = True
         if is_file_saved:
-            local_logger.info(self.lcl.gettext( \
+            local_logger.info(self.lcl.gettext(
                 'Pandas Data Frame has just been saved to file "{file_name}", '
-                + 'considering {file_type} as file type') \
-                              .replace('{file_name}', in_file_details['name']) \
+                + 'considering {file_type} as file type')
+                              .replace('{file_name}', in_file_details['name'])
                               .replace('{file_type}', in_file_details['format']))
         timmer.stop()
 
-    def fn_store_data_frame_to_file_validation(self, local_logger, in_data_frame, in_file_details):
-        implemented_file_formats = ['csv', 'excel', 'pickle']
+    def fn_store_data_frame_to_file_validation(self, local_logger, in_file_details):
         are_settings_ok = False
         if 'format' in in_file_details:
+            implemented_file_formats = ['csv', 'excel', 'pickle']
             given_format = in_file_details['format'].lower()
-            if given_format not in implemented_file_formats:
-                local_logger.error(self.lcl.gettext( \
+            if given_format in implemented_file_formats:
+                are_settings_ok = True
+            else:
+                local_logger.error(self.lcl.gettext(
                         'File "format" attribute has a value of "{format_value}" '
                         + 'which is not among currently implemented values: '
-                        + '"{implemented_file_formats}", therefore file saving is not possible') \
-                                   .replace('{format_value}', given_format) \
+                        + '"{implemented_file_formats}", therefore file saving is not possible')
+                                   .replace('{format_value}', given_format)
                                    .replace('{implemented_file_formats}',
                                             '", "'.join(implemented_file_formats)))
-            elif given_format == 'csv':
-                if 'field-delimiter' in in_file_details:
-                    are_settings_ok = given_format
-                else:
-                    local_logger.error(self.lcl.gettext( \
-                            'File format is CSV and that required a "field-delimiter" attribute '
-                            + 'with value specified, and that is missing, '
-                            + 'therefore file saving is not going to be performed'))
-            elif given_format in ('excel', 'pickle'):
-                are_settings_ok = given_format
         else:
             local_logger.error(self.lcl.gettext('File "format" attribute is mandatory '
                                                 + 'in the file setting, but missing, '

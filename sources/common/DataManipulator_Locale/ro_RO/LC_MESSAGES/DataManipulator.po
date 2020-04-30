@@ -29,9 +29,6 @@ msgstr "Atributul \"format\" al fișierului are o valoare \"{format_value}\" car
 msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
 msgstr "Atributul \"format\" al fișierului este obligatoriu, dar acesta lipsește, prin urmare nu este posibilă salvarea fișierului"
 
-msgid "File format is CSV and that required a \"field-delimiter\" attribute with value specified, and that is missing, therefore file saving is not going to be performed"
-msgstr "Formatul fișierului este CSV și această valoare necesită deasemenea un atribut \"field-delimiter\" cu o valoare specificată și care lipsește, de aceea salvarea fișierului nu va fi efectuată"
-
 msgid "Lower"
 msgstr "Inferior"
 

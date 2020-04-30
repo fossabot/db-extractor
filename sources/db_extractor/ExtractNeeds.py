@@ -225,10 +225,9 @@ class ExtractNeeds:
         return rdf
 
     def set_default_starting_weekday(self, crt_session):
-        if 'start-isoweekday' not in crt_session:
-            week_starts_with_isoweekday = 1
-            if 'start_isoweekday' in crt_session:
-                week_starts_with_isoweekday = crt_session['start_isoweekday']
+        week_starts_with_isoweekday = 1
+        if 'start_isoweekday' in crt_session:
+            week_starts_with_isoweekday = crt_session['start-isoweekday']
         return week_starts_with_isoweekday
 
     def set_default_parameter_rules(self, crt_session):

@@ -29,9 +29,6 @@ msgstr "File \"format\" attribute has a value of \"{format_value}\" which is not
 msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
 msgstr "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
 
-msgid "File format is CSV and that required a \"field-delimiter\" attribute with value specified, and that is missing, therefore file saving is not going to be performed"
-msgstr "File format is CSV and that required a \"field-delimiter\" attribute with value specified, and that is missing, therefore file saving is not going to be performed"
-
 msgid "Lower"
 msgstr "Lower"
 
