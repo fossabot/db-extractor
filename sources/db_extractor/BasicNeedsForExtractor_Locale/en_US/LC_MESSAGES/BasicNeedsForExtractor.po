@@ -35,8 +35,8 @@ msgstr "Extraction sequence file name is a LIST but does not contain at least 1 
 msgid "File {file_name} already exists, so database extraction will not be performed"
 msgstr "File {file_name} already exists, so database extraction will not be performed"
 
-msgid "File File {file_name} does not exist, so database extraction has to be performed"
-msgstr ""
+msgid "File {file_name} does not exist, so database extraction has to be performed"
+msgstr "File {file_name} does not exist, so database extraction has to be performed"
 
 msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
 msgstr "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
@@ -50,8 +50,8 @@ msgstr "For {str_user_secrets} your \"Username\" property has the default value:
 msgid "Query Session"
 msgstr "Query Session"
 
-msgid "Query extraction should be performed"
-msgstr "Query extraction should be performed"
+msgid "Query extraction probably should be performed (other checks might be required)"
+msgstr "Query extraction probably should be performed (other checks might be required)"
 
 msgid "Source System"
 msgstr "Source System"

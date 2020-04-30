@@ -61,18 +61,58 @@
                                 "value":                                "utcnow"
                             }
                         ],
-                        "extract-behaviour":                            "overwrite-if-output-file-exists",
+                        "extract-behaviour":                            "skip-if-output-file-exists",
                         "extract-overwrite-condition":  {
                             "file-datetime":                            "last_modified",
                             "reference-expresion":                      "CalculatedDate_CYCMCDCH",
                             "rule":                                     "older"
                         },
                         "output-file": {
-                                "compression":                          "bz2",
-                                "format":                               "pickle",
-                                "name":                                 "mysql-test-pickle.bz2"
+                                "format":                               "excel",
+                                "name":                                 "mysql-test-excel.xlsx"
                         },
-                        "output-files": [
+                        "parameters": {
+                            "Select Fields": [
+                                "*"
+                            ],
+                            "From":                                     "information_schema.COLLATIONS",
+                            "Filter Field":                             "CHARACTER_SET_NAME",
+                            "Filter Values": {
+                                "UTF-8 Unicode":                        "utf8"
+                            }
+                        },
+                        "parameters-handling-rules": {
+                            "dict-values-glue":                         "', '",
+                            "dict-values-prefix":                       "IN ('",
+                            "dict-values-suffix":                       "')",
+                            "list-values-glue":                         ", ",
+                            "list-values-prefix":                       "",
+                            "list-values-suffix":                       ""
+                        }
+                    },
+                    {
+                        "additional-columns": [
+                            {
+                                "name":                                 "Calculated Timestamp [UTC]",
+                                "value":                                "utcnow"
+                            }
+                        ],
+                        "extract-behaviour":                            "overwrite-if-output-file-exists",
+                        "extract-overwrite-condition":  {
+                            "file-datetime":                            "last_modified",
+                            "reference-expresion":                      "CalculatedDate_CYCMCDCH_-24",
+                            "rule":                                     "older"
+                        },
+                        "output-file": [
+                            {
+                                "field-delimiter":                      ";",
+                                "format":                               "csv",
+                                "name":                                 "mysql-test.csv"
+                            },
+                            {
+                                "format":                               "excel",
+                                "name":                                 "mysql-test.xlsx"
+                            },
                             {
                                 "compression":                          "bz2",
                                 "format":                               "pickle",
@@ -117,43 +157,6 @@
                             "list-values-prefix":                       "",
                             "list-values-suffix":                       ""
                         }
-                    },
-                    {
-                        "additional-columns": [
-                            {
-                                "name":                                 "Calculated Timestamp [UTC]",
-                                "value":                                "utcnow"
-                            }
-                        ],
-                        "extract-behaviour":                            "overwrite-if-output-file-exists",
-                        "extract-overwrite-condition":  {
-                            "file-datetime":                            "last_modified",
-                            "reference-expresion":                      "CalculatedDate_CYCMCDCH",
-                            "rule":                                     "older"
-                        },
-                        "output-file": {
-                                "compression":                          "gzip",
-                                "format":                               "pickle",
-                                "name":                                 "mysql-test-utf8-pickle.gzip"
-                        },
-                        "parameters": {
-                            "Select Fields": [
-                                "*"
-                            ],
-                            "From":                                     "information_schema.COLLATIONS",
-                            "Filter Field":                             "CHARACTER_SET_NAME",
-                            "Filter Values": {
-                                "UTF-8 Unicode":                        "utf8"
-                            }
-                        },
-                        "parameters-handling-rules": {
-                            "dict-values-glue":                         "', '",
-                            "dict-values-prefix":                       "IN ('",
-                            "dict-values-suffix":                       "')",
-                            "list-values-glue":                         ", ",
-                            "list-values-prefix":                       "",
-                            "list-values-suffix":                       ""
-                        }
                     }
                 ]
             }
@@ -182,9 +185,9 @@
                         ],
                         "extract-behaviour":                            "skip-if-output-file-exists",
                         "output-file": {
+                            "field-delimiter":                          ";",
                             "format":                                   "csv",
-                            "name":                                     "hana-test.csv",
-                            "field-delimiter":                          ";"
+                            "name":                                     "hana-test.csv"
                         },
                         "parameters": {
                             "Select Fields": [

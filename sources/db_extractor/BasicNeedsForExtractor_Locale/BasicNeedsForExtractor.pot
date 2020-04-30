@@ -34,7 +34,7 @@ msgstr ""
 msgid "File {file_name} already exists, so database extraction will not be performed"
 msgstr ""
 
-msgid "File File {file_name} does not exist, so database extraction has to be performed"
+msgid "File {file_name} does not exist, so database extraction has to be performed"
 msgstr ""
 
 msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
@@ -49,7 +49,7 @@ msgstr ""
 msgid "Query Session"
 msgstr ""
 
-msgid "Query extraction should be performed"
+msgid "Query extraction probably should be performed (other checks might be required)"
 msgstr ""
 
 msgid "Source System"

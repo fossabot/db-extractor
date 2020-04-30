@@ -35,8 +35,8 @@ msgstr "Numele fișierului secvenței de extragere este un LIST, dar nu conține
 msgid "File {file_name} already exists, so database extraction will not be performed"
 msgstr "Fișierul {file_name} există deja, astfel încât extragerea din baza de date nu va fi efectuată"
 
-msgid "File File {file_name} does not exist, so database extraction has to be performed"
-msgstr ""
+msgid "File {file_name} does not exist, so database extraction has to be performed"
+msgstr "Fișierul {file_name} nu există, deci trebuie efectuată extragerea bazei de date"
 
 msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
 msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Name\" are valoarea implicită: \"{default_name_value}\" ceea ce este neobișnuit"
@@ -50,8 +50,8 @@ msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Username\" are valoarea im
 msgid "Query Session"
 msgstr "Sesiunea de interogare"
 
-msgid "Query extraction should be performed"
-msgstr "Interogarea de extragerea trebuie efectuată"
+msgid "Query extraction probably should be performed (other checks might be required)"
+msgstr "Probabil că interogarea de extragerea ar trebui să fie efectuată (posibil ca alte verificări să fie necesare)"
 
 msgid "Source System"
 msgstr "Sistemul sursă"

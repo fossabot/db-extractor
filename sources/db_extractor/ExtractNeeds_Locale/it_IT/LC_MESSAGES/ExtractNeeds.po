@@ -14,6 +14,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Additional evaluation took place and new verdict is: {new_verdict}"
+msgstr "Ulteriore valutazione ha avuto luogo e il nuovo verdetto è: {new_verdict}"
+
 msgid "Closing DB completed"
 msgstr "Chiusura DataBase completata"
 
@@ -47,6 +50,9 @@ msgstr "L'interrogazione generica è: %s"
 msgid "Output file name"
 msgstr "Nome del file di output"
 
+msgid "Overall new verdict after considering multiple files is: {overall_verdict}"
+msgstr "Il nuovo verdetto complessivo dopo aver considerato più file è: {overall_verdict}"
+
 msgid "Preparing connection details has been completed"
 msgstr "La preparazione dei dettagli di collegamento è stata completata"
 
@@ -64,3 +70,9 @@ msgstr "Il tempo trascorso è di {seconds}"
 
 msgid "Validation of the 3 JSON files involved (Extraction Sequence, Source systems and User Secrets) has been completed"
 msgstr "La validazione dei 3 file JSON coinvolti (Sequenza di estrazione, sistemi sorgente e segreti utente) è stata completata"
+
+msgid "not required"
+msgstr "non necessario"
+
+msgid "required"
+msgstr "necessario"

@@ -35,8 +35,8 @@ msgstr "Il nome del file di sequenza di estrazione è un LIST ma non contiene al
 msgid "File {file_name} already exists, so database extraction will not be performed"
 msgstr "Il file {file_name} esiste già, quindi l'estrazione del database non verrà eseguita"
 
-msgid "File File {file_name} does not exist, so database extraction has to be performed"
-msgstr ""
+msgid "File {file_name} does not exist, so database extraction has to be performed"
+msgstr "Il file {file_name} non esiste, quindi è necessario eseguire l'estrazione del database"
 
 msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
 msgstr "Per {str_user_secrets} la proprietà \"Name\" ha il valore predefinito: \"{default_name_value}\" che è insolito"
@@ -50,8 +50,8 @@ msgstr "Per {str_user_secrets} la proprietà \"Nome utente\" ha il valore predef
 msgid "Query Session"
 msgstr "Sessione di interogazione"
 
-msgid "Query extraction should be performed"
-msgstr "L'estrazione con la interogazione deve essere eseguita"
+msgid "Query extraction probably should be performed (other checks might be required)"
+msgstr "Probabilmente dovrebbe essere eseguita l'estrazione della query (potrebbero essere necessari altri controlli)"
 
 msgid "Source System"
 msgstr "Sistema sorgente"

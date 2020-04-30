@@ -13,6 +13,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Additional evaluation took place and new verdict is: {new_verdict}"
+msgstr ""
+
 msgid "Closing DB completed"
 msgstr ""
 
@@ -46,6 +49,9 @@ msgstr ""
 msgid "Output file name"
 msgstr ""
 
+msgid "Overall new verdict after considering multiple files is: {overall_verdict}"
+msgstr ""
+
 msgid "Preparing connection details has been completed"
 msgstr ""
 
@@ -62,4 +68,10 @@ msgid "Time spent is {seconds}"
 msgstr ""
 
 msgid "Validation of the 3 JSON files involved (Extraction Sequence, Source systems and User Secrets) has been completed"
+msgstr ""
+
+msgid "not required"
+msgstr ""
+
+msgid "required"
 msgstr ""

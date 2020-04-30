@@ -7,6 +7,8 @@ from codetiming import Timer
 import os
 # package to add support for multi-language (i18n)
 import gettext
+# package to facilitate working with directories and files
+from pathlib import Path
 # custom classes specific to this project
 from common.BasicNeeds import BasicNeeds
 from common.CommandLineArgumentsManagement import CommandLineArgumentsManagement
@@ -73,6 +75,55 @@ class ExtractNeeds:
         local_logger.info(self.locale.gettext('Free DB result-set completed'))
         self.timer.stop()
 
+    def evaluate_if_extraction_is_required(self, crt_session):
+        extraction_required = False
+        if type(crt_session['output-file']) == dict:
+            extraction_required = \
+                self.evaluate_if_extraction_is_required_for_single_file(crt_session,
+                                                                        crt_session['output-file'])
+        elif type(crt_session['output-file']) == list:
+            evaluated_extraction = {}
+            for crt_file in crt_session['output-file']:
+                crt_eval = self.evaluate_if_extraction_is_required_for_single_file(crt_session,
+                                                                                   crt_file)
+                evaluated_extraction.update({str(crt_file['name']): crt_eval})
+            extraction_required = self.class_bn.fn_evaluate_dict_values(evaluated_extraction)
+            self.class_ln.logger.debug(evaluated_extraction)
+            overall_verdict = self.locale.gettext('not required')
+            if extraction_required:
+                overall_verdict = self.locale.gettext('required')
+            self.class_ln.logger.debug(self.locale.gettext( \
+                    'Overall new verdict after considering multiple files is: {overall_verdict}') \
+                                       .replace('{overall_verdict}', overall_verdict))
+        return extraction_required
+
+    def evaluate_if_extraction_is_required_for_single_file(self, crt_session, crt_file):
+        crt_file['name'] = self.class_ph.eval_expression(self.class_ln.logger,
+                                                         crt_file['name'],
+                                                         crt_session['start-isoweekday'])
+        e_dict = {
+            'extract-behaviour': crt_session['extract-behaviour'],
+            'output-csv-file'  : crt_file['name'],
+        }
+        extraction_required = \
+            self.class_bnfe.fn_is_extraction_necessary(self.class_ln.logger, e_dict)
+        if crt_session['extract-behaviour'] == 'overwrite-if-output-file-exists' \
+                and 'extract-overwrite-condition' in crt_session \
+                and Path(crt_file['name']).is_file():
+            fv = self.class_bnfe.fn_is_extraction_neccesary_additional(self.class_ln.logger,
+                                                                       self.class_ph,
+                                                                       self.class_fo,
+                                                                       crt_session, crt_file)
+            extraction_required = False
+            new_verdict = self.locale.gettext('not required')
+            if fv == self.class_fo.lcl.gettext('older'):
+                extraction_required = True
+                new_verdict = self.locale.gettext('required')
+            self.class_ln.logger.debug(self.locale.gettext( \
+                    'Additional evaluation took place and new verdict is: {new_verdict}') \
+                                       .replace('{new_verdict}', new_verdict))
+        return extraction_required
+
     def extract_query_to_result_set(self, local_logger, in_cursor, in_dictionary):
         this_session = in_dictionary['session']
         this_query = in_dictionary['query']
@@ -87,8 +138,7 @@ class ExtractNeeds:
                                                              tuple_parameters)
         local_logger.info(self.locale.gettext('Query with parameters interpreted is: %s') \
                           .replace('%s',
-                                   self.class_bn.fn_multi_line_string_to_single_line(\
-                                           simulated_query)))
+                                   self.class_bn.fn_multi_line_string_to_single(simulated_query)))
         # actual execution of the query
         in_cursor = self.class_dbt.execute_query(local_logger, self.timer, in_cursor, this_query,
                                                  expected_number_of_parameters, tuple_parameters)
@@ -152,6 +202,15 @@ class ExtractNeeds:
                                                self.parameters.input_credentials_file,
                                                self.locale.gettext( \
                                                     'Configuration file name with credentials'))
+
+    def load_query(self, crt_query):
+        self.timer.start()
+        query = self.class_fo.fn_open_file_and_get_content(crt_query['input-query-file'], 'raw')
+        feedback = self.locale.gettext('Generic query is: %s') \
+            .replace('%s', self.class_bn.fn_multi_line_string_to_single(query))
+        self.class_ln.logger.info(feedback)
+        self.timer.stop()
+        return query
 
     def result_set_into_data_frame(self, local_logger, stats, crt_session):
         result_df = self.class_dbt.result_set_to_data_frame(local_logger, self.timer,

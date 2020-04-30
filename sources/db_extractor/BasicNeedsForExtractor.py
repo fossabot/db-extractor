@@ -16,8 +16,11 @@ from common.BasicNeeds import BasicNeeds
 
 
 class BasicNeedsForExtractor:
+    connection_details = None
     local_c_bn = None
     lcl = None
+    str_ss = None
+    srv = None
 
     def __init__(self, default_language='en_US'):
         self.local_c_bn = BasicNeeds(default_language)
@@ -61,10 +64,11 @@ class BasicNeedsForExtractor:
                                    .replace('{file_name}', relevant_details['output-csv-file']))
         elif relevant_details['extract-behaviour'] == 'overwrite-if-output-file-exists':
             extraction_is_necessary = True
-            local_logger.debug(self.lcl.gettext('Query extraction should be performed'))
+            local_logger.debug(self.lcl.gettext('Query extraction probably should be performed '
+                                                + '(other checks might be required)'))
         return extraction_is_necessary
 
-    def fn_is_extraction_neccesary_additional(self, local_logger, c_ph, c_fo, crt_session):
+    def fn_is_extraction_neccesary_additional(self, local_logger, c_ph, c_fo, crt_session, in_file):
         ref_expr = crt_session['extract-overwrite-condition']['reference-expresion']
         reference_datetime = c_ph.eval_expression(local_logger, ref_expr,
                                                   crt_session['start-isoweekday'])
@@ -72,7 +76,7 @@ class BasicNeedsForExtractor:
         deviation_original = child_parent_expressions.get(ref_expr.split('_')[1])
         r_dt = datetime.strptime(reference_datetime,
                                  c_ph.output_standard_formats.get(deviation_original))
-        return c_fo.fn_get_file_datetime_verdict(local_logger, crt_session['output-file']['name'],
+        return c_fo.fn_get_file_datetime_verdict(local_logger, in_file['name'],
                                                  'last modified', r_dt)
 
     @staticmethod
@@ -89,7 +93,69 @@ class BasicNeedsForExtractor:
             value_to_return = in_session['extract-behaviour']
         return value_to_return
 
-    def validate_extraction_query(self, local_logger, in_extraction_sequence):
+    def validate_all_json_files(self, local_logger, timmer, extracting_sequences):
+        timmer.start()
+        are_json_files_valid = False
+        # validation of the extraction sequence file
+        if self.validate_extraction_sequence_file(local_logger, extracting_sequences):
+            are_json_files_valid = True
+        timmer.stop()
+        return are_json_files_valid
+
+    def validate_all_json_files_current(self, local_logger, timmer, extracting_sequence,
+                                        in_source_systems, in_user_secrets):
+        # setting initial checks statuses
+        can_proceed = {
+            'Extraction'              : False,
+            'Source System'           : False,
+            'Source System Properties': False,
+            'User Secrets'            : False,
+            'User Secrets Properties' : False,
+        }
+        timmer.start()
+        # actual check
+        can_proceed['Extraction'] = self.validate_extraction_sequence(local_logger,
+                                                                      extracting_sequence)
+        if can_proceed['Extraction']:
+            # just few values that's going to be used a lot
+            srv = {
+                'vdtp': extracting_sequence['server-vendor']
+                        + ' ' + extracting_sequence['server-type'],
+                'vdr' : extracting_sequence['server-vendor'],
+                'typ' : extracting_sequence['server-type'],
+                'grp' : extracting_sequence['server-group'],
+                'lyr' : extracting_sequence['server-layer'],
+            }
+            ac = extracting_sequence['account-label']
+            can_proceed['Source System'] = \
+                self.validate_current_source_system(local_logger, srv, in_source_systems)
+            if can_proceed['Source System']:
+                # variable for source server details
+                ss = in_source_systems[srv['vdr']][srv['typ']]['Server'][srv['grp']][srv['lyr']]
+                self.str_ss = '"' + '", "'.join(srv.values()) + '"'
+                can_proceed['Source System Properties'] = \
+                    self.validate_current_source_system_properties(local_logger, ss)
+                can_proceed['User Secrets'] = \
+                    self.validate_user_secrets_file(local_logger, srv, in_user_secrets)
+                if can_proceed['Source System Properties'] and can_proceed['User Secrets']:
+                    # variable with credentials for source server
+                    u_dtl = in_user_secrets[srv['vdr']][srv['typ']][srv['grp']][srv['lyr']][ac]
+                    can_proceed['User Secrets Properties'] = \
+                        self.validate_user_secrets(local_logger, u_dtl)
+                    self.connection_details = {
+                        'server-vendor-and-type': srv['vdtp'],
+                        'server-layer'          : srv['lyr'],
+                        'ServerName'            : ss['ServerName'],
+                        'ServerPort'            : int(ss['ServerPort']),
+                        'Username'              : u_dtl['Username'],
+                        'Name'                  : u_dtl['Name'],
+                        'Password'              : u_dtl['Password'],
+                    }
+        timmer.stop()
+        return can_proceed, srv
+
+    def validate_extraction_query(self, local_logger, timmer, in_extraction_sequence):
+        timmer.start()
         mandatory_props_q = [
             'input-query-file',
             'sessions',
@@ -98,6 +164,7 @@ class BasicNeedsForExtractor:
                                                          self.lcl.gettext('Extraction Query'),
                                                          in_extraction_sequence,
                                                          mandatory_props_q)
+        timmer.stop()
         return is_valid
 
     def validate_extraction_sequence_file(self, local_logger, in_extract_sequence):
@@ -112,8 +179,7 @@ class BasicNeedsForExtractor:
                                + 'but does not contain at least 1 extraction sequence, '
                                + 'therefore cannot be used'))
             is_valid = False
-        if not is_valid:
-            exit(1)
+        return is_valid
 
     def validate_extraction_sequence(self, local_logger, in_extraction_sequence):
         mandatory_props_e = [
@@ -130,29 +196,29 @@ class BasicNeedsForExtractor:
                                                          mandatory_props_e)
         return is_valid
 
-    def validate_query_session(self, local_logger, str_query_session, in_session):
+    def validate_query_session(self, local_logger, in_session):
         mandatory_properties = [
             'extract-behaviour',
             'output-file',
         ]
         is_valid = self.fn_validate_mandatory_properties(local_logger,
                                                          self.lcl.gettext('Query Session')
-                                                         + ' ' + str_query_session,
+                                                         + ' ' + self.str_ss,
                                                          in_session, mandatory_properties)
         return is_valid
 
-    def validate_source_system(self, local_logger, str_source_system, in_source_system):
+    def validate_current_source_system_properties(self, local_logger, in_source_system):
         mandatory_properties = [
             'ServerName',
             'ServerPort',
         ]
         is_valid = self.fn_validate_mandatory_properties(local_logger,
                                                          self.lcl.gettext('Source System')
-                                                         + ' ' + str_source_system,
+                                                         + ' ' + self.str_ss,
                                                          in_source_system, mandatory_properties)
         return is_valid
 
-    def validate_source_systems_file(self, local_logger, in_seq, in_source_systems):
+    def validate_current_source_system(self, local_logger, in_seq, in_source_systems):
         can_proceed_s = self.fn_validate_mandatory_properties(local_logger,
                                                               self.lcl.gettext('Source Systems'),
                                                               in_source_systems, [in_seq['vdr']])
@@ -187,7 +253,7 @@ class BasicNeedsForExtractor:
                                                                    item_checked, [in_seq['lyr']])
         return can_proceed_s and can_proceed_s1 and can_proceed_s2 and can_proceed_s3
 
-    def validate_user_secrets(self, local_logger, str_user_secrets, in_user_secrets):
+    def validate_user_secrets(self, local_logger, in_user_secrets):
         mandatory_properties = [
             'Name',
             'Username',
@@ -195,27 +261,27 @@ class BasicNeedsForExtractor:
         ]
         is_valid = self.fn_validate_mandatory_properties(local_logger,
                                                          self.lcl.gettext('User Secrets')
-                                                         + ' ' + str_user_secrets,
+                                                         + ' ' + self.str_ss,
                                                          in_user_secrets, mandatory_properties)
         if in_user_secrets['Name'] in ('login', 'Your Full Name Here'):
             local_logger.warning(self.lcl.gettext('For {str_user_secrets} your "Name" property '
                                                   + 'has the default value: "{default_name_value}" '
                                                   + 'which is unusual') \
-                                 .replace('{str_user_secrets}', str_user_secrets) \
+                                 .replace('{str_user_secrets}', self.str_ss) \
                                  .replace('{default_name_value}', in_user_secrets['Name']))
         if in_user_secrets['Username'] in ('usrnme', 'your_username_goes_here'):
             local_logger.warning(self.lcl.gettext('For {str_user_secrets} your "Username" property '
                                                   + 'has the default value: '
                                                   + '"{default_username_value}" '
                                                   + 'which is unusual') \
-                                 .replace('{str_user_secrets}', str_user_secrets) \
+                                 .replace('{str_user_secrets}', self.str_ss) \
                                  .replace('{default_username_value}', in_user_secrets['Username']))
         if in_user_secrets['Password'] in ('pwd', 'your_password_goes_here'):
             local_logger.warning(self.lcl.gettext('For {str_user_secrets} your "Password" property '
                                                   + 'has the default value: '
                                                   + '"{default_password_value}" '
                                                   + 'which is unusual') \
-                                 .replace('{str_user_secrets}', str_user_secrets) \
+                                 .replace('{str_user_secrets}', self.str_ss) \
                                  .replace('{default_password_value}', in_user_secrets['Password']))
         return is_valid
 
