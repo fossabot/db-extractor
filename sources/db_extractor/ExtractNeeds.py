@@ -143,11 +143,16 @@ class ExtractNeeds:
         in_cursor = self.class_dbt.execute_query(local_logger, self.timer, in_cursor, this_query,
                                                  expected_number_of_parameters, tuple_parameters)
         # bringing the information from server (data transfer)
-        return {
-            'columns'   : self.class_dbt.get_column_names(local_logger, self.timer, in_cursor),
-            'result_set': self.class_dbt.fetch_executed_query(local_logger, self.timer, in_cursor),
-            'rows_counted': in_cursor.rowcount,
+        dict_to_return = {
+            'rows_counted': 0
         }
+        if in_cursor is not None:
+            dict_to_return = {
+                'columns'   : self.class_dbt.get_column_names(local_logger, self.timer, in_cursor),
+                'result_set': self.class_dbt.fetch_executed_query(local_logger, self.timer, in_cursor),
+                'rows_counted': in_cursor.rowcount,
+            }
+        return dict_to_return
 
     def initiate_logger_and_timer(self):
         # initiate logger
