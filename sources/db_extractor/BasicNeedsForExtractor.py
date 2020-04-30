@@ -113,6 +113,7 @@ class BasicNeedsForExtractor:
             'User Secrets Properties' : False,
         }
         timmer.start()
+        srv = {}
         # actual check
         can_proceed['Extraction'] = self.validate_extraction_sequence(local_logger,
                                                                       extracting_sequence)
