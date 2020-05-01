@@ -20,27 +20,24 @@ class DataManipulator:
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
     def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame, input_details):
-        for current_input_details in input_details:
+        for in_dt in input_details:
             timmer.start()
-            col_name_to_add = current_input_details['New Column']
-            offset_sign = -1
-            if current_input_details['Direction'] == 'down':
-                offset_sign = 1
-            col_offset = offset_sign * current_input_details['Deviation']
-            input_data_frame[col_name_to_add] = \
-                input_data_frame[current_input_details['Original Column']]
-            input_data_frame[col_name_to_add] = input_data_frame[col_name_to_add].shift(col_offset)
-            fill_value = current_input_details['Empty Values Replacement']
-            input_data_frame[col_name_to_add] = input_data_frame[col_name_to_add].apply(
-                lambda x: str(x).replace('.0', '')).apply(lambda x: str(x).replace('nan',
-                                                                                   fill_value))
+            col_offset = -1 * in_dt['Deviation']
+            if in_dt['Direction'] == 'down':
+                col_offset = 1 * in_dt['Deviation']
+            input_data_frame[in_dt['New Column']] = input_data_frame[in_dt['Original Column']]
+            input_data_frame[in_dt['New Column']] = input_data_frame[in_dt['New Column']]\
+                .shift(col_offset)
+            fill_value = in_dt['Empty Values Replacement']
+            input_data_frame[in_dt['New Column']] = input_data_frame[in_dt['New Column']]\
+                .apply(lambda x: str(x).replace('.0', ''))\
+                .apply(lambda x: str(x).replace('nan', in_dt['Empty Values Replacement']))
             local_logger.info(self.lcl.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
                 + '(filling any empty value as {empty_values_replacement})')
-                              .replace('{new_column_name}', col_name_to_add)
-                              .replace('{original_column}',
-                                       current_input_details['Original Column'])
+                              .replace('{new_column_name}', in_dt['New Column'])
+                              .replace('{original_column}', in_dt['Original Column'])
                               .replace('{shifting_rows}', str(col_offset))
                               .replace('{empty_values_replacement}', fill_value))
             timmer.stop()
