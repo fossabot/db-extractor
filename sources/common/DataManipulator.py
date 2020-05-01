@@ -305,7 +305,7 @@ class DataManipulator:
             implemented_file_formats = ['csv', 'excel', 'pickle']
             given_format = in_file_details['format'].lower()
             if given_format in implemented_file_formats:
-                are_settings_ok = True
+                are_settings_ok = given_format
             else:
                 local_logger.error(self.lcl.gettext(
                         'File "format" attribute has a value of "{format_value}" '
