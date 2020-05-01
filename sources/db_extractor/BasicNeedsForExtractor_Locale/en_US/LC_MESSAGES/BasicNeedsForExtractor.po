@@ -47,11 +47,17 @@ msgstr "For {str_user_secrets} your \"Password\" property has the default value:
 msgid "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
 msgstr "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
 
+msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
+msgstr "For the sequence number {sequence_number} the relevant details for database connection have been verified"
+
 msgid "Query Session"
 msgstr "Query Session"
 
 msgid "Query extraction probably should be performed (other checks might be required)"
 msgstr "Query extraction probably should be performed (other checks might be required)"
+
+msgid "Relevant JSON files are valid"
+msgstr "Relevant JSON files are valid"
 
 msgid "Source System"
 msgstr "Source System"

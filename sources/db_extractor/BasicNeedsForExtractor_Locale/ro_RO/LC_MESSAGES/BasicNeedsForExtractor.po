@@ -47,11 +47,17 @@ msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Password\" are valoarea im
 msgid "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
 msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Username\" are valoarea implicită: \"{default_username_value}\" ceea ce este neobișnuit"
 
+msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
+msgstr "Pentru secvența de extragere cu numărul {sequence_number} detaliile relevante pentru conexiunea la baza de date au fost verificate"
+
 msgid "Query Session"
 msgstr "Sesiunea de interogare"
 
 msgid "Query extraction probably should be performed (other checks might be required)"
 msgstr "Probabil că interogarea de extragerea ar trebui să fie efectuată (posibil ca alte verificări să fie necesare)"
+
+msgid "Relevant JSON files are valid"
+msgstr "Fișierele JSON relevante sunt valide"
 
 msgid "Source System"
 msgstr "Sistemul sursă"

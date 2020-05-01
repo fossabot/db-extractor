@@ -99,10 +99,11 @@ class BasicNeedsForExtractor:
         # validation of the extraction sequence file
         if self.validate_extraction_sequence_file(local_logger, extracting_sequences):
             are_json_files_valid = True
+            local_logger.debug(self.lcl.gettext('Relevant JSON files are valid'))
         timmer.stop()
         return are_json_files_valid
 
-    def validate_all_json_files_current(self, local_logger, timmer, extracting_sequence,
+    def validate_all_json_files_current(self, local_logger, timmer, extracting_sequence, seq_index,
                                         in_source_systems, in_user_secrets):
         # setting initial checks statuses
         can_proceed = {
@@ -152,8 +153,12 @@ class BasicNeedsForExtractor:
                         'Name'                  : u_dtl['Name'],
                         'Password'              : u_dtl['Password'],
                     }
+        local_logger.debug(self.lcl.gettext('For the sequence number {sequence_number} '
+                                            + 'the relevant details for database connection '
+                                            + 'have been verified')
+                           .replace('{sequence_number}', str(seq_index)))
         timmer.stop()
-        return can_proceed, srv
+        return can_proceed
 
     def validate_extraction_query(self, local_logger, timmer, in_extraction_sequence):
         timmer.start()
