@@ -21,7 +21,7 @@ msgid "Closing DB completed"
 msgstr "Închiderea conexiunii la Baza de Date a fost finalizată"
 
 msgid "Closing DB connection"
-msgstr "Închiderea conexiunea la Baza de Date"
+msgstr "Închiderea conexiunii la Baza de Date în curs"
 
 msgid "Configuration file name with credentials"
 msgstr "Numele fișierului de configurare cu datele de acreditare"
