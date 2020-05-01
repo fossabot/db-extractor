@@ -73,10 +73,11 @@ class DataManipulator:
         # rename some columns to cope with long expression
         in_df.rename(columns={'Start Date': 'sd', 'End Date': 'ed'}, inplace=True)
         # actual "Timeline Evaluation" column determination
-        cols = ['rd', de['sd'], de['ed']]
-        in_df['te'] = \
-            in_df[cols].apply(lambda r: 'C' if r[de['sd']] <= r['rd'] <= r[de['ed']] else
-                              'P' if r[de['sd']] < r['rd'] else 'F', axis=1)
+        cols = ['rd', 'sd', 'ed']
+        in_df['Timeline Evaluation'] = in_df[cols].apply(lambda r: 'Current'
+                                                         if r['sd'] <= r['rd'] <= r['ed'] else
+                                                         'Past' if r['sd'] < r['rd'] else 'Future',
+                                                         axis=1)
         # rename back columns
         in_df.rename(columns={'sd': 'Start Date', 'ed': 'End Date', 'rd': 'Reference Date'},
                      inplace=True)
