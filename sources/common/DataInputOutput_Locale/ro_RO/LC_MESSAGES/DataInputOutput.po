@@ -8,14 +8,17 @@ msgstr ""
 "PO-Revision-Date: 2020-05-02 01:16+0300\n"
 "Last-Translator: danielppiniuc@gmail.com\n"
 "Language-Team: Romanian\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
 
 msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
 msgstr "Toate fișierele relevante ({files_counted}) au fost contopite într-un Cadru de Date Pandas"
+
+msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
+msgstr "Eroare întâmpinată la salvarea cadrului de date Pandas într-un tip de fișier {file_type} (consultați mai jos)"
 
 msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
 msgstr "Atributul \"format\" al fișierului are o valoare \"{format_value}\" care nu se află printre valorile implementate în prezent: \"{implemented_file_formats}\", prin urmare, salvarea fișierului nu este posibilă"

@@ -16,6 +16,9 @@ msgstr ""
 msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
 msgstr ""
 
+msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
+msgstr ""
+
 msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
 msgstr ""
 

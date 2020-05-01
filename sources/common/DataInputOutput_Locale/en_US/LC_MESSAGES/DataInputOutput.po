@@ -8,14 +8,17 @@ msgstr ""
 "PO-Revision-Date: 2020-05-02 01:16+0300\n"
 "Last-Translator: danielppiniuc@gmail.com\n"
 "Language-Team: English\n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
 msgstr "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
+
+msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
+msgstr "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
 
 msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
 msgstr "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
