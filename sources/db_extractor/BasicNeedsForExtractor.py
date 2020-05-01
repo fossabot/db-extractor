@@ -69,7 +69,7 @@ class BasicNeedsForExtractor:
         return extraction_is_necessary
 
     def fn_is_extraction_neccesary_additional(self, local_logger, c_ph, c_fo, crt_session, in_file):
-        ref_expr = crt_session['extract-overwrite-condition']['reference-expresion']
+        ref_expr = crt_session['extract-overwrite-condition']['reference-expression']
         reference_datetime = c_ph.eval_expression(local_logger, ref_expr,
                                                   crt_session['start-isoweekday'])
         child_parent_expressions = c_ph.get_child_parent_expressions()

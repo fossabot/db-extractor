@@ -13,7 +13,7 @@
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
                         "extract-overwrite-condition":  {
                             "file-datetime":                            "last_modified",
-                            "reference-expresion":                      "CalculatedDate_CYCMCDCH_-1",
+                            "reference-expression":                     "CalculatedDate_CYCMCDCH_-1",
                             "rule":                                     "older"
                         },
                         "output-file": {
@@ -64,12 +64,12 @@
                         "extract-behaviour":                            "skip-if-output-file-exists",
                         "extract-overwrite-condition":  {
                             "file-datetime":                            "last_modified",
-                            "reference-expresion":                      "CalculatedDate_CYCMCDCH",
+                            "reference-expression":                     "CalculatedDate_CYCMCDCH",
                             "rule":                                     "older"
                         },
                         "output-file": {
                                 "format":                               "excel",
-                                "name":                                 "mysql-test-excel.xlsx"
+                                "name":                                 "mysql-test-utf8.xlsx"
                         },
                         "parameters": {
                             "Select Fields": [
@@ -100,43 +100,43 @@
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
                         "extract-overwrite-condition":  {
                             "file-datetime":                            "last_modified",
-                            "reference-expresion":                      "CalculatedDate_CYCMCDCH_-24",
+                            "reference-expression":                     "CalculatedDate_CYCMCDCH_-24",
                             "rule":                                     "older"
                         },
                         "output-file": [
                             {
                                 "field-delimiter":                      ";",
                                 "format":                               "csv",
-                                "name":                                 "mysql-test.csv"
+                                "name":                                 "mysql-test-utf8mb4.csv"
                             },
                             {
-                                "format":                               "excel",
-                                "name":                                 "mysql-test.xlsx"
+                                    "format":                           "excel",
+                                    "name":                             "mysql-test-utf8mb4.xlsx"
                             },
                             {
                                 "compression":                          "bz2",
                                 "format":                               "pickle",
-                                "name":                                 "mysql-test-pickle.bz2"
+                                "name":                                 "mysql-test-utf8mb4-pickle.bz2"
                             },
                             {
                                 "compression":                          "gzip",
                                 "format":                               "pickle",
-                                "name":                                 "mysql-test-pickle.gzip"
+                                "name":                                 "mysql-test-utf8mb4-pickle.gzip"
                             },
                             {
                                 "compression":                          "infer",
                                 "format":                               "pickle",
-                                "name":                                 "mysql-test.pickle"
+                                "name":                                 "mysql-test-utf8mb4.pickle"
                             },
                             {
                                 "compression":                          "xz",
                                 "format":                               "pickle",
-                                "name":                                 "mysql-test-pickle.xz"
+                                "name":                                 "mysql-test-utf8mb4-pickle.xz"
                             },
                             {
                                 "compression":                          "zip",
                                 "format":                               "pickle",
-                                "name":                                 "mysql-test-pickle.zip"
+                                "name":                                 "mysql-test-utf8mb4-pickle.zip"
                             }
                         ],
                         "parameters": {
