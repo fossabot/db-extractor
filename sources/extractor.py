@@ -29,12 +29,13 @@ if __name__ == '__main__':
     if c_en.class_bnfe.validate_all_json_files(c_en.class_ln.logger, c_en.timer,
                                                c_en.file_extract_sequence):
         # cycling through the configurations
-        for crt_sequence in c_en.file_extract_sequence:
-            can_proceed_dictionary, srv = \
+        for seq_idx, crt_sequence in enumerate(c_en.file_extract_sequence):
+            can_proceed = \
                 c_en.class_bnfe.validate_all_json_files_current(c_en.class_ln.logger, c_en.timer,
-                                                                crt_sequence, c_en.source_systems,
+                                                                crt_sequence, seq_idx,
+                                                                c_en.source_systems,
                                                                 c_en.user_credentials)
-            if c_en.class_bn.fn_evaluate_dict_values(can_proceed_dictionary):
+            if c_en.class_bn.fn_evaluate_dict_values(can_proceed):
                 c_en.class_dbt.connect_to_database(c_en.class_ln.logger, c_en.timer,
                                                    c_en.class_bnfe.connection_details)
                 if c_en.class_dbt.conn is not None:
