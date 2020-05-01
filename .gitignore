@@ -137,4 +137,10 @@ dmypy.json
 *.log.*
 
 # Result set files
+*.bz2
 *.csv
+*.gzip
+*.pickle
+*.xlsx
+*.xz
+*.zip
