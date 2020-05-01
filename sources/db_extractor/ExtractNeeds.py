@@ -12,6 +12,7 @@ from pathlib import Path
 # custom classes specific to this project
 from common.BasicNeeds import BasicNeeds
 from common.CommandLineArgumentsManagement import CommandLineArgumentsManagement
+from common.DataInputOutput import DataInputOutput
 from common.DataManipulator import DataManipulator
 from common.FileOperations import FileOperations
 from common.LoggingNeeds import LoggingNeeds
@@ -25,6 +26,7 @@ class ExtractNeeds:
     class_bnfe = None
     class_clam = None
     class_dbt = None
+    class_dio = None
     class_dm = None
     class_fo = None
     class_ln = None
@@ -52,6 +54,8 @@ class ExtractNeeds:
         self.class_fo = FileOperations(default_language)
         # instantiate File Operations class
         self.class_dbt = DatabaseTalker(default_language)
+        # instantiate Data Manipulator class, useful to manipulate data frames
+        self.class_dio = DataInputOutput(default_language)
         # instantiate Data Manipulator class, useful to manipulate data frames
         self.class_dm = DataManipulator(default_language)
         # instantiate Command Line Arguments class
@@ -249,14 +253,14 @@ class ExtractNeeds:
     def store_result_set_to_disk(self, local_logger, in_data_frame, crt_session):
         output_file_setting_type = type(crt_session['output-file'])
         if output_file_setting_type == dict:
-            self.class_dm.fn_store_data_frame_to_file(local_logger, self.timer, in_data_frame,
-                                                      crt_session['output-file'])
+            self.class_dio.fn_store_data_frame_to_file(local_logger, self.timer, in_data_frame,
+                                                       crt_session['output-file'])
             self.class_fo.fn_store_file_statistics(local_logger, self.timer,
                                                    crt_session['output-file']['name'],
                                                    self.locale.gettext('Output file name'))
         elif output_file_setting_type == list:
             for crt_output in crt_session['output-file']:
-                self.class_dm.fn_store_data_frame_to_file(local_logger, self.timer,
-                                                          in_data_frame, crt_output)
+                self.class_dio.fn_store_data_frame_to_file(local_logger, self.timer,
+                                                           in_data_frame, crt_output)
                 self.class_fo.fn_store_file_statistics(local_logger, self.timer, crt_output['name'],
                                                        self.locale.gettext('Output file name'))

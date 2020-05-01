@@ -4,7 +4,7 @@
 #,fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: FileOperations\n"
+"Project-Id-Version: DataManipulator\n"
 "POT-Creation-Date: 2020-04-25 13:20+0200\n"
 "PO-Revision-Date: 2020-04-25 13:20+0200\n"
 "Last-Translator: danielppiniuc@gmail.com\n"
@@ -16,22 +16,10 @@ msgstr ""
 msgid "{deviation_type} Deviation Number is {deviation_number} to be applied to Current index, became {index_to_apply}"
 msgstr ""
 
-msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
-msgstr ""
-
 msgid "Current index has been determined to be {index_current_value}"
 msgstr ""
 
-msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
-msgstr ""
-
-msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
-msgstr ""
-
 msgid "Lower"
-msgstr ""
-
-msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"
 msgstr ""
 
 msgid "Query expression to apply is: {query_expression}"

@@ -17,23 +17,11 @@ msgstr ""
 msgid "{deviation_type} Deviation Number is {deviation_number} to be applied to Current index, became {index_to_apply}"
 msgstr "{deviation_type} Deviation Number is {deviation_number} to be applied to Current index, became {index_to_apply}"
 
-msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
-msgstr "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
-
 msgid "Current index has been determined to be {index_current_value}"
 msgstr "Current index has been determined to be {index_current_value}"
 
-msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
-msgstr "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
-
-msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
-msgstr "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
-
 msgid "Lower"
 msgstr "Lower"
-
-msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"
-msgstr "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"
 
 msgid "Query expression to apply is: {query_expression}"
 msgstr "Query expression to apply is: {query_expression}"

@@ -17,23 +17,11 @@ msgstr ""
 msgid "{deviation_type} Deviation Number is {deviation_number} to be applied to Current index, became {index_to_apply}"
 msgstr "Numărul Devierii {deviation_type} este {deviation_number} care trebuie aplicat indexului curent, a devenit {index_to_apply}"
 
-msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
-msgstr "Toate fișierele relevante ({files_counted}) au fost contopite într-un Cadru de Date Pandas"
-
 msgid "Current index has been determined to be {index_current_value}"
 msgstr "Indicele curent a fost determinat a fi {index_current_value}"
 
-msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
-msgstr "Atributul \"format\" al fișierului are o valoare \"{format_value}\" care nu se află printre valorile implementate în prezent: \"{implemented_file_formats}\", prin urmare, salvarea fișierului nu este posibilă"
-
-msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
-msgstr "Atributul \"format\" al fișierului este obligatoriu, dar acesta lipsește, prin urmare nu este posibilă salvarea fișierului"
-
 msgid "Lower"
 msgstr "Inferior"
-
-msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"
-msgstr "Cadru de Date Pandas tocmai a fost salvat în fișierul \"{file_name}\", considerând {file_type} ca tip de fișier"
 
 msgid "Query expression to apply is: {query_expression}"
 msgstr "Expresia de interogare de aplicat este: {query_expression}"
