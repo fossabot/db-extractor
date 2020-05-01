@@ -64,11 +64,11 @@ class DataInputOutput:
 
     def fn_save_data_frame_to_excel(self, local_logger, in_data_frame, in_file_details):
         if in_file_details['format'].lower() == 'excel':
-            if 'compression' not in in_file_details:
-                in_file_details['compression'] = 'gzip'
             try:
-                in_data_frame.to_pickle(path=in_file_details['name'],
-                                        compression=in_file_details['compression'])
+                in_data_frame.to_excel(excel_writer=in_file_details['name'],
+                                       engine='xlsxwriter',
+                                       freeze_panes=(1, 1),
+                                       verbose=True)
                 self.fn_file_save_error_logger(local_logger, in_file_details, None)
             except Exception as err:
                 self.fn_file_save_error_logger(local_logger, in_file_details, err)
