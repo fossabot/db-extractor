@@ -35,7 +35,7 @@ msgid "File \"{file_name}\" has the following characteristics: {file_statistics}
 msgstr "File \"{file_name}\" has the following characteristics: {file_statistics}"
 
 msgid "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" vs. \"{reference_datetime}\" has a verdict = {verdict}"
-msgstr ""
+msgstr "File \"{file_name}\" which has the {created_or_modified} datetime as \"{file_datetime}\" vs. \"{reference_datetime}\" has a verdict = {verdict}"
 
 msgid "File matching pattern identified"
 msgstr "File matching pattern identified"
