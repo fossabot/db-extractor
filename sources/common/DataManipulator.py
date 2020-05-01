@@ -22,16 +22,14 @@ class DataManipulator:
     def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame, input_details):
         for in_dt in input_details:
             timmer.start()
-            col_offset = -1 * in_dt['Deviation']
-            if in_dt['Direction'] == 'down':
-                col_offset = 1 * in_dt['Deviation']
             input_data_frame[in_dt['New Column']] = input_data_frame[in_dt['Original Column']]
+            offset_sign = (lambda x: 1 if x == 'down' else -1)
+            col_offset = offset_sign(in_dt['Direction']) * in_dt['Deviation']
             input_data_frame[in_dt['New Column']] = input_data_frame[in_dt['New Column']]\
                 .shift(col_offset)
-            fill_value = in_dt['Empty Values Replacement']
             input_data_frame[in_dt['New Column']] = input_data_frame[in_dt['New Column']]\
                 .apply(lambda x: str(x).replace('.0', ''))\
-                .apply(lambda x: str(x).replace('nan', in_dt['Empty Values Replacement']))
+                .apply(lambda x: str(x).replace('nan', str(in_dt['Empty Values Replacement'])))
             local_logger.info(self.lcl.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
@@ -39,7 +37,8 @@ class DataManipulator:
                               .replace('{new_column_name}', in_dt['New Column'])
                               .replace('{original_column}', in_dt['Original Column'])
                               .replace('{shifting_rows}', str(col_offset))
-                              .replace('{empty_values_replacement}', fill_value))
+                              .replace('{empty_values_replacement}',
+                                       str(in_dt['Empty Values Replacement'])))
             timmer.stop()
         return input_data_frame
 
