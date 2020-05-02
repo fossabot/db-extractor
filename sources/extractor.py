@@ -50,16 +50,21 @@ if __name__ == '__main__':
                             for crt_session in crt_query['sessions']:
                                 crt_session['start-isoweekday'] = \
                                     c_en.set_default_starting_weekday(crt_session)
+                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    crt_session, crt_query, crt_sequence)
                                 if 'parameters' in crt_session:
                                     crt_session['parameters-handling-rules'] = \
-                                        c_en.set_default_parameter_rules(crt_session)
+                                        c_en.set_default_parameter_rules(
+                                            dict__child__parent__grand_parent)
                                 can_proceed_ses = \
                                     c_en.class_bnfe.validate_query_session(c_en.class_ln.logger,
                                                                            crt_session)
                                 crt_session['extract-behaviour'] = \
                                     c_en.class_bnfe.fn_set_extract_behaviour(crt_session)
-                                extraction_required = \
-                                    c_en.evaluate_if_extraction_is_required(crt_session)
+                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    crt_session, crt_query, crt_sequence)
+                                extraction_required = c_en.evaluate_if_extraction_is_required(
+                                    dict__child__parent__grand_parent)
                                 if can_proceed_ses and extraction_required:
                                     dict_prepared = {
                                         'query': the_query,
@@ -68,8 +73,11 @@ if __name__ == '__main__':
                                     stats = c_en.extract_query_to_result_set(c_en.class_ln.logger,
                                                                              cursor, dict_prepared)
                                     if stats['rows_counted'] > 0:
-                                        rdf = c_en.result_set_into_data_frame(c_en.class_ln.logger,
-                                                                              stats, crt_session)
+                                        dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                            crt_session, crt_query, crt_sequence)
+                                        rdf = c_en.result_set_into_data_frame(
+                                            c_en.class_ln.logger, stats,
+                                            dict__child__parent__grand_parent)
                                         c_en.store_result_set_to_disk(c_en.class_ln.logger,
                                                                       rdf, crt_session)
                         c_en.close_cursor(c_en.class_ln.logger, cursor)

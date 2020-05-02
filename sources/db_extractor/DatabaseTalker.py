@@ -29,36 +29,35 @@ class DatabaseTalker:
 
     def append_additional_columns_to_df(self, local_logger, timered, data_frame, session_details):
         resulted_data_frame = data_frame
-        if 'additional-columns' in session_details:
-            timered.start()
-            for crt_column in session_details['additional-columns']:
-                if crt_column['value'] == 'utcnow':
-                    resulted_data_frame[crt_column['name']] = datetime.utcnow()
-                elif crt_column['value'] == 'now':
-                    resulted_data_frame[crt_column['name']] = datetime.now()
-                else:
-                    resulted_data_frame[crt_column['name']] = crt_column['value']
-            local_logger.info(self.lcl.ngettext( \
-                'Additional {additional_columns_counted} column added to Pandas Data Frame',
-                'Additional {additional_columns_counted} columns added to Pandas Data Frame',
-                    len(session_details['additional-columns'])) \
-                              .replace('{additional_columns_counted}',
-                                       str(len(session_details['additional-columns']))))
-            timered.stop()
+        timered.start()
+        for crt_column in session_details['additional-columns']:
+            if crt_column['value'] == 'utcnow':
+                resulted_data_frame[crt_column['name']] = datetime.utcnow()
+            elif crt_column['value'] == 'now':
+                resulted_data_frame[crt_column['name']] = datetime.now()
+            else:
+                resulted_data_frame[crt_column['name']] = crt_column['value']
+        local_logger.info(self.lcl.ngettext(
+            'Additional {additional_columns_counted} column added to Pandas Data Frame',
+            'Additional {additional_columns_counted} columns added to Pandas Data Frame',
+                len(session_details['additional-columns']))
+                          .replace('{additional_columns_counted}',
+                                   str(len(session_details['additional-columns']))))
+        timered.stop()
         return resulted_data_frame
 
     def connect_to_database(self, local_logger, timered, connection_details):
         timered.start()
-        local_logger.info(self.lcl.gettext( \
+        local_logger.info(self.lcl.gettext(
             'Connection to {server_vendor_and_type} server, layer {server_layer} '
             + 'which means (server {server_name}, port {server_port}) '
-            + 'using the username {username} ({name_of_user})') \
+            + 'using the username {username} ({name_of_user})')
                           .replace('{server_vendor_and_type}',
-                                   connection_details['server-vendor-and-type']) \
-                          .replace('{server_layer}', connection_details['server-layer']) \
-                          .replace('{server_name}', connection_details['ServerName']) \
-                          .replace('{server_port}', str(connection_details['ServerPort'])) \
-                          .replace('{username}', connection_details['Username']) \
+                                   connection_details['server-vendor-and-type'])
+                          .replace('{server_layer}', connection_details['server-layer'])
+                          .replace('{server_name}', connection_details['ServerName'])
+                          .replace('{server_port}', str(connection_details['ServerPort']))
+                          .replace('{username}', connection_details['Username'])
                           .replace('{name_of_user}', connection_details['Name']))
         try:
             host = socket.gethostbyname(connection_details['ServerName'])
@@ -86,12 +85,12 @@ class DatabaseTalker:
                 statementCacheSize=10,
             )
             local_logger.info(self.lcl.gettext( \
-                'Connection to {server_vendor_and_type} server completed') \
+                'Connection to {server_vendor_and_type} server completed')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
         except ConnectionError as err:
             local_logger.error(self.lcl.gettext( \
-                'Error connecting to {server_vendor_and_type} server with details') \
+                'Error connecting to {server_vendor_and_type} server with details')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
             local_logger.error(err)
@@ -111,13 +110,13 @@ class DatabaseTalker:
                 collation='utf8mb4_unicode_ci',
                 get_warnings=True,
             )
-            local_logger.info(self.lcl.gettext( \
-                'Connection to {server_vendor_and_type} server completed') \
+            local_logger.info(self.lcl.gettext(
+                'Connection to {server_vendor_and_type} server completed')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
         except mysql.connector.Error as err:
-            local_logger.error(self.lcl.gettext( \
-                'Error connecting to {server_vendor_and_type} server with details') \
+            local_logger.error(self.lcl.gettext(
+                'Error connecting to {server_vendor_and_type} server with details')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
             local_logger.error(err)
@@ -134,7 +133,7 @@ class DatabaseTalker:
                 processing_tm = timedelta(microseconds=(in_cursor.server_processing_time() / 1000))
                 local_logger.info(self.lcl.gettext( \
                     'Query executed successfully '
-                    + 'having a server processing time of {processing_time}') \
+                    + 'having a server processing time of {processing_time}')
                                   .replace('{processing_time}', format(processing_tm)))
             except AttributeError:
                 local_logger.info(self.lcl.gettext('Query executed successfully'))
@@ -150,8 +149,8 @@ class DatabaseTalker:
         local_result_set = None
         try:
             local_result_set = given_cursor.fetchall()
-            local_logger.info(self.lcl.gettext( \
-                'Result-set has been completely fetched and contains {rows_counted} rows') \
+            local_logger.info(self.lcl.gettext(
+                'Result-set has been completely fetched and contains {rows_counted} rows')
                               .replace('{rows_counted}', str(len(local_result_set))))
         except ConnectionError as e:
             local_logger.info(self.lcl.gettext('Connection problem encountered: '))
@@ -167,8 +166,8 @@ class DatabaseTalker:
             column_names = []
             for column_name, col2, col3, col4, col5, col6, col7 in given_cursor.description:
                 column_names.append(column_name)
-        local_logger.info(self.lcl.gettext( \
-            'Result-set column name determination completed: {columns_name}') \
+        local_logger.info(self.lcl.gettext(
+            'Result-set column name determination completed: {columns_name}')
                           .replace('{columns_name}', str(column_names)))
         timered.stop()
         return column_names

@@ -79,17 +79,24 @@ class ExtractNeeds:
         local_logger.info(self.locale.gettext('Free DB result-set completed'))
         self.timer.stop()
 
-    def evaluate_if_extraction_is_required(self, crt_session):
+    def evaluate_if_extraction_is_required(self, in_dict):
         extraction_required = False
-        if type(crt_session['output-file']) == dict:
-            extraction_required = \
-                self.evaluate_if_extraction_is_required_for_single_file(crt_session,
-                                                                        crt_session['output-file'])
-        elif type(crt_session['output-file']) == list:
+        if type(in_dict['session']['output-file']) == dict:
+            extraction_required = self.evaluate_if_extraction_is_required_for_single_file({
+                'session': in_dict['session'],
+                'query': in_dict['query'],
+                'sequence': in_dict['sequence'],
+                'file': in_dict['session']['output-file'],
+            })
+        elif type(in_dict['session']['output-file']) == list:
             evaluated_extraction = {}
-            for crt_file in crt_session['output-file']:
-                crt_eval = self.evaluate_if_extraction_is_required_for_single_file(crt_session,
-                                                                                   crt_file)
+            for crt_file in in_dict['session']['output-file']:
+                crt_eval = self.evaluate_if_extraction_is_required_for_single_file({
+                    'session': in_dict['session'],
+                    'query': in_dict['query'],
+                    'sequence': in_dict['sequence'],
+                    'file': crt_file,
+                })
                 evaluated_extraction.update({str(crt_file['name']): crt_eval})
             extraction_required = self.class_bn.fn_evaluate_dict_values(evaluated_extraction)
             self.class_ln.logger.debug(evaluated_extraction)
@@ -101,30 +108,27 @@ class ExtractNeeds:
                                        .replace('{overall_verdict}', overall_verdict))
         return extraction_required
 
-    def evaluate_if_extraction_is_required_for_single_file(self, crt_session, crt_file):
-        crt_file['name'] = self.class_ph.eval_expression(self.class_ln.logger,
-                                                         crt_file['name'],
-                                                         crt_session['start-isoweekday'])
+    def evaluate_if_extraction_is_required_for_single_file(self, in_dict):
+        in_dict['file']['name'] = self.class_ph.eval_expression(
+            self.class_ln.logger, in_dict['file']['name'], in_dict['session']['start-isoweekday'])
         e_dict = {
-            'extract-behaviour': crt_session['extract-behaviour'],
-            'output-csv-file': crt_file['name'],
+            'extract-behaviour': in_dict['session']['extract-behaviour'],
+            'output-csv-file': in_dict['file']['name'],
         }
         extraction_required = \
             self.class_bnfe.fn_is_extraction_necessary(self.class_ln.logger, e_dict)
-        if crt_session['extract-behaviour'] == 'overwrite-if-output-file-exists' \
-                and 'extract-overwrite-condition' in crt_session \
-                and Path(crt_file['name']).is_file():
-            fv = self.class_bnfe.fn_is_extraction_neccesary_additional(self.class_ln.logger,
-                                                                       self.class_ph,
-                                                                       self.class_fo,
-                                                                       crt_session, crt_file)
+        if in_dict['session']['extract-behaviour'] == 'overwrite-if-output-file-exists' \
+                and 'extract-overwrite-condition' in in_dict['session'] \
+                and Path(in_dict['file']['name']).is_file():
+            fv = self.class_bnfe.fn_is_extraction_neccesary_additional(
+                self.class_ln.logger, self.class_ph, self.class_fo, in_dict)
             extraction_required = False
             new_verdict = self.locale.gettext('not required')
             if fv == self.class_fo.lcl.gettext('older'):
                 extraction_required = True
                 new_verdict = self.locale.gettext('required')
-            self.class_ln.logger.debug(self.locale.gettext( \
-                'Additional evaluation took place and new verdict is: {new_verdict}') \
+            self.class_ln.logger.debug(self.locale.gettext(
+                'Additional evaluation took place and new verdict is: {new_verdict}')
                                        .replace('{new_verdict}', new_verdict))
         return extraction_required
 
@@ -222,11 +226,24 @@ class ExtractNeeds:
         self.timer.stop()
         return query
 
-    def result_set_into_data_frame(self, local_logger, stats, crt_session):
-        result_df = self.class_dbt.result_set_to_data_frame(local_logger, self.timer,
-                                                            stats['columns'], stats['result_set'])
-        rdf = self.class_dbt.append_additional_columns_to_df(local_logger, self.timer,
-                                                             result_df, crt_session)
+    @staticmethod
+    def pack_three_levels(in_session, in_query, in_sequence):
+        return {
+            'session': in_session,
+            'query': in_query,
+            'sequence': in_sequence,
+        }
+
+    def result_set_into_data_frame(self, local_logger, stats, in_dict):
+        result_df = self.class_dbt.result_set_to_data_frame(
+            local_logger, self.timer, stats['columns'], stats['result_set'])
+        if 'additional-columns' in in_dict['session']:
+            if in_dict['session']['additional-columns'] == 'inherit-from-parent':
+                in_dict['session']['additional-columns'] = in_dict['query']['additional-columns']
+            elif in_dict['session']['additional-columns'] == 'inherit-from-grand-parent':
+                in_dict['session']['additional-columns'] = in_dict['sequence']['additional-columns']
+            rdf = self.class_dbt.append_additional_columns_to_df(
+                local_logger, self.timer, result_df, in_dict['session'])
         return rdf
 
     def set_default_starting_weekday(self, crt_session):
@@ -235,20 +252,23 @@ class ExtractNeeds:
             week_starts_with_isoweekday = crt_session['start-isoweekday']
         return week_starts_with_isoweekday
 
-    def set_default_parameter_rules(self, crt_session):
-        if 'parameters-handling-rules' in crt_session:
-            dictionary_to_return = crt_session['parameters-handling-rules']
-        else:
-            # assumption is for either DICT or LIST values are numeric
-            # in case text is given different rules have to be specified
-            dictionary_to_return = {
-                "dict-values-glue": ", ",
-                "dict-values-prefix": "IN (",
-                "dict-values-suffix": ")",
-                "list-values-glue": ", ",
-                "list-values-prefix": "",
-                "list-values-suffix": ""
-            }
+    def set_default_parameter_rules(self, in_dict):
+        # assumption is for either DICT or LIST values are numeric
+        # in case text is given different rules have to be specified
+        dictionary_to_return = {
+            "dict-values-glue": ", ",
+            "dict-values-prefix": "IN (",
+            "dict-values-suffix": ")",
+            "list-values-glue": ", ",
+            "list-values-prefix": "",
+            "list-values-suffix": ""
+        }
+        if 'parameters-handling-rules' in in_dict['session']:
+            dictionary_to_return = in_dict['session']['parameters-handling-rules']
+            if dictionary_to_return == 'inherit-from-parent':
+                dictionary_to_return = in_dict['query']['parameters-handling-rules']
+            elif dictionary_to_return == 'inherit-from-grand-parent':
+                dictionary_to_return = in_dict['sequence']['parameters-handling-rules']
         return dictionary_to_return
 
     def store_result_set_to_disk(self, local_logger, in_data_frame, crt_session):

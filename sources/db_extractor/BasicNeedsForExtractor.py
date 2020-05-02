@@ -68,16 +68,22 @@ class BasicNeedsForExtractor:
                                                 + '(other checks might be required)'))
         return extraction_is_necessary
 
-    def fn_is_extraction_neccesary_additional(self, local_logger, c_ph, c_fo, crt_session, in_file):
-        ref_expr = crt_session['extract-overwrite-condition']['reference-expression']
-        reference_datetime = c_ph.eval_expression(local_logger, ref_expr,
-                                                  crt_session['start-isoweekday'])
+    def fn_is_extraction_neccesary_additional(self, local_logger, c_ph, c_fo, in_dict):
+        if in_dict['session']['extract-overwrite-condition'] == 'inherit-from-parent':
+            in_dict['session']['extract-overwrite-condition'] = \
+                in_dict['query']['extract-overwrite-condition']
+        elif in_dict['session']['extract-overwrite-condition'] == 'inherit-from-grand-parent':
+            in_dict['session']['extract-overwrite-condition'] = \
+                in_dict['sequence']['extract-overwrite-condition']
+        ref_expr = in_dict['session']['extract-overwrite-condition']['reference-expression']
+        reference_datetime = c_ph.eval_expression(
+            local_logger, ref_expr, in_dict['session']['start-isoweekday'])
         child_parent_expressions = c_ph.get_child_parent_expressions()
         deviation_original = child_parent_expressions.get(ref_expr.split('_')[1])
         r_dt = datetime.strptime(reference_datetime,
                                  c_ph.output_standard_formats.get(deviation_original))
-        return c_fo.fn_get_file_datetime_verdict(local_logger, in_file['name'],
-                                                 'last modified', r_dt)
+        return c_fo.fn_get_file_datetime_verdict(
+            local_logger, in_dict['file']['name'], 'last modified', r_dt)
 
     @staticmethod
     def fn_set_extract_behaviour(in_session):
