@@ -121,7 +121,7 @@
                             {
                                 "compression":                          "gzip",
                                 "format":                               "pickle",
-                                "name":                                 "mysql-test-utf8mb4-pickle.gzip"
+                                "name":                                 "mysql-test-utf8mb4-pickle.gz"
                             },
                             {
                                 "compression":                          "infer",

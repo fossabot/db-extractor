@@ -139,7 +139,7 @@ dmypy.json
 # Result set files
 *.bz2
 *.csv
-*.gzip
+*.gz
 *.pickle
 *.xlsx
 *.xz
