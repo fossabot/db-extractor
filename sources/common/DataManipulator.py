@@ -15,7 +15,8 @@ class DataManipulator:
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
-    def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame, input_details):
+    def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame,
+                                input_details: list):
         for detail in input_details:
             timmer.start()
             input_data_frame[detail['New Column']] = input_data_frame[detail['Original Column']]
