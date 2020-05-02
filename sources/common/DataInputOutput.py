@@ -6,7 +6,7 @@ import gettext
 # package to handle files/folders and related metadata/operations
 import os
 # package facilitating Data Frames manipulation
-import pandas as pd
+import pandas
 
 
 class DataInputOutput:
@@ -64,14 +64,14 @@ class DataInputOutput:
     def fn_load_file_type_csv_into_data_frame(self, local_logger, in_file_list, csv_delimiter):
         details_for_logger = self.fn_default_load_dict_message(in_file_list, 'CSV')
         try:
-            out_data_frame = pd.concat([pd.read_csv(filepath_or_buffer=current_file,
-                                                    delimiter=csv_delimiter,
-                                                    cache_dates=True,
-                                                    index_col=None,
-                                                    memory_map=True,
-                                                    low_memory=False,
-                                                    encoding='utf-8',
-                                                    ) for current_file in in_file_list])
+            out_data_frame = pandas.concat([pandas.read_csv(filepath_or_buffer=current_file,
+                                                            delimiter=csv_delimiter,
+                                                            cache_dates=True,
+                                                            index_col=None,
+                                                            memory_map=True,
+                                                            low_memory=False,
+                                                            encoding='utf-8',
+                                                            ) for current_file in in_file_list])
         except Exception as err:
             details_for_logger['error details'] = err
         self.fn_file_operation_logger(local_logger, details_for_logger)
@@ -81,9 +81,9 @@ class DataInputOutput:
         out_data_frame = None
         details_for_logger = self.fn_default_load_dict_message(in_file_list, 'Excel')
         try:
-            out_data_frame = pd.concat([pd.read_excel(io=current_file,
-                                                      verbose=True,
-                                                      ) for current_file in in_file_list])
+            out_data_frame = pandas.concat([pandas.read_excel(io=current_file,
+                                                              verbose=True,
+                                                              ) for current_file in in_file_list])
         except Exception as err:
             details_for_logger['error details'] = err
         self.fn_file_operation_logger(local_logger, details_for_logger)
@@ -94,9 +94,9 @@ class DataInputOutput:
         out_data_frame = None
         details_for_logger = self.fn_default_load_dict_message(in_file_list, 'Pickle')
         try:
-            out_data_frame = pd.concat([pd.read_pickle(filepath_or_buffer=current_file,
-                                                       compression=in_compression,
-                                                       ) for current_file in in_file_list])
+            out_data_frame = pandas.concat([pandas.read_pickle(filepath_or_buffer=current_file,
+                                                               compression=in_compression,
+                                                               ) for current_file in in_file_list])
         except Exception as err:
             details_for_logger['error details'] = err
         self.fn_file_operation_logger(local_logger, details_for_logger)
