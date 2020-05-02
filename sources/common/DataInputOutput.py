@@ -41,7 +41,7 @@ class DataInputOutput:
                     'Pandas Data Frame has just been saved to file "{file_name}", '
                     + 'considering {file_type} as file type')
                     .replace('{file_name}', operation_details['name'])
-                    .replace('{file_type}', operation_details['format']),
+                    .replace('{file_type}', operation_details['format'].upper()),
             }
         return messages
 
@@ -146,7 +146,7 @@ class DataInputOutput:
         if 'format' in in_file_details:
             details_for_logger = {
                 'error details': None,
-                'file name': in_file_details['name'],
+                'name': in_file_details['name'],
                 'format': in_file_details['format'],
                 'operation': 'save',
             }
