@@ -79,44 +79,7 @@ class ExtractNeeds:
         local_logger.info(self.locale.gettext('Free DB result-set completed'))
         self.timer.stop()
 
-    def evaluate_if_extraction_is_required(self, in_dict):
-        extraction_required = False
-        if type(in_dict['session']['output-file']) == dict:
-            extraction_required = self.evaluate_if_extraction_is_required_for_single_file({
-                'session': in_dict['session'],
-                'query': in_dict['query'],
-                'sequence': in_dict['sequence'],
-                'file': in_dict['session']['output-file'],
-            })
-        elif type(in_dict['session']['output-file']) == list:
-            evaluated_extraction = {}
-            for crt_file in in_dict['session']['output-file']:
-                crt_eval = self.evaluate_if_extraction_is_required_for_single_file({
-                    'session': in_dict['session'],
-                    'query': in_dict['query'],
-                    'sequence': in_dict['sequence'],
-                    'file': crt_file,
-                })
-                evaluated_extraction.update({str(crt_file['name']): crt_eval})
-            extraction_required = self.class_bn.fn_evaluate_dict_values(evaluated_extraction)
-            self.class_ln.logger.debug(evaluated_extraction)
-            overall_verdict = self.locale.gettext('not required')
-            if extraction_required:
-                overall_verdict = self.locale.gettext('required')
-            self.class_ln.logger.debug(self.locale.gettext( \
-                'Overall new verdict after considering multiple files is: {overall_verdict}') \
-                                       .replace('{overall_verdict}', overall_verdict))
-        return extraction_required
-
-    def evaluate_if_extraction_is_required_for_single_file(self, in_dict):
-        in_dict['file']['name'] = self.class_ph.eval_expression(
-            self.class_ln.logger, in_dict['file']['name'], in_dict['session']['start-isoweekday'])
-        e_dict = {
-            'extract-behaviour': in_dict['session']['extract-behaviour'],
-            'output-csv-file': in_dict['file']['name'],
-        }
-        extraction_required = \
-            self.class_bnfe.fn_is_extraction_necessary(self.class_ln.logger, e_dict)
+    def evaluate_extraction_overwrite_condition(self, extraction_required, in_dict):
         if in_dict['session']['extract-behaviour'] == 'overwrite-if-output-file-exists' \
                 and 'extract-overwrite-condition' in in_dict['session'] \
                 and Path(in_dict['file']['name']).is_file():
@@ -130,6 +93,52 @@ class ExtractNeeds:
             self.class_ln.logger.debug(self.locale.gettext(
                 'Additional evaluation took place and new verdict is: {new_verdict}')
                                        .replace('{new_verdict}', new_verdict))
+        return extraction_required
+
+    def evaluate_if_extraction_is_required(self, in_dict):
+        extraction_required = False
+        if type(in_dict['session']['output-file']) == dict:
+            extraction_required = self.evaluate_if_extraction_is_required_for_single_file({
+                'session': in_dict['session'],
+                'query': in_dict['query'],
+                'sequence': in_dict['sequence'],
+                'file': in_dict['session']['output-file'],
+            })
+        elif type(in_dict['session']['output-file']) == list:
+            extraction_required = self.evaluate_if_extraction_is_required_list(in_dict)
+        return extraction_required
+
+    def evaluate_if_extraction_is_required_list(self, in_dict):
+        evaluated_extraction = {}
+        for crt_file in in_dict['session']['output-file']:
+            crt_eval = self.evaluate_if_extraction_is_required_for_single_file({
+                'session': in_dict['session'],
+                'query': in_dict['query'],
+                'sequence': in_dict['sequence'],
+                'file': crt_file,
+            })
+            evaluated_extraction.update({str(crt_file['name']): crt_eval})
+        extraction_required = self.class_bn.fn_evaluate_dict_values(evaluated_extraction)
+        self.class_ln.logger.debug(evaluated_extraction)
+        overall_verdict = self.locale.gettext('not required')
+        if extraction_required:
+            overall_verdict = self.locale.gettext('required')
+        self.class_ln.logger.debug(self.locale.gettext(
+            'Overall new verdict after considering multiple files is: {overall_verdict}')
+                                   .replace('{overall_verdict}', overall_verdict))
+        return extraction_required
+
+    def evaluate_if_extraction_is_required_for_single_file(self, in_dict):
+        in_dict['file']['name'] = self.class_ph.eval_expression(
+            self.class_ln.logger, in_dict['file']['name'], in_dict['session']['start-isoweekday'])
+        e_dict = {
+            'extract-behaviour': in_dict['session']['extract-behaviour'],
+            'output-csv-file': in_dict['file']['name'],
+        }
+        extraction_required = self.class_bnfe.fn_is_extraction_necessary(
+            self.class_ln.logger, e_dict)
+        extraction_required = self.evaluate_extraction_overwrite_condition(
+            extraction_required, in_dict)
         return extraction_required
 
     def extract_query_to_result_set(self, local_logger, in_cursor, in_dictionary):
