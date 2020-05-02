@@ -9,15 +9,15 @@
         "expected": ["A", "B", "C", "0"],
         "list": ["A", "B", "C"]
     },
-    "After": {
-        "add": "0",
-        "expected": ["A", "B", "0", "C"],
-        "list": ["A", "B", "C"],
-        "reference": "B"
-    },
     "Before": {
         "add": "0",
         "expected": ["A", "0", "B", "C"],
+        "list": ["A", "B", "C"],
+        "reference": "B"
+    },
+    "After": {
+        "add": "0",
+        "expected": ["A", "B", "0", "C"],
         "list": ["A", "B", "C"],
         "reference": "B"
     }

@@ -21,11 +21,81 @@ class BasicNeeds:
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
+    def fn_add_value_to_dictionary(self, in_list, adding_value, adding_type, reference_column):
+        add_type = adding_type.lower()
+        total_columns = len(in_list.copy())
+        reference_indexes = {
+            'add': {'after': 0, 'before': 0},
+            'cycle_down_to': {'after': 0, 'before': 0}
+        }
+        if reference_column is not None:
+            reference_indexes = {
+                'add': {
+                    'after': in_list.copy().index(reference_column) + 1,
+                    'before': in_list.copy().index(reference_column),
+                },
+                'cycle_down_to': {
+                    'after': in_list.copy().index(reference_column),
+                    'before': in_list.copy().index(reference_column),
+                }
+            }
+        positions = {
+            'after': {
+                'cycle_down_to': reference_indexes.get('cycle_down_to').get('after'),
+                'add': reference_indexes.get('add').get('after'),
+            },
+            'before': {
+                'cycle_down_to': reference_indexes.get('cycle_down_to').get('before'),
+                'add': reference_indexes.get('add').get('before'),
+            },
+            'first': {
+                'cycle_down_to': 0,
+                'add': 0,
+            },
+            'last': {
+                'cycle_down_to': total_columns,
+                'add': total_columns,
+            }
+        }
+        return self.add_value_to_dictionary_by_position({
+            'adding_value': adding_value,
+            'list': in_list.copy(),
+            'position_to_add': positions.get(add_type).get('add'),
+            'position_to_cycle_down_to': positions.get(add_type).get('cycle_down_to'),
+            'total_columns': total_columns,
+        })
+
+    @staticmethod
+    def add_value_to_dictionary_by_position(adding_dictionary):
+        list_with_values = adding_dictionary['list']
+        list_with_values.append(adding_dictionary['total_columns'])
+        for counter in range(adding_dictionary['total_columns'],
+                             adding_dictionary['position_to_cycle_down_to'], -1):
+            list_with_values[counter] = list_with_values[(counter - 1)]
+        list_with_values[adding_dictionary['position_to_add']] = adding_dictionary['adding_value']
+        return list_with_values
+
     def fn_check_inputs(self, input_parameters):
         if input_parameters.output_log_file is not None:
             # checking log folder first as there's all further messages will be stored
             self.fn_validate_single_value(os.path.dirname(input_parameters.output_log_file),
                                           'folder', self.lcl.gettext('log file'))
+
+    @staticmethod
+    def fn_decide_by_omission_or_specific_true(in_dictionary, key_decision_factor):
+        """
+        Evaluates if a property is specified in a Dict structure
+
+        @param in_dictionary: input Dict structure
+        @param key_decision_factor: key used to search value in Dict structure
+        @return: True|False
+        """
+        final_decision = False
+        if key_decision_factor in in_dictionary:
+            final_decision = True
+        elif in_dictionary[key_decision_factor]:
+            final_decision = True
+        return final_decision
 
     def fn_evaluate_dict_values(self, in_dict):
         true_counted = 0
