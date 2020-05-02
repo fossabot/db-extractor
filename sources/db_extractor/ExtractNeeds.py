@@ -242,9 +242,9 @@ class ExtractNeeds:
                 in_dict['session']['additional-columns'] = in_dict['query']['additional-columns']
             elif in_dict['session']['additional-columns'] == 'inherit-from-grand-parent':
                 in_dict['session']['additional-columns'] = in_dict['sequence']['additional-columns']
-            rdf = self.class_dbt.append_additional_columns_to_df(
+            result_df = self.class_dbt.append_additional_columns_to_df(
                 local_logger, self.timer, result_df, in_dict['session'])
-        return rdf
+        return result_df
 
     def set_default_starting_weekday(self, crt_session):
         week_starts_with_isoweekday = 1
