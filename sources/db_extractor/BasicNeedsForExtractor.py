@@ -111,19 +111,13 @@ class BasicNeedsForExtractor:
 
     def validate_all_json_files_current(self, local_logger, timmer, extracting_sequence, seq_index,
                                         in_source_systems, in_user_secrets):
-        # setting initial checks statuses
-        can_proceed = {
-            'Extraction'              : False,
-            'Source System'           : False,
-            'Source System Properties': False,
-            'User Secrets'            : False,
-            'User Secrets Properties' : False,
-        }
         timmer.start()
-        srv = {}
+        # setting initial checks statuses
+        can_proceed = {'Extraction': self.validate_extraction_sequence(
+            local_logger, extracting_sequence), 'Source System': False,
+            'Source System Properties': False, 'User Secrets': False,
+            'User Secrets Properties': False}
         # actual check
-        can_proceed['Extraction'] = self.validate_extraction_sequence(local_logger,
-                                                                      extracting_sequence)
         if can_proceed['Extraction']:
             # just few values that's going to be used a lot
             srv = {
@@ -134,25 +128,22 @@ class BasicNeedsForExtractor:
                 'grp' : extracting_sequence['server-group'],
                 'lyr' : extracting_sequence['server-layer'],
             }
-            can_proceed['Source System'] = \
-                self.validate_current_source_system(local_logger, srv, in_source_systems)
+            can_proceed['Source System'] = self.validate_current_source_system(
+                local_logger, srv, in_source_systems)
             if can_proceed['Source System']:
                 # variable for source server details
                 ss = in_source_systems[srv['vdr']][srv['typ']]['Server'][srv['grp']][srv['lyr']]
                 self.str_ss = '"' + '", "'.join(srv.values()) + '"'
                 can_proceed['Source System Properties'] = \
                     self.validate_current_source_system_properties(local_logger, ss)
-                can_proceed['User Secrets'] = \
-                    self.validate_user_secrets_file(local_logger, srv, in_user_secrets)
-                in_dict = {
-                    'can_proceed': can_proceed,
-                    'usr': in_user_secrets,
-                    'ac': extracting_sequence['account-label'],
-                    'ss': ss,
-                }
-                in_dict.update(srv)
+                can_proceed['User Secrets'] = self.validate_user_secrets_file(
+                    local_logger, srv, in_user_secrets)
+                srv.update(can_proceed)
+                srv.update(ss)
+                srv.update({'ac': extracting_sequence['account-label']})
                 can_proceed['User Secrets Properties'] = \
-                    self.validate_user_and_establish_connection_details(local_logger, in_dict)
+                    self.validate_user_and_establish_connection_details(
+                        local_logger, srv, in_user_secrets)
         local_logger.debug(self.lcl.gettext('For the sequence number {sequence_number} '
                                             + 'the relevant details for database connection '
                                             + 'have been verified')
@@ -259,18 +250,17 @@ class BasicNeedsForExtractor:
                                                                    item_checked, [in_seq['lyr']])
         return can_proceed_s and can_proceed_s1 and can_proceed_s2 and can_proceed_s3
 
-    def validate_user_and_establish_connection_details(self, local_logger, in_dc):
+    def validate_user_and_establish_connection_details(self, local_logger, in_dc, in_user):
         is_valid = False
-        if in_dc['can_proceed']['Source System Properties'] \
-                and in_dc['can_proceed']['User Secrets']:
+        if in_dc['Source System Properties'] and in_dc['User Secrets']:
             # variable with credentials for source server
-            u = in_dc['usr'][in_dc['vdr']][in_dc['typ']][in_dc['grp']][in_dc['lyr']][in_dc['ac']]
+            u = in_user[in_dc['vdr']][in_dc['typ']][in_dc['grp']][in_dc['lyr']][in_dc['ac']]
             is_valid = self.validate_user_secrets(local_logger, u)
             self.connection_details = {
                 'server-vendor-and-type': in_dc['vdtp'],
                 'server-layer'          : in_dc['lyr'],
-                'ServerName'            : in_dc['ss']['ServerName'],
-                'ServerPort'            : int(in_dc['ss']['ServerPort']),
+                'ServerName'            : in_dc['ServerName'],
+                'ServerPort'            : int(in_dc['ServerPort']),
                 'Username'              : u['Username'],
                 'Name'                  : u['Name'],
                 'Password'              : u['Password'],
