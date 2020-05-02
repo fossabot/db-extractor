@@ -14,11 +14,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
-msgstr "Tutti i file rilevanti ({files_counted}) sono stati uniti in una Strutura di Dati Pandas"
+msgid "All {files_counted} files of type {file_type} were successfully added to a Pandas Data Frame"
+msgstr "Tutti i file {files_counted} di tipo {file_type} sono stati aggiunti correttamente ad una Strutura di Dati Pandas"
+
+msgid "Error encountered on loading Pandas Data Frame from {file_type} file type (see below)"
+msgstr "Si è verificato un errore durante il caricamento di Strutura di Dati Pandas dal tipo di file {file_type} (vedi sotto)"
 
 msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
-msgstr "Si è verificato un errore durante il salvataggio di Pandas Data Frame in un tipo di file {file_type} (vedi sotto)"
+msgstr "Si è verificato un errore durante il salvataggio di Strutura di Dati Pandas in un tipo di file {file_type} (vedi sotto)"
 
 msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
 msgstr "L'attributo file \"format\" ha un valore di \"{format_value}\" che non è tra i valori attualmente implementati: \"{implemented_file_formats}\", quindi il salvataggio del file non è possibile"

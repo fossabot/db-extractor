@@ -17,38 +17,92 @@ class DataInputOutput:
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
-    def fn_file_save_error_logger(self, local_logger, in_file_details, error_details):
-        if error_details is None:
-            local_logger.info(self.lcl.gettext(
-                'Pandas Data Frame has just been saved to file "{file_name}", '
-                + 'considering {file_type} as file type')
-                              .replace('{file_name}', in_file_details['name'])
-                              .replace('{file_type}', in_file_details['format']))
-        else:
-            local_logger.error(
-                self.lcl.gettext(
+    def fn_build_feedback_for_logger(self, operation_details):
+        messages = {}
+        if operation_details['operation'] == 'load':
+            messages = {
+                'failed': self.lcl.gettext(
+                    'Error encountered on loading Pandas Data Frame '
+                    + 'from {file_type} file type (see below)')
+                    .replace('{file_type}', operation_details['format'].upper()),
+                'success': self.lcl.gettext(
+                    'All {files_counted} files of type {file_type} '
+                    + 'successfully added to a Pandas Data Frame')
+                    .replace('{files_counted}', str(operation_details['files counted']))
+                    .replace('{file_type}', str(operation_details['format']))
+            }
+        elif operation_details['operation'] == 'save':
+            messages = {
+                'failed': self.lcl.gettext(
                     'Error encountered on saving Pandas Data Frame '
                     + 'into a {file_type} file type (see below)')
-                    .replace('{file_type}', in_file_details['format'].upper()))
-            local_logger.error(error_details)
+                    .replace('{file_type}', operation_details['format'].upper()),
+                'success': self.lcl.gettext(
+                    'Pandas Data Frame has just been saved to file "{file_name}", '
+                    + 'considering {file_type} as file type')
+                    .replace('{file_name}', operation_details['name'])
+                    .replace('{file_type}', operation_details['format']),
+            }
+        return messages
 
-    def fn_load_file_list_to_data_frame(self, local_logger, timmer, file_list, csv_delimiter):
-        timmer.start()
-        out_data_frame = pd.concat([pd.read_csv(filepath_or_buffer=current_file,
-                                                delimiter=csv_delimiter,
-                                                cache_dates=True,
-                                                index_col=None,
-                                                memory_map=True,
-                                                low_memory=False,
-                                                encoding='utf-8',
-                                                ) for current_file in file_list])
-        local_logger.info(self.lcl.gettext(
-            'All relevant files ({files_counted}) were merged into a Pandas Data Frame')
-                          .replace('{files_counted}', str(len(file_list))))
-        timmer.stop()
+    def fn_default_load_dict_message(self, in_file_list, in_format):
+        return {
+            'error details': None,
+            'files counted': len(in_file_list),
+            'format': in_format,
+            'operation': 'load',
+        }
+
+    def fn_file_operation_logger(self, local_logger, in_logger_dict):
+        messages = self.fn_build_feedback_for_logger(in_logger_dict)
+        if in_logger_dict['error details'] is None:
+            local_logger.info(messages['success'])
+        else:
+            local_logger.error(messages['failed'])
+            local_logger.error(in_logger_dict['error details'])
+
+    def fn_load_file_type_csv_into_data_frame(self, local_logger, in_file_list, csv_delimiter):
+        details_for_logger = self.fn_default_load_dict_message(in_file_list, 'CSV')
+        try:
+            out_data_frame = pd.concat([pd.read_csv(filepath_or_buffer=current_file,
+                                                    delimiter=csv_delimiter,
+                                                    cache_dates=True,
+                                                    index_col=None,
+                                                    memory_map=True,
+                                                    low_memory=False,
+                                                    encoding='utf-8',
+                                                    ) for current_file in in_file_list])
+        except Exception as err:
+            details_for_logger['error details'] = err
+        self.fn_file_operation_logger(local_logger, details_for_logger)
         return out_data_frame
 
-    def fn_save_data_frame_to_csv(self, local_logger, in_data_frame, in_file_details):
+    def fn_load_file_type_excel_into_data_frame(self, local_logger, in_file_list):
+        out_data_frame = None
+        details_for_logger = self.fn_default_load_dict_message(in_file_list, 'Excel')
+        try:
+            out_data_frame = pd.concat([pd.read_excel(io=current_file,
+                                                      verbose=True,
+                                                      ) for current_file in in_file_list])
+        except Exception as err:
+            details_for_logger['error details'] = err
+        self.fn_file_operation_logger(local_logger, details_for_logger)
+        return out_data_frame
+
+    def fn_load_file_type_pickle_into_data_frame(self, local_logger, in_file_list,
+                                                 in_compression='infer'):
+        out_data_frame = None
+        details_for_logger = self.fn_default_load_dict_message(in_file_list, 'Pickle')
+        try:
+            out_data_frame = pd.concat([pd.read_pickle(filepath_or_buffer=current_file,
+                                                       compression=in_compression,
+                                                       ) for current_file in in_file_list])
+        except Exception as err:
+            details_for_logger['error details'] = err
+        self.fn_file_operation_logger(local_logger, details_for_logger)
+        return out_data_frame
+
+    def fn_save_data_frame_to_csv(self, local_logger, in_data_frame, in_file_details, logger_dict):
         if in_file_details['format'].lower() == 'csv':
             if 'field-delimiter' not in in_file_details:
                 in_file_details['field-delimiter'] = os.pathsep
@@ -58,39 +112,50 @@ class DataInputOutput:
                                      header=True,
                                      index=False,
                                      encoding='utf-8')
-                self.fn_file_save_error_logger(local_logger, in_file_details, None)
             except Exception as err:
-                self.fn_file_save_error_logger(local_logger, in_file_details, err)
+                logger_dict['error details'] = err
+            self.fn_file_operation_logger(local_logger, logger_dict)
 
-    def fn_save_data_frame_to_excel(self, local_logger, in_data_frame, in_file_details):
+    def fn_save_data_frame_to_excel(self, local_logger, in_data_frame, in_file_details,
+                                    logger_dict):
         if in_file_details['format'].lower() == 'excel':
             try:
                 in_data_frame.to_excel(excel_writer=in_file_details['name'],
                                        engine='xlsxwriter',
                                        freeze_panes=(1, 1),
                                        verbose=True)
-                self.fn_file_save_error_logger(local_logger, in_file_details, None)
             except Exception as err:
-                self.fn_file_save_error_logger(local_logger, in_file_details, err)
+                logger_dict['error details'] = err
+            self.fn_file_operation_logger(local_logger, logger_dict)
 
-    def fn_save_data_frame_to_pickle(self, local_logger, in_data_frame, in_file_details):
+    def fn_save_data_frame_to_pickle(self, local_logger, in_data_frame, in_file_details,
+                                     logger_dict):
         if in_file_details['format'].lower() == 'pickle':
             if 'compression' not in in_file_details:
                 in_file_details['compression'] = 'gzip'
             try:
                 in_data_frame.to_pickle(path=in_file_details['name'],
                                         compression=in_file_details['compression'])
-                self.fn_file_save_error_logger(local_logger, in_file_details, None)
             except Exception as err:
-                self.fn_file_save_error_logger(local_logger, in_file_details, err)
+                logger_dict['error details'] = err
+            self.fn_file_operation_logger(local_logger, logger_dict)
 
     def fn_store_data_frame_to_file(self, local_logger, timmer, in_data_frame, in_file_details):
         timmer.start()
         self.fn_store_data_frame_to_file_validation(local_logger, in_file_details)
         if 'format' in in_file_details:
-            self.fn_save_data_frame_to_csv(local_logger, in_data_frame, in_file_details)
-            self.fn_save_data_frame_to_excel(local_logger, in_data_frame, in_file_details)
-            self.fn_save_data_frame_to_pickle(local_logger, in_data_frame, in_file_details)
+            details_for_logger = {
+                'error details': None,
+                'file name': in_file_details['name'],
+                'format': in_file_details['format'],
+                'operation': 'save',
+            }
+            self.fn_save_data_frame_to_csv(local_logger, in_data_frame,
+                                           in_file_details, details_for_logger)
+            self.fn_save_data_frame_to_excel(local_logger, in_data_frame,
+                                             in_file_details, details_for_logger)
+            self.fn_save_data_frame_to_pickle(local_logger, in_data_frame,
+                                              in_file_details, details_for_logger)
         timmer.stop()
 
     def fn_store_data_frame_to_file_validation(self, local_logger, in_file_details):

@@ -13,7 +13,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "All relevant files ({files_counted}) were merged into a Pandas Data Frame"
+msgid "All {files_counted} files of type {file_type} were successfully added to a Pandas Data Frame"
+msgstr ""
+
+msgid "Error encountered on loading Pandas Data Frame from {file_type} file type (see below)"
 msgstr ""
 
 msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"

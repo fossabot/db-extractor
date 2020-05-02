@@ -38,7 +38,8 @@ setup(
         'hdbcli>=2.4.171,<2.5',
         'mysql-connector-python>=8.0.11,<8.1',
         'pandas>=0.25.3,<1.1',
-        'xlsxwriter>=1.2.8,<1.3'
+        'xlrd>=1,<2.0',
+        'xlsxwriter>=1,<1.3'
     ],
     keywords=[
         'csv'
