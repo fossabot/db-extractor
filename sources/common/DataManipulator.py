@@ -15,19 +15,18 @@ class DataManipulator:
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
         self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
 
-    def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame,
-                                input_details: list):
+    def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame, input_details: list):
         for current_dict in input_details:
             c_dict = current_dict
             timmer.start()
             input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['Original Column']]
-            offset_sign = (lambda x: 1 if x == 'down' else -1)
-            col_offset = offset_sign(c_dict['Direction']) * c_dict['Deviation']
-            input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['New Column']]\
-                .shift(col_offset)
-            input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['New Column']]\
-                .apply(lambda x: str(x).replace('.0', ''))\
-                .apply(lambda x: str(x).replace('nan', str(c_dict['Empty Values Replacement'])))
+            col_offset = self.fn_set_shifting_value(current_dict)
+            input_data_frame[c_dict['New Column']] = \
+                input_data_frame[c_dict['New Column']].shift(col_offset)
+            input_data_frame[c_dict['New Column']] = \
+                input_data_frame[c_dict['New Column']]\
+                    .apply(lambda x: str(x).replace('nan', str(c_dict['Empty Values Replacement']))
+                           .replace('.0', ''))
             local_logger.info(self.lcl.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
@@ -90,6 +89,12 @@ class DataManipulator:
                           .replace('{index_current_value}', str(index_current.index)))
         if str(index_current.index) != "Int64Index([], dtype='int64')" \
                 and 'Deviation' in filter_rule:
+            in_data_frame = self.fn_filter_data_frame_by_index_internal(local_logger, {
+                'data frame': in_data_frame,
+                'deviation': filter_rule['Deviation'],
+                'index': index_current.index,
+            })
+            '''
             for deviation_type in filter_rule['Deviation']:
                 deviation_number = filter_rule['Deviation'][deviation_type]
                 index_to_apply = index_current.index
@@ -105,7 +110,27 @@ class DataManipulator:
                                   .replace('{deviation_type}', deviation_type)
                                   .replace('{deviation_number}', str(deviation_number))
                                   .replace('{index_to_apply}', str(index_to_apply)))
+            '''
         return in_data_frame
+
+    def fn_filter_data_frame_by_index_internal(self, local_logger, in_dict):
+        in_data_frame = in_dict['data_frame']
+        for deviation_type in in_dict['deviation']:
+            deviation_number = in_dict['deviation'][deviation_type]
+            index_to_apply = in_dict['index']
+            if deviation_type == 'Lower':
+                index_to_apply -= deviation_number
+                in_data_frame = in_data_frame[in_dict['index'] >= index_to_apply[0]]
+            elif deviation_type == 'Upper':
+                index_to_apply += deviation_number
+                in_data_frame = in_data_frame[in_dict['index'] <= index_to_apply[0]]
+            local_logger.info(self.lcl.gettext(
+                '{deviation_type} Deviation Number is {deviation_number} '
+                + 'to be applied to Current index, became {index_to_apply}')
+                              .replace('{deviation_type}', deviation_type)
+                              .replace('{deviation_number}', str(deviation_number))
+                              .replace('{index_to_apply}', str(index_to_apply)))
+        return in_dict['data_frame']
 
     @staticmethod
     def fn_get_column_index_from_data_frame(data_frame_columns, column_name_to_identify):
@@ -121,3 +146,10 @@ class DataManipulator:
             'first': in_data_frame.iloc[0][in_column_name],
             'last': in_data_frame.iloc[(len(in_data_frame) - 1)][in_column_name],
         }
+
+    @staticmethod
+    def fn_set_shifting_value(in_dict):
+        offset_sign = 1
+        if in_dict['Direction'] == 'up':
+            offset_sign = -1
+        return offset_sign * in_dict['Deviation']
