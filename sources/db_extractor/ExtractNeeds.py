@@ -97,7 +97,7 @@ class ExtractNeeds:
             if extraction_required:
                 overall_verdict = self.locale.gettext('required')
             self.class_ln.logger.debug(self.locale.gettext( \
-                    'Overall new verdict after considering multiple files is: {overall_verdict}') \
+                'Overall new verdict after considering multiple files is: {overall_verdict}') \
                                        .replace('{overall_verdict}', overall_verdict))
         return extraction_required
 
@@ -107,7 +107,7 @@ class ExtractNeeds:
                                                          crt_session['start-isoweekday'])
         e_dict = {
             'extract-behaviour': crt_session['extract-behaviour'],
-            'output-csv-file'  : crt_file['name'],
+            'output-csv-file': crt_file['name'],
         }
         extraction_required = \
             self.class_bnfe.fn_is_extraction_necessary(self.class_ln.logger, e_dict)
@@ -124,7 +124,7 @@ class ExtractNeeds:
                 extraction_required = True
                 new_verdict = self.locale.gettext('required')
             self.class_ln.logger.debug(self.locale.gettext( \
-                    'Additional evaluation took place and new verdict is: {new_verdict}') \
+                'Additional evaluation took place and new verdict is: {new_verdict}') \
                                        .replace('{new_verdict}', new_verdict))
         return extraction_required
 
@@ -152,8 +152,9 @@ class ExtractNeeds:
         }
         if in_cursor is not None:
             dict_to_return = {
-                'columns'   : self.class_dbt.get_column_names(local_logger, self.timer, in_cursor),
-                'result_set': self.class_dbt.fetch_executed_query(local_logger, self.timer, in_cursor),
+                'columns': self.class_dbt.get_column_names(local_logger, self.timer, in_cursor),
+                'result_set': self.class_dbt.fetch_executed_query(local_logger, self.timer,
+                                                                  in_cursor),
                 'rows_counted': in_cursor.rowcount,
             }
         return dict_to_return
@@ -164,8 +165,8 @@ class ExtractNeeds:
         # initiate localization specific for this script
         # define global timer to use
         self.timer = Timer(self.script,
-                           text = self.locale.gettext('Time spent is {seconds}'),
-                           logger = self.class_ln.logger.debug)
+                           text=self.locale.gettext('Time spent is {seconds}'),
+                           logger=self.class_ln.logger.debug)
 
     def load_configuration(self):
         # load application configuration (inputs are defined into a json file)
@@ -182,9 +183,9 @@ class ExtractNeeds:
     def load_extraction_sequence_and_dependencies(self):
         self.timer.start()
         self.file_extract_sequence = self.class_fo.fn_open_file_and_get_content(
-                self.parameters.input_extracting_sequence_file, 'json')
-        self.class_ln.logger.info(self.locale.gettext( \
-                'Configuration file name with extracting sequence(es) has been loaded'))
+            self.parameters.input_extracting_sequence_file, 'json')
+        self.class_ln.logger.info(self.locale.gettext(
+            'Configuration file name with extracting sequence(es) has been loaded'))
         self.timer.stop()
         # store file statistics
         self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
@@ -194,7 +195,7 @@ class ExtractNeeds:
         # get the source system details from provided file
         self.timer.start()
         self.source_systems = self.class_fo.fn_open_file_and_get_content( \
-                self.parameters.input_source_system_file, 'json')['Systems']
+            self.parameters.input_source_system_file, 'json')['Systems']
         self.class_ln.logger.info(self.locale.gettext('Source Systems file name has been loaded'))
         self.timer.stop()
         self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
@@ -203,14 +204,14 @@ class ExtractNeeds:
         # get the source system details from provided file
         self.timer.start()
         self.user_credentials = self.class_fo.fn_open_file_and_get_content(
-                self.parameters.input_credentials_file, 'json')['Credentials']
+            self.parameters.input_credentials_file, 'json')['Credentials']
         self.class_ln.logger.info(self.locale.gettext( \
-                'Configuration file name with credentials has been loaded'))
+            'Configuration file name with credentials has been loaded'))
         self.timer.stop()
         self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
                                                self.parameters.input_credentials_file,
                                                self.locale.gettext( \
-                                                    'Configuration file name with credentials'))
+                                                   'Configuration file name with credentials'))
 
     def load_query(self, crt_query):
         self.timer.start()
@@ -240,11 +241,11 @@ class ExtractNeeds:
         else:
             # assumption is for either DICT or LIST values are numeric
             # in case text is given different rules have to be specified
-            dictionary_to_return  = {
-                "dict-values-glue"  : ", ",
+            dictionary_to_return = {
+                "dict-values-glue": ", ",
                 "dict-values-prefix": "IN (",
                 "dict-values-suffix": ")",
-                "list-values-glue"  : ", ",
+                "list-values-glue": ", ",
                 "list-values-prefix": "",
                 "list-values-suffix": ""
             }
