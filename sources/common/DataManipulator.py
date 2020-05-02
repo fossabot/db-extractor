@@ -17,25 +17,26 @@ class DataManipulator:
 
     def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame,
                                 input_details: list):
-        for detail in input_details:
+        for current_dict in input_details:
+            c_dict = current_dict
             timmer.start()
-            input_data_frame[detail['New Column']] = input_data_frame[detail['Original Column']]
+            input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['Original Column']]
             offset_sign = (lambda x: 1 if x == 'down' else -1)
-            col_offset = offset_sign(detail['Direction']) * detail['Deviation']
-            input_data_frame[detail['New Column']] = input_data_frame[detail['New Column']]\
+            col_offset = offset_sign(c_dict['Direction']) * c_dict['Deviation']
+            input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['New Column']]\
                 .shift(col_offset)
-            input_data_frame[detail['New Column']] = input_data_frame[detail['New Column']]\
+            input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['New Column']]\
                 .apply(lambda x: str(x).replace('.0', ''))\
-                .apply(lambda x: str(x).replace('nan', str(detail['Empty Values Replacement'])))
+                .apply(lambda x: str(x).replace('nan', str(c_dict['Empty Values Replacement'])))
             local_logger.info(self.lcl.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
                 + '(filling any empty value as {empty_values_replacement})')
-                              .replace('{new_column_name}', detail['New Column'])
-                              .replace('{original_column}', detail['Original Column'])
+                              .replace('{new_column_name}', c_dict['New Column'])
+                              .replace('{original_column}', c_dict['Original Column'])
                               .replace('{shifting_rows}', str(col_offset))
                               .replace('{empty_values_replacement}',
-                                       str(detail['Empty Values Replacement'])))
+                                       str(c_dict['Empty Values Replacement'])))
             timmer.stop()
         return input_data_frame
 
@@ -107,7 +108,7 @@ class DataManipulator:
         return in_data_frame
 
     @staticmethod
-    def fn_get_column_index_from_dataframe(data_frame_columns, column_name_to_identify):
+    def fn_get_column_index_from_data_frame(data_frame_columns, column_name_to_identify):
         column_index_to_return = 0
         for ndx, column_name in enumerate(data_frame_columns):
             if column_name == column_name_to_identify:
