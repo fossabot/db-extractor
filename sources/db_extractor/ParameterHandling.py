@@ -123,12 +123,8 @@ class ParameterHandling:
 
     def get_flattened_known_expressions(self):
         flat_values = []
-        index_counter = 0
-        for current_expression_group in self.known_expressions.items():
-            for current_expression in current_expression_group[1]:
-                flat_values.append(index_counter)
-                flat_values[index_counter] = current_expression
-                index_counter += 1
+        for crt_list in self.known_expressions.values():
+            flat_values += crt_list
         return flat_values
 
     @staticmethod
