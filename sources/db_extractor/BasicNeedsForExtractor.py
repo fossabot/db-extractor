@@ -134,7 +134,6 @@ class BasicNeedsForExtractor:
                 'grp' : extracting_sequence['server-group'],
                 'lyr' : extracting_sequence['server-layer'],
             }
-            ac = extracting_sequence['account-label']
             can_proceed['Source System'] = \
                 self.validate_current_source_system(local_logger, srv, in_source_systems)
             if can_proceed['Source System']:
@@ -145,20 +144,15 @@ class BasicNeedsForExtractor:
                     self.validate_current_source_system_properties(local_logger, ss)
                 can_proceed['User Secrets'] = \
                     self.validate_user_secrets_file(local_logger, srv, in_user_secrets)
-                if can_proceed['Source System Properties'] and can_proceed['User Secrets']:
-                    # variable with credentials for source server
-                    u_dtl = in_user_secrets[srv['vdr']][srv['typ']][srv['grp']][srv['lyr']][ac]
-                    can_proceed['User Secrets Properties'] = \
-                        self.validate_user_secrets(local_logger, u_dtl)
-                    self.connection_details = {
-                        'server-vendor-and-type': srv['vdtp'],
-                        'server-layer'          : srv['lyr'],
-                        'ServerName'            : ss['ServerName'],
-                        'ServerPort'            : int(ss['ServerPort']),
-                        'Username'              : u_dtl['Username'],
-                        'Name'                  : u_dtl['Name'],
-                        'Password'              : u_dtl['Password'],
-                    }
+                in_dict = {
+                    'can_proceed': can_proceed,
+                    'usr': in_user_secrets,
+                    'ac': extracting_sequence['account-label'],
+                    'ss': ss,
+                }
+                in_dict.update(srv)
+                can_proceed['User Secrets Properties'] = \
+                    self.validate_user_and_establish_connection_details(local_logger, in_dict)
         local_logger.debug(self.lcl.gettext('For the sequence number {sequence_number} '
                                             + 'the relevant details for database connection '
                                             + 'have been verified')
@@ -264,6 +258,24 @@ class BasicNeedsForExtractor:
                                                                    + '", "Server" ',
                                                                    item_checked, [in_seq['lyr']])
         return can_proceed_s and can_proceed_s1 and can_proceed_s2 and can_proceed_s3
+
+    def validate_user_and_establish_connection_details(self, local_logger, in_dc):
+        is_valid = False
+        if in_dc['can_proceed']['Source System Properties'] \
+                and in_dc['can_proceed']['User Secrets']:
+            # variable with credentials for source server
+            u = in_dc['usr'][in_dc['vdr']][in_dc['typ']][in_dc['grp']][in_dc['lyr']][in_dc['ac']]
+            is_valid = self.validate_user_secrets(local_logger, u)
+            self.connection_details = {
+                'server-vendor-and-type': in_dc['vdtp'],
+                'server-layer'          : in_dc['lyr'],
+                'ServerName'            : in_dc['ss']['ServerName'],
+                'ServerPort'            : int(in_dc['ss']['ServerPort']),
+                'Username'              : u['Username'],
+                'Name'                  : u['Name'],
+                'Password'              : u['Password'],
+            }
+        return is_valid
 
     def validate_user_secrets(self, local_logger, in_user_secrets):
         mandatory_properties = [
