@@ -14,22 +14,22 @@ import mysql.connector.errors
 import os
 # package facilitating Data Frames manipulation
 import pandas as pd
-# package to bring ability to check hostnames availability
+# package to bring ability to check hostname availability
 import socket
 
 
 class DatabaseTalker:
-    conn = None
-    lcl = None
+    connection = None
+    locale = None
 
     def __init__(self, default_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
+        self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
 
-    def append_additional_columns_to_df(self, local_logger, timered, data_frame, session_details):
+    def append_additional_columns_to_df(self, local_logger, timer, data_frame, session_details):
         resulted_data_frame = data_frame
-        timered.start()
+        timer.start()
         for crt_column in session_details['additional-columns']:
             if crt_column['value'] == 'utcnow':
                 resulted_data_frame[crt_column['name']] = datetime.utcnow()
@@ -37,18 +37,18 @@ class DatabaseTalker:
                 resulted_data_frame[crt_column['name']] = datetime.now()
             else:
                 resulted_data_frame[crt_column['name']] = crt_column['value']
-        local_logger.info(self.lcl.ngettext(
+        local_logger.info(self.locale.ngettext(
             'Additional {additional_columns_counted} column added to Pandas Data Frame',
             'Additional {additional_columns_counted} columns added to Pandas Data Frame',
-                len(session_details['additional-columns']))
+                          len(session_details['additional-columns']))
                           .replace('{additional_columns_counted}',
                                    str(len(session_details['additional-columns']))))
-        timered.stop()
+        timer.stop()
         return resulted_data_frame
 
-    def connect_to_database(self, local_logger, timered, connection_details):
-        timered.start()
-        local_logger.info(self.lcl.gettext(
+    def connect_to_database(self, local_logger, timer, connection_details):
+        timer.start()
+        local_logger.info(self.locale.gettext(
             'Connection to {server_vendor_and_type} server, layer {server_layer} '
             + 'which means (server {server_name}, port {server_port}) '
             + 'using the username {username} ({name_of_user})')
@@ -60,7 +60,7 @@ class DatabaseTalker:
                           .replace('{username}', connection_details['Username'])
                           .replace('{name_of_user}', connection_details['Name']))
         try:
-            host = socket.gethostbyname(connection_details['ServerName'])
+            socket.gethostbyname(connection_details['ServerName'])
             if connection_details['server-vendor-and-type'] == 'SAP HANA':
                 self.connect_to_database_hana(local_logger, connection_details)
             elif connection_details['server-vendor-and-type'] in ('MariaDB Foundation MariaDB',
@@ -69,11 +69,11 @@ class DatabaseTalker:
         except socket.gaierror as err:
             local_logger.error('Hostname not found, connection will not be established')
             local_logger.error(err)
-        timered.stop()
+        timer.stop()
 
     def connect_to_database_hana(self, local_logger, connection_details):
         try:
-            self.conn = dbapi.connect(
+            self.connection = dbapi.connect(
                 address=connection_details['ServerName'],
                 port=connection_details['ServerPort'],
                 user=connection_details['Username'],
@@ -84,12 +84,12 @@ class DatabaseTalker:
                 connDownRollbackError='TRUE',
                 statementCacheSize=10,
             )
-            local_logger.info(self.lcl.gettext( \
+            local_logger.info(self.locale.gettext(
                 'Connection to {server_vendor_and_type} server completed')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
         except ConnectionError as err:
-            local_logger.error(self.lcl.gettext( \
+            local_logger.error(self.locale.gettext(
                 'Error connecting to {server_vendor_and_type} server with details')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
@@ -97,7 +97,7 @@ class DatabaseTalker:
 
     def connect_to_database_mysql(self, local_logger, connection_details):
         try:
-            self.conn = mysql.connector.connect(
+            self.connection = mysql.connector.connect(
                 host=connection_details['ServerName'],
                 port=connection_details['ServerPort'],
                 user=connection_details['Username'],
@@ -110,71 +110,71 @@ class DatabaseTalker:
                 collation='utf8mb4_unicode_ci',
                 get_warnings=True,
             )
-            local_logger.info(self.lcl.gettext(
+            local_logger.info(self.locale.gettext(
                 'Connection to {server_vendor_and_type} server completed')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
         except mysql.connector.Error as err:
-            local_logger.error(self.lcl.gettext(
+            local_logger.error(self.locale.gettext(
                 'Error connecting to {server_vendor_and_type} server with details')
                               .replace('{server_vendor_and_type}',
                                        connection_details['server-vendor-and-type']))
             local_logger.error(err)
 
-    def execute_query(self, local_logger, timered, in_cursor, in_query, in_counted_parameters,
+    def execute_query(self, local_logger, timer, in_cursor, in_query, in_counted_parameters,
                       in_tuple_parameters):
         try:
-            timered.start()
+            timer.start()
             if in_counted_parameters > 0:
                 in_cursor.execute(in_query % in_tuple_parameters)
             else:
                 in_cursor.execute(in_query)
             try:
                 processing_tm = timedelta(microseconds=(in_cursor.server_processing_time() / 1000))
-                local_logger.info(self.lcl.gettext( \
+                local_logger.info(self.locale.gettext(
                     'Query executed successfully '
                     + 'having a server processing time of {processing_time}')
                                   .replace('{processing_time}', format(processing_tm)))
             except AttributeError:
-                local_logger.info(self.lcl.gettext('Query executed successfully'))
-            timered.stop()
+                local_logger.info(self.locale.gettext('Query executed successfully'))
+            timer.stop()
             return in_cursor
         except dbapi.ProgrammingError as e:
-            local_logger.error(self.lcl.gettext('Error running the query:'))
+            local_logger.error(self.locale.gettext('Error running the query:'))
             local_logger.error(e)
-            timered.stop()
+            timer.stop()
 
-    def fetch_executed_query(self, local_logger, timered, given_cursor):
-        timered.start()
+    def fetch_executed_query(self, local_logger, timer, given_cursor):
+        timer.start()
         local_result_set = None
         try:
             local_result_set = given_cursor.fetchall()
-            local_logger.info(self.lcl.gettext(
+            local_logger.info(self.locale.gettext(
                 'Result-set has been completely fetched and contains {rows_counted} rows')
                               .replace('{rows_counted}', str(len(local_result_set))))
         except ConnectionError as e:
-            local_logger.info(self.lcl.gettext('Connection problem encountered: '))
+            local_logger.info(self.locale.gettext('Connection problem encountered: '))
             local_logger.info(e)
-        timered.stop()
+        timer.stop()
         return local_result_set
 
-    def get_column_names(self, local_logger, timered, given_cursor):
-        timered.start()
+    def get_column_names(self, local_logger, timer, given_cursor):
+        timer.start()
         try:
             column_names = given_cursor.column_names
         except AttributeError:
             column_names = []
             for column_name, col2, col3, col4, col5, col6, col7 in given_cursor.description:
                 column_names.append(column_name)
-        local_logger.info(self.lcl.gettext(
+        local_logger.info(self.locale.gettext(
             'Result-set column name determination completed: {columns_name}')
                           .replace('{columns_name}', str(column_names)))
-        timered.stop()
+        timer.stop()
         return column_names
 
-    def result_set_to_data_frame(self, local_logger, timered, given_columns_name, given_result_set):
-        timered.start()
+    def result_set_to_data_frame(self, local_logger, timer, given_columns_name, given_result_set):
+        timer.start()
         df = pd.DataFrame(data=given_result_set, index=None, columns=given_columns_name)
-        local_logger.info(self.lcl.gettext('Result-set has been loaded into Pandas Data Frame'))
-        timered.stop()
+        local_logger.info(self.locale.gettext('Result-set has been loaded into Pandas Data Frame'))
+        timer.stop()
         return df

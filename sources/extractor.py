@@ -37,9 +37,9 @@ if __name__ == '__main__':
             if c_en.class_bn.fn_evaluate_dict_values(can_proceed):
                 c_en.class_dbt.connect_to_database(c_en.class_ln.logger, c_en.timer,
                                                    c_en.class_bnfe.connection_details)
-                if c_en.class_dbt.conn is not None:
+                if c_en.class_dbt.connection is not None:
                     # instantiate DB connection handler
-                    cursor = c_en.class_dbt.conn.cursor()
+                    cursor = c_en.class_dbt.connection.cursor()
                     for crt_query in crt_sequence['queries']:
                         can_proceed_q = \
                             c_en.class_bnfe.validate_extraction_query(
@@ -47,8 +47,11 @@ if __name__ == '__main__':
                         if can_proceed_q:
                             the_query = c_en.load_query(crt_query)
                             for crt_session in crt_query['sessions']:
-                                crt_session['start-isoweekday'] = \
-                                    c_en.set_default_starting_weekday(crt_session)
+                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    crt_session, crt_query, crt_sequence)
+                                crt_session['start-iso-weekday'] = \
+                                    c_en.set_default_starting_weekday(
+                                            dict__child__parent__grand_parent)
                                 dict__child__parent__grand_parent = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 if 'parameters' in crt_session:

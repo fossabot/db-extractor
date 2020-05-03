@@ -16,9 +16,9 @@ from common.DataInputOutput import DataInputOutput
 from common.DataManipulator import DataManipulator
 from common.FileOperations import FileOperations
 from common.LoggingNeeds import LoggingNeeds
+from common.ParameterHandling import ParameterHandling
 from db_extractor.BasicNeedsForExtractor import BasicNeedsForExtractor
 from db_extractor.DatabaseTalker import DatabaseTalker
-from db_extractor.ParameterHandling import ParameterHandling
 
 
 class ExtractNeeds:
@@ -68,7 +68,7 @@ class ExtractNeeds:
     def close_connection(self, local_logger):
         self.timer.start()
         local_logger.info(self.locale.gettext('Closing DB connection'))
-        self.class_dbt.conn.close()
+        self.class_dbt.connection.close()
         local_logger.info(self.locale.gettext('Closing DB completed'))
         self.timer.stop()
 
@@ -83,11 +83,11 @@ class ExtractNeeds:
         if in_dict['session']['extract-behaviour'] == 'overwrite-if-output-file-exists' \
                 and 'extract-overwrite-condition' in in_dict['session'] \
                 and Path(in_dict['file']['name']).is_file():
-            fv = self.class_bnfe.fn_is_extraction_neccesary_additional(
+            fv = self.class_bnfe.fn_is_extraction_necessary_additional(
                 self.class_ln.logger, self.class_ph, self.class_fo, in_dict)
             extraction_required = False
             new_verdict = self.locale.gettext('not required')
-            if fv == self.class_fo.lcl.gettext('older'):
+            if fv == self.class_fo.locale.gettext('older'):
                 extraction_required = True
                 new_verdict = self.locale.gettext('required')
             self.class_ln.logger.debug(self.locale.gettext(
@@ -130,7 +130,7 @@ class ExtractNeeds:
 
     def evaluate_if_extraction_is_required_for_single_file(self, in_dict):
         in_dict['file']['name'] = self.class_ph.eval_expression(
-            self.class_ln.logger, in_dict['file']['name'], in_dict['session']['start-isoweekday'])
+            self.class_ln.logger, in_dict['file']['name'], in_dict['session']['start-iso-weekday'])
         e_dict = {
             'extract-behaviour': in_dict['session']['extract-behaviour'],
             'output-csv-file': in_dict['file']['name'],
@@ -145,20 +145,19 @@ class ExtractNeeds:
         this_session = in_dictionary['session']
         this_query = in_dictionary['query']
         # get query parameters into a tuple
-        tuple_parameters = self.class_ph.handle_query_parameters(local_logger, this_session,
-                                                                 this_session['start-isoweekday'])
+        tuple_parameters = self.class_ph.handle_query_parameters(
+                local_logger, this_session, this_session['start-iso-weekday'])
         # measure expected number of parameters
-        expected_number_of_parameters = str(this_query).count('%s')
+        expected_no_of_parameters = str(this_query).count('%s')
         # simulate final query to log (useful for debugging purposes)
-        simulated_query = self.class_ph.simulate_final_query(local_logger, self.timer, this_query,
-                                                             expected_number_of_parameters,
-                                                             tuple_parameters)
-        local_logger.info(self.locale.gettext('Query with parameters interpreted is: %s') \
+        simulated_query = self.class_ph.simulate_final_query(
+                local_logger, self.timer, this_query, expected_no_of_parameters, tuple_parameters)
+        local_logger.info(self.locale.gettext('Query with parameters interpreted is: %s')
                           .replace('%s',
                                    self.class_bn.fn_multi_line_string_to_single(simulated_query)))
         # actual execution of the query
         in_cursor = self.class_dbt.execute_query(local_logger, self.timer, in_cursor, this_query,
-                                                 expected_number_of_parameters, tuple_parameters)
+                                                 expected_no_of_parameters, tuple_parameters)
         # bringing the information from server (data transfer)
         dict_to_return = {
             'rows_counted': 0
@@ -207,7 +206,7 @@ class ExtractNeeds:
                                                                    + 'extracting sequence(es)'))
         # get the source system details from provided file
         self.timer.start()
-        self.source_systems = self.class_fo.fn_open_file_and_get_content( \
+        self.source_systems = self.class_fo.fn_open_file_and_get_content(
             self.parameters.input_source_system_file, 'json')['Systems']
         self.class_ln.logger.info(self.locale.gettext('Source Systems file name has been loaded'))
         self.timer.stop()
@@ -218,12 +217,12 @@ class ExtractNeeds:
         self.timer.start()
         self.user_credentials = self.class_fo.fn_open_file_and_get_content(
             self.parameters.input_credentials_file, 'json')['Credentials']
-        self.class_ln.logger.info(self.locale.gettext( \
+        self.class_ln.logger.info(self.locale.gettext(
             'Configuration file name with credentials has been loaded'))
         self.timer.stop()
         self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
                                                self.parameters.input_credentials_file,
-                                               self.locale.gettext( \
+                                               self.locale.gettext(
                                                    'Configuration file name with credentials'))
 
     def load_query(self, crt_query):
@@ -255,13 +254,19 @@ class ExtractNeeds:
                 local_logger, self.timer, result_df, in_dict['session'])
         return result_df
 
-    def set_default_starting_weekday(self, crt_session):
-        week_starts_with_isoweekday = 1
-        if 'start_isoweekday' in crt_session:
-            week_starts_with_isoweekday = crt_session['start-isoweekday']
-        return week_starts_with_isoweekday
+    @staticmethod
+    def set_default_starting_weekday(in_dict):
+        week_starts_with_iso_weekday = 1
+        if 'start-iso-weekday' in in_dict['session']:
+            if in_dict['session']['start-iso-weekday'] == 'inherit-from-parent':
+                in_dict['session']['start-iso-weekday'] = in_dict['query']['start-iso-weekday']
+            elif in_dict['session']['start-iso-weekday'] == 'inherit-from-grand-parent':
+                in_dict['session']['start-iso-weekday'] = in_dict['sequence']['start-iso-weekday']
+            week_starts_with_iso_weekday = in_dict['session']['start-iso-weekday']
+        return week_starts_with_iso_weekday
 
-    def set_default_parameter_rules(self, in_dict):
+    @staticmethod
+    def set_default_parameter_rules(in_dict):
         # assumption is for either DICT or LIST values are numeric
         # in case text is given different rules have to be specified
         dictionary_to_return = {
