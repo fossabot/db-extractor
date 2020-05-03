@@ -110,6 +110,18 @@
             "expected_value": "201944"
         },
         {
+            "reference_value": "2020-05-03",
+            "expression": "CalculatedDate_CYCW_-1",
+            "expected_value": "202018",
+            "start-iso-weekday": 7
+        },
+        {
+            "reference_value": "2020-05-03",
+            "expression": "CalculatedDate_CYCW_-70",
+            "expected_value": "201901",
+            "start-iso-weekday": 7
+        },
+        {
             "reference_value": "2020-01-31",
             "expression": "CalculatedDate_CurrentYearCurrentWeek",
             "expected_value": "202005"

@@ -3,7 +3,7 @@ Testing key methods from Parameter Handling class
 """
 from datetime import datetime
 from sources.common.FileOperations import os, FileOperations
-from sources.db_extractor.ParameterHandling import ParameterHandling
+from common.ParameterHandling import ParameterHandling
 import unittest
 
 
@@ -27,8 +27,10 @@ class TestParameterHandling(unittest.TestCase):
                 reference_format = current_pair['reference_format']
             reference_date = datetime.strptime(current_pair['reference_value'], reference_format)
             expression_parts = current_pair['expression'].split('_')
+            if 'start-iso-weekday' not in current_pair:
+                current_pair['start-iso-weekday'] = 1
             value_to_assert = class_ph.interpret_known_expression(
-                reference_date, expression_parts, 1)
+                reference_date, expression_parts, current_pair['start-iso-weekday'])
             self.assertEqual(value_to_assert, current_pair['expected_value'],
                              'Provided value was "' + current_pair['reference_value']
                              + '", Expression was "' + current_pair['expression'] + '" '
