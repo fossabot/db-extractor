@@ -4,7 +4,7 @@ from codetiming import Timer
 from common.BasicNeeds import BasicNeeds
 from common.LoggingNeeds import LoggingNeeds
 from common.FileOperations import datetime, os, FileOperations
-from db_extractor.ParameterHandling import ParameterHandling
+from common.ParameterHandling import ParameterHandling
 # get current script name
 CURRENT_SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
 SCRIPT_LANGUAGE = 'ro_RO'
