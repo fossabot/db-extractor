@@ -31,7 +31,7 @@ msgstr ""
 msgid "Initial query expects {expected_parameters_counted} but only {given_parameters_counted} were provided"
 msgstr ""
 
-msgid "Initial Tuple for Parameters is: {parameters_tupple}"
+msgid "Initial Tuple for Parameters is: {parameters_tuple}"
 msgstr ""
 
 msgid "Known expression \"{expression_parts}\" has been interpreted as {final_string}"

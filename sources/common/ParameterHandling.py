@@ -34,19 +34,19 @@ class ParameterHandling:
         'just_day': '%d',
         'hour': '%Y%m%d%H%M%S%f',
     }
-    lcl = None
+    locale = None
 
     def __init__(self, default_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
+        self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
 
     def build_parameters(self, local_logger, query_session_parameters, in_parameter_rules
-                         , in_start_isoweekday):
-        local_logger.debug(self.lcl.gettext('Seen Parameters are: {parameters}') \
+                         , in_start_iso_weekday):
+        local_logger.debug(self.locale.gettext('Seen Parameters are: {parameters}')
                            .replace('{parameters}', str(query_session_parameters)))
         parameters_type = type(query_session_parameters)
-        local_logger.debug(self.lcl.gettext('Parameters type is {parameter_type}') \
+        local_logger.debug(self.locale.gettext('Parameters type is {parameter_type}')
                            .replace('{parameter_type}', str(parameters_type)))
         tp = None
         if parameters_type == dict:
@@ -54,15 +54,15 @@ class ParameterHandling:
         elif parameters_type == list:
             tp = tuple(query_session_parameters)
         else:
-            local_logger.error(self.lcl.gettext( \
+            local_logger.error(self.locale.gettext(
                 'Unexpected parameter type, either Dictionary or List expected, '
-                + 'but seen is {parameter_type}') \
+                + 'but seen is {parameter_type}')
                                .replace('{parameter_type}', str(parameters_type)))
             exit(1)
-        local_logger.debug(self.lcl.gettext( \
-            'Initial Tuple for Parameters is: {parameters_tupple}') \
-                           .replace('{parameters_tupple}', str(tp)))
-        return self.stringify_parameters(local_logger, tp, in_parameter_rules, in_start_isoweekday)
+        local_logger.debug(self.locale.gettext(
+            'Initial Tuple for Parameters is: {parameters_tuple}')
+                           .replace('{parameters_tuple}', str(tp)))
+        return self.stringify_parameters(local_logger, tp, in_parameter_rules, in_start_iso_weekday)
 
     @staticmethod
     def calculate_date_deviation(in_date, deviation_type, expression_parts):
@@ -77,40 +77,40 @@ class ParameterHandling:
         }
         return final_dates.get(deviation_type)
 
-    def calculate_date_from_expression(self, local_logger, expression_parts, in_start_isoweekday):
+    def calculate_date_from_expression(self, local_logger, expression_parts, in_start_iso_weekday):
         final_string = ''
         all_known_expressions = self.get_flattened_known_expressions()
         if expression_parts[1] in all_known_expressions:
             str_expression = '_'.join(expression_parts)
-            local_logger.debug(self.lcl.gettext( \
-                'A known expression "{expression_parts}" has to be interpreted') \
+            local_logger.debug(self.locale.gettext(
+                'A known expression "{expression_parts}" has to be interpreted')
                                .replace('{expression_parts}', str_expression))
-            final_string = self.interpret_known_expression(datetime.now(), expression_parts,
-                                                           in_start_isoweekday)
-            local_logger.debug(self.lcl.gettext( \
-                'Known expression "{expression_parts}" has been interpreted as {final_string}') \
-                               .replace('{expression_parts}', str_expression) \
+            final_string = self.interpret_known_expression(
+                    datetime.utcnow(), expression_parts, in_start_iso_weekday)
+            local_logger.debug(self.locale.gettext(
+                'Known expression "{expression_parts}" has been interpreted as {final_string}')
+                               .replace('{expression_parts}', str_expression)
                                .replace('{final_string}', final_string))
         else:
-            local_logger.debug(self.lcl.gettext( \
+            local_logger.debug(self.locale.gettext(
                 'Unknown expression encountered: provided was "{given_expression}" '
-                + 'which is not among known ones: "{all_known_expressions}"') \
-                               .replace('{given_expression}', str(expression_parts[1])) \
+                + 'which is not among known ones: "{all_known_expressions}"')
+                               .replace('{given_expression}', str(expression_parts[1]))
                                .replace('{all_known_expressions}',
                                         '", "'.join(all_known_expressions)))
             exit(1)
         return final_string
 
-    def eval_expression(self, local_logger, crt_parameter, in_start_isoweekday):
+    def eval_expression(self, local_logger, crt_parameter, in_start_iso_weekday):
         value_to_return = crt_parameter
-        reg_ex = re.search(r'(CalculatedDate\_[A-Za-z]{2,75}\_*(-*)[0-9]{0,2})', crt_parameter)
+        reg_ex = re.search(r'(CalculatedDate_[A-Za-z]{2,75}_*(-*)[0-9]{0,2})', crt_parameter)
         if reg_ex:
             parameter_value_parts = reg_ex.group().split('_')
-            calculated = self.calculate_date_from_expression(local_logger, parameter_value_parts,
-                                                             in_start_isoweekday)
+            calculated = self.calculate_date_from_expression(
+                    local_logger, parameter_value_parts, in_start_iso_weekday)
             value_to_return = re.sub(reg_ex.group(), calculated, crt_parameter)
-            local_logger.debug(self.lcl.gettext( \
-                'Current Parameter is STR and has been re-interpreted as value: "{str_value}"') \
+            local_logger.debug(self.locale.gettext(
+                'Current Parameter is STR and has been re-interpreted as value: "{str_value}"')
                                .replace('{str_value}', str(value_to_return)))
         return value_to_return
 
@@ -128,41 +128,42 @@ class ParameterHandling:
         return flat_values
 
     @staticmethod
-    def get_week_number_as_two_digits_string(in_date, in_start_isoweekday=1):
-        if in_start_isoweekday == 7:
+    def get_week_number_as_two_digits_string(in_date, in_start_iso_weekday=1):
+        if in_start_iso_weekday == 7:
             in_date = in_date + timedelta(days=1)
         week_iso_num = datetime.isocalendar(in_date)[1]
-        value_to_return = str(week_iso_num)
+        iso_wek_to_return = str(week_iso_num)
         if week_iso_num < 10:
-            value_to_return = '0' + value_to_return
-        return value_to_return
+            iso_wek_to_return = '0' + iso_wek_to_return
+        return str(datetime.isocalendar(in_date)[0]), iso_wek_to_return
 
-    def handle_query_parameters(self, local_logger, given_session, in_start_isoweekday):
+    def handle_query_parameters(self, local_logger, given_session, in_start_iso_weekday):
         tp = None
         if 'parameters' in given_session:
             parameter_rules = []
             if 'parameters-handling-rules' in given_session:
                 parameter_rules = given_session['parameters-handling-rules']
-            tp = self.build_parameters(local_logger, given_session['parameters'], parameter_rules,
-                                       in_start_isoweekday)
+            tp = self.build_parameters(
+                    local_logger, given_session['parameters'], parameter_rules,
+                    in_start_iso_weekday)
         return tp
 
-    def interpret_known_expression(self, ref_date, expression_parts, in_start_isoweekday):
+    def interpret_known_expression(self, ref_date, expression_parts, in_start_iso_weekday):
         child_parent_expressions = self.get_child_parent_expressions()
         deviation_original = child_parent_expressions.get(expression_parts[1])
         deviation = deviation_original.replace('just_', '')
         finalized_date = ref_date
         if len(expression_parts) > 2:
             finalized_date = self.calculate_date_deviation(ref_date, deviation, expression_parts)
-        week_number_string = self.get_week_number_as_two_digits_string(finalized_date,
-                                                                       in_start_isoweekday)
+        year_number_string, week_number_string = self.get_week_number_as_two_digits_string(
+                finalized_date, in_start_iso_weekday)
         if deviation_original == 'week':
-            final_string = str(datetime.isocalendar(finalized_date)[0]) + week_number_string
+            final_string = year_number_string + week_number_string
         elif deviation_original == 'just_week':
             final_string = week_number_string
         else:
-            final_string = datetime.strftime(finalized_date,
-                                             self.output_standard_formats.get(deviation_original))
+            final_string = datetime.strftime(
+                    finalized_date, self.output_standard_formats.get(deviation_original))
         return final_string
 
     def manage_parameter_value(self, local_logger, given_prefix, given_parameter,
@@ -172,50 +173,49 @@ class ParameterHandling:
             element_to_join = given_parameter.values()
         elif given_prefix == 'list':
             element_to_join = given_parameter
-        local_logger.debug(self.lcl.gettext( \
-            'Current Parameter is {parameter_type} and has the value: "{str_value}"') \
-                           .replace('{parameter_type}', self.lcl.gettext(given_prefix.upper())) \
+        local_logger.debug(self.locale.gettext(
+            'Current Parameter is {parameter_type} and has the value: "{str_value}"')
+                           .replace('{parameter_type}', self.locale.gettext(given_prefix.upper()))
                            .replace('{str_value}', str(element_to_join)))
         return given_parameter_rules[given_prefix + '-values-prefix'] \
-               + given_parameter_rules[given_prefix + '-values-glue'].join(element_to_join) \
-               + given_parameter_rules[given_prefix + '-values-suffix']
+            + given_parameter_rules[given_prefix + '-values-glue'].join(element_to_join) \
+            + given_parameter_rules[given_prefix + '-values-suffix']
 
-    def simulate_final_query(self, local_logger, timered, in_query, in_parameters_number, in_tp):
-        timered.start()
+    def simulate_final_query(self, local_logger, timer, in_query, in_parameters_number, in_tp):
+        timer.start()
         return_query = in_query
         if in_parameters_number > 0:
             try:
                 return_query = in_query % in_tp
             except TypeError as e:
-                local_logger.error(self.lcl.gettext( \
+                local_logger.error(self.locale.gettext(
                     'Initial query expects {expected_parameters_counted} '
-                    + 'but only {given_parameters_counted} were provided') \
+                    + 'but only {given_parameters_counted} were provided')
                                    .replace('{expected_parameters_counted}',
-                                            str(in_parameters_number)) \
+                                            str(in_parameters_number))
                                    .replace('{given_parameters_counted}', str(len(in_tp))))
                 local_logger.error(e)
-        timered.stop()
+        timer.stop()
         return return_query
 
     def stringify_parameters(self, local_logger, tuple_parameters, given_parameter_rules,
-                             in_start_isoweekday):
+                             in_start_iso_weekday):
         working_list = []
         for ndx, crt_parameter in enumerate(tuple_parameters):
             current_parameter_type = type(crt_parameter)
             working_list.append(ndx)
             if current_parameter_type == str:
-                local_logger.debug(self.lcl.gettext( \
-                    'Current Parameter is {parameter_type} and has the value: "{str_value}"') \
-                                   .replace('{parameter_type}', self.lcl.gettext('STR')) \
+                local_logger.debug(self.locale.gettext(
+                    'Current Parameter is {parameter_type} and has the value: "{str_value}"')
+                                   .replace('{parameter_type}', self.locale.gettext('STR'))
                                    .replace('{str_value}', crt_parameter))
-                working_list[ndx] = self.eval_expression(local_logger, crt_parameter,
-                                                         in_start_isoweekday)
+                working_list[ndx] = self.eval_expression(
+                        local_logger, crt_parameter, in_start_iso_weekday)
             elif current_parameter_type in (list, dict):
                 prefix = str(current_parameter_type).replace("<class '", '').replace("'>", '')
-                working_list[ndx] = self.manage_parameter_value(local_logger, prefix.lower(),
-                                                                crt_parameter,
-                                                                given_parameter_rules)
+                working_list[ndx] = self.manage_parameter_value(
+                        local_logger, prefix.lower(), crt_parameter, given_parameter_rules)
         final_tuple = tuple(working_list)
-        local_logger.debug(self.lcl.gettext('Final Tuple for Parameters is: {final_tuple}') \
+        local_logger.debug(self.locale.gettext('Final Tuple for Parameters is: {final_tuple}')
                            .replace('{final_tuple}', str(final_tuple)))
         return final_tuple
