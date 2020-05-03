@@ -8,26 +8,27 @@ import os
 
 
 class DataManipulator:
-    lcl = None
+    locale = None
 
     def __init__(self, default_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
+        self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
 
-    def fn_add_and_shift_column(self, local_logger, timmer, input_data_frame, input_details: list):
+    def fn_add_and_shift_column(self, local_logger, timer, input_data_frame, input_details: list):
         for current_dict in input_details:
             c_dict = current_dict
-            timmer.start()
+            timer.start()
             input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['Original Column']]
             col_offset = self.fn_set_shifting_value(current_dict)
             input_data_frame[c_dict['New Column']] = \
                 input_data_frame[c_dict['New Column']].shift(col_offset)
+            evr = 'Empty Values Replacement'
             input_data_frame[c_dict['New Column']] = \
-                input_data_frame[c_dict['New Column']]\
-                    .apply(lambda x: str(x).replace('nan', str(c_dict['Empty Values Replacement']))
-                           .replace('.0', ''))
-            local_logger.info(self.lcl.gettext(
+                input_data_frame[c_dict['New Column']].apply(lambda x: str(x)
+                                                             .replace('nan', str(c_dict[evr]))
+                                                             .replace('.0', ''))
+            local_logger.info(self.locale.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
                 + '(filling any empty value as {empty_values_replacement})')
@@ -36,7 +37,7 @@ class DataManipulator:
                               .replace('{shifting_rows}', str(col_offset))
                               .replace('{empty_values_replacement}',
                                        str(c_dict['Empty Values Replacement'])))
-            timmer.stop()
+            timer.stop()
         return input_data_frame
 
     @staticmethod
@@ -49,22 +50,22 @@ class DataManipulator:
             grouped_df.rename(columns=dict_expression['map'], inplace=True)
         return grouped_df
 
-    def fn_apply_query_to_data_frame(self, local_logger, timmer, input_data_frame, extract_params):
-        timmer.start()
+    def fn_apply_query_to_data_frame(self, local_logger, timer, input_data_frame, extract_params):
+        timer.start()
         query_expression = ''
-        generic_pre_feedback = self.lcl.gettext('Will retain only values {filter_type} '
-                                                + '"{filter_values}" within the field '
-                                                + '"{column_to_filter}"') \
+        generic_pre_feedback = self.locale.gettext('Will retain only values {filter_type} '
+                                                   + '"{filter_values}" within the field '
+                                                   + '"{column_to_filter}"') \
             .replace('{column_to_filter}', extract_params['column_to_filter'])
         if extract_params['filter_to_apply'] == 'equal':
             local_logger.debug(generic_pre_feedback
-                               .replace('{filter_type}', self.lcl.gettext('equal with'))
+                               .replace('{filter_type}', self.locale.gettext('equal with'))
                                .replace('{filter_values}', extract_params['filter_values']))
             query_expression = '`' + extract_params['column_to_filter'] + '` == "' \
                                + extract_params['filter_values'] + '"'
         elif extract_params['filter_to_apply'] == 'different':
             local_logger.debug(generic_pre_feedback
-                               .replace('{filter_type}', self.lcl.gettext('different than'))
+                               .replace('{filter_type}', self.locale.gettext('different than'))
                                .replace('{filter_values}', extract_params['filter_values']))
             query_expression = '`' + extract_params['column_to_filter'] + '` != "' \
                                + extract_params['filter_values'] + '"'
@@ -72,19 +73,19 @@ class DataManipulator:
             multiple_values = '["' + '", "'.join(extract_params['filter_values'].values()) + '"]'
             local_logger.debug(generic_pre_feedback
                                .replace('{filter_type}',
-                                        self.lcl.gettext('matching any of these values'))
+                                        self.locale.gettext('matching any of these values'))
                                .replace('{filter_values}', multiple_values))
             query_expression = '`' + extract_params['column_to_filter'] + '` in ' + multiple_values
-        local_logger.debug(self.lcl.gettext('Query expression to apply is: {query_expression}')
+        local_logger.debug(self.locale.gettext('Query expression to apply is: {query_expression}')
                            .replace('{query_expression}', query_expression))
         input_data_frame.query(query_expression, inplace=True)
-        timmer.stop()
+        timer.stop()
         return input_data_frame
 
     def fn_filter_data_frame_by_index(self, local_logger, in_data_frame, filter_rule):
         reference_expression = filter_rule['Query Expression for Reference Index']
         index_current = in_data_frame.query(reference_expression, inplace=False)
-        local_logger.info(self.lcl.gettext(
+        local_logger.info(self.locale.gettext(
             'Current index has been determined to be {index_current_value}')
                           .replace('{index_current_value}', str(index_current.index)))
         if str(index_current.index) != "Int64Index([], dtype='int64')" \
@@ -94,23 +95,6 @@ class DataManipulator:
                 'deviation': filter_rule['Deviation'],
                 'index': index_current.index,
             })
-            '''
-            for deviation_type in filter_rule['Deviation']:
-                deviation_number = filter_rule['Deviation'][deviation_type]
-                index_to_apply = index_current.index
-                if deviation_type == 'Lower':
-                    index_to_apply = index_current.index - deviation_number
-                    in_data_frame = in_data_frame[in_data_frame.index >= index_to_apply[0]]
-                elif deviation_type == 'Upper':
-                    index_to_apply = index_current.index + deviation_number
-                    in_data_frame = in_data_frame[in_data_frame.index <= index_to_apply[0]]
-                local_logger.info(self.lcl.gettext(
-                    '{deviation_type} Deviation Number is {deviation_number} '
-                    + 'to be applied to Current index, became {index_to_apply}')
-                                  .replace('{deviation_type}', deviation_type)
-                                  .replace('{deviation_number}', str(deviation_number))
-                                  .replace('{index_to_apply}', str(index_to_apply)))
-            '''
         return in_data_frame
 
     def fn_filter_data_frame_by_index_internal(self, local_logger, in_dict):
@@ -124,7 +108,7 @@ class DataManipulator:
             elif deviation_type == 'Upper':
                 index_to_apply += deviation_number
                 in_data_frame = in_data_frame[in_dict['index'] <= index_to_apply[0]]
-            local_logger.info(self.lcl.gettext(
+            local_logger.info(self.locale.gettext(
                 '{deviation_type} Deviation Number is {deviation_number} '
                 + 'to be applied to Current index, became {index_to_apply}')
                               .replace('{deviation_type}', deviation_type)

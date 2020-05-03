@@ -14,12 +14,12 @@ import re
 
 
 class BasicNeeds:
-    lcl = None
+    locale = None
 
     def __init__(self, default_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.lcl = gettext.translation(current_script, lang_folder, languages=[default_language])
+        self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
 
     def fn_add_value_to_dictionary(self, in_list, adding_value, adding_type, reference_column):
         add_type = adding_type.lower()
@@ -78,8 +78,8 @@ class BasicNeeds:
     def fn_check_inputs(self, input_parameters):
         if input_parameters.output_log_file is not None:
             # checking log folder first as there's all further messages will be stored
-            self.fn_validate_single_value(os.path.dirname(input_parameters.output_log_file),
-                                          'folder', self.lcl.gettext('log file'))
+            self.fn_validate_single_value(
+                    os.path.dirname(input_parameters.output_log_file), 'folder')
 
     @staticmethod
     def fn_decide_by_omission_or_specific_true(in_dictionary, key_decision_factor):
@@ -97,7 +97,8 @@ class BasicNeeds:
             final_decision = True
         return final_decision
 
-    def fn_evaluate_dict_values(self, in_dict):
+    @staticmethod
+    def fn_evaluate_dict_values(in_dict):
         true_counted = 0
         for crt_value in in_dict:
             if in_dict[crt_value]:
@@ -107,7 +108,8 @@ class BasicNeeds:
             all_true = True
         return all_true
 
-    def fn_evaluate_list_values(self, in_list):
+    @staticmethod
+    def fn_evaluate_list_values(in_list):
         true_counted = 0
         for crt_value in in_list:
             if crt_value:
@@ -120,13 +122,13 @@ class BasicNeeds:
     def fn_final_message(self, local_logger, log_file_name, performance_in_seconds):
         total_time_string = str(timedelta(seconds=performance_in_seconds))
         if log_file_name == 'None':
-            self.fn_timestamped_print(self.lcl.gettext( \
-                'Application finished, whole script took {total_time_string}') \
+            self.fn_timestamped_print(self.locale.gettext(
+                'Application finished, whole script took {total_time_string}')
                                       .replace('{total_time_string}', total_time_string))
         else:
-            local_logger.info(self.lcl.gettext('Total execution time was {total_time_string}') \
+            local_logger.info(self.locale.gettext('Total execution time was {total_time_string}')
                               .replace('{total_time_string}', total_time_string))
-            self.fn_timestamped_print(self.lcl.gettext( \
+            self.fn_timestamped_print(self.locale.gettext(
                 'Application finished, for complete logged details please check {log_file_name}')
                                       .replace('{log_file_name}', log_file_name))
 
@@ -150,33 +152,26 @@ class BasicNeeds:
     def fn_timestamped_print(string_to_print):
         print(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f %Z") + '- ' + string_to_print)
 
-    def fn_validate_one_value(self, value_to_validate, validation_type, name_meaning):
+    def fn_validate_one_value(self, value_to_validate, validation_type):
         is_invalid = False
         message = ''
         if validation_type == 'file':
             is_invalid = (not os.path.isfile(value_to_validate))
-            message = self.lcl.gettext( \
-                'Given file "{value_to_validate}" does not exist') \
-                .replace('{value_to_validate}', value_to_validate)
+            message = self.locale.gettext('Given file "{value_to_validate}" does not exist')
         elif validation_type == 'folder':
             is_invalid = (not os.path.isdir(value_to_validate))
-            message = self.lcl.gettext( \
-                'Given folder "{value_to_validate}" does not exist') \
-                .replace('{value_to_validate}', value_to_validate)
+            message = self.locale.gettext('Given folder "{value_to_validate}" does not exist')
         elif validation_type == 'url':
             url_reg_expression = 'https?://(?:www)?(?:[\\w-]{2,255}(?:\\.\\w{2,66}){1,2})'
             is_invalid = (not re.match(url_reg_expression, value_to_validate))
-            message = self.lcl.gettext( \
-                'Given url "{value_to_validate}" is not valid') \
-                .replace('{value_to_validate}', value_to_validate)
+            message = self.locale.gettext('Given url "{value_to_validate}" is not valid')
         return {
             'is_invalid': is_invalid,
-            'message': message,
+            'message': message.replace('{value_to_validate}', value_to_validate),
         }
 
-    def fn_validate_single_value(self, value_to_validate, validation_type, name_meaning):
-        validation_details = self.fn_validate_one_value(value_to_validate, validation_type,
-                                                        name_meaning)
+    def fn_validate_single_value(self, value_to_validate, validation_type):
+        validation_details = self.fn_validate_one_value(value_to_validate, validation_type)
         if validation_details['is_invalid']:
             self.fn_timestamped_print(validation_details['message'])
             exit(1)
