@@ -22,10 +22,10 @@ msgstr ""
 msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
 msgstr ""
 
-msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
+msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore desired file operation is not possible"
 msgstr ""
 
-msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
+msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore desired file operation is not possible"
 msgstr ""
 
 msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"

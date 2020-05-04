@@ -23,11 +23,11 @@ msgstr "Si è verificato un errore durante il caricamento di Strutura di Dati Pa
 msgid "Error encountered on saving Pandas Data Frame into a {file_type} file type (see below)"
 msgstr "Si è verificato un errore durante il salvataggio di Strutura di Dati Pandas in un tipo di file {file_type} (vedi sotto)"
 
-msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore file saving is not possible"
-msgstr "L'attributo file \"format\" ha un valore di \"{format_value}\" che non è tra i valori attualmente implementati: \"{implemented_file_formats}\", quindi il salvataggio del file non è possibile"
+msgid "File \"format\" attribute has a value of \"{format_value}\" which is not among currently implemented values: \"{implemented_file_formats}\", therefore desired file operation is not possible"
+msgstr "L'attributo file \"format\" ha un valore di \"{format_value}\" che non è tra i valori attualmente implementati: \"{implemented_file_formats}\", pertanto l'operazione di file desiderata non è possibile"
 
-msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore file saving is not possible"
-msgstr "L'attributo file \"formato\" è obbligatorio nell'impostazione del file, ma manca, pertanto non è possibile salvare il file"
+msgid "File \"format\" attribute is mandatory in the file setting, but missing, therefore desired file operation is not possible"
+msgstr "L'attributo file \"format\" è obbligatorio nell'impostazione del file, ma manca, pertanto l'operazione di file desiderata non è possibile"
 
 msgid "Pandas Data Frame has just been saved to file \"{file_name}\", considering {file_type} as file type"
 msgstr "La Strutura di Dati Pandas è stato appena salvato nel file \"{file_name}\", considerando {file_type} come tipo di file"
