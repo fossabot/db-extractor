@@ -2,8 +2,10 @@
 Testing key methods from Parameter Handling class
 """
 from datetime import datetime
-from sources.common.FileOperations import os, FileOperations
+import os
+from common.FileOperations import FileOperations
 from common.ParameterHandling import ParameterHandling
+from db_extractor.ExtractNeeds import ExtractNeeds
 import unittest
 
 
@@ -11,6 +13,7 @@ class TestParameterHandling(unittest.TestCase):
 
     def test_interpret_known_expression(self):
         class_fo = FileOperations()
+        class_en = ExtractNeeds(os.path.basename(__file__).replace('.py', ''))
         # load testing values from JSON file
         # where all cases are grouped
         json_structure = class_fo.fn_open_file_and_get_content(
@@ -27,8 +30,11 @@ class TestParameterHandling(unittest.TestCase):
                 reference_format = current_pair['reference_format']
             reference_date = datetime.strptime(current_pair['reference_value'], reference_format)
             expression_parts = current_pair['expression'].split('_')
-            if 'start-iso-weekday' not in current_pair:
-                current_pair['start-iso-weekday'] = 1
+            current_pair['start-iso-weekday'] = class_en.set_default_starting_weekday({
+                'session': current_pair,
+                'query': current_pair,
+                'sequence': current_pair,
+            })
             value_to_assert = class_ph.interpret_known_expression(
                 reference_date, expression_parts, current_pair['start-iso-weekday'])
             self.assertEqual(value_to_assert, current_pair['expected_value'],

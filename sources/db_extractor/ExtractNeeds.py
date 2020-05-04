@@ -241,7 +241,7 @@ class ExtractNeeds:
             'sequence': in_sequence,
         }
 
-    def result_set_into_data_frame(self, local_logger, stats, in_dict):
+    def result_set_to_disk_file(self, local_logger, stats, in_dict):
         result_df = self.class_dbt.result_set_to_data_frame(
             local_logger, self.timer, stats['columns'], stats['result_set'])
         if 'additional-columns' in in_dict['session']:
@@ -251,7 +251,7 @@ class ExtractNeeds:
                 in_dict['session']['additional-columns'] = in_dict['sequence']['additional-columns']
             result_df = self.class_dbt.append_additional_columns_to_df(
                 local_logger, self.timer, result_df, in_dict['session'])
-        return result_df
+        self.store_result_set_to_disk(self.class_ln.logger, result_df, in_dict['session'])
 
     @staticmethod
     def set_default_starting_weekday(in_dict):

@@ -16,27 +16,26 @@ class DataManipulator:
         self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
 
     def fn_add_and_shift_column(self, local_logger, timer, input_data_frame, input_details: list):
-        for current_dict in input_details:
-            c_dict = current_dict
+        evr = 'Empty Values Replacement'
+        for crt_dict in input_details:
             timer.start()
-            input_data_frame[c_dict['New Column']] = input_data_frame[c_dict['Original Column']]
-            col_offset = self.fn_set_shifting_value(current_dict)
-            input_data_frame[c_dict['New Column']] = \
-                input_data_frame[c_dict['New Column']].shift(col_offset)
-            evr = 'Empty Values Replacement'
-            input_data_frame[c_dict['New Column']] = \
-                input_data_frame[c_dict['New Column']].apply(lambda x: str(x)
-                                                             .replace('nan', str(c_dict[evr]))
-                                                             .replace('.0', ''))
+            input_data_frame[crt_dict['New Column']] = input_data_frame[crt_dict['Original Column']]
+            col_offset = self.fn_set_shifting_value(crt_dict)
+            input_data_frame[crt_dict['New Column']] = \
+                input_data_frame[crt_dict['New Column']].shift(col_offset)
+            input_data_frame[crt_dict['New Column']] = \
+                input_data_frame[crt_dict['New Column']].apply(lambda x: str(x)
+                                                               .replace('nan', str(crt_dict[evr]))
+                                                               .replace('.0', ''))
             local_logger.info(self.locale.gettext(
                 'A new column named "{new_column_name}" as copy from "{original_column}" '
                 + 'then shifted by {shifting_rows} to relevant data frame '
                 + '(filling any empty value as {empty_values_replacement})')
-                              .replace('{new_column_name}', c_dict['New Column'])
-                              .replace('{original_column}', c_dict['Original Column'])
+                              .replace('{new_column_name}', crt_dict['New Column'])
+                              .replace('{original_column}', crt_dict['Original Column'])
                               .replace('{shifting_rows}', str(col_offset))
                               .replace('{empty_values_replacement}',
-                                       str(c_dict['Empty Values Replacement'])))
+                                       str(crt_dict['Empty Values Replacement'])))
             timer.stop()
         return input_data_frame
 

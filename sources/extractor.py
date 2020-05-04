@@ -36,7 +36,7 @@ if __name__ == '__main__':
                     c_en.source_systems, c_en.user_credentials)
             if c_en.class_bn.fn_evaluate_dict_values(can_proceed):
                 c_en.class_dbt.connect_to_database(
-                        c_en.class_ln.logger, c_en.timer, c_en.class_bnfe.connection_details)
+                    c_en.class_ln.logger, c_en.timer, c_en.class_bnfe.connection_details)
                 if c_en.class_dbt.connection is not None:
                     # instantiate DB connection handler
                     cursor = c_en.class_dbt.connection.cursor()
@@ -51,7 +51,7 @@ if __name__ == '__main__':
                                     crt_session, crt_query, crt_sequence)
                                 crt_session['start-iso-weekday'] = \
                                     c_en.set_default_starting_weekday(
-                                            dict__child__parent__grand_parent)
+                                        dict__child__parent__grand_parent)
                                 dict__child__parent__grand_parent = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 if 'parameters' in crt_session:
@@ -60,7 +60,7 @@ if __name__ == '__main__':
                                             dict__child__parent__grand_parent)
                                 can_proceed_ses = \
                                     c_en.class_bnfe.validate_query_session(
-                                            c_en.class_ln.logger, crt_session)
+                                        c_en.class_ln.logger, crt_session)
                                 crt_session['extract-behaviour'] = \
                                     c_en.class_bnfe.fn_set_extract_behaviour(crt_session)
                                 dict__child__parent__grand_parent = c_en.pack_three_levels(
@@ -77,11 +77,9 @@ if __name__ == '__main__':
                                     if stats['rows_counted'] > 0:
                                         dict__child__parent__grand_parent = c_en.pack_three_levels(
                                             crt_session, crt_query, crt_sequence)
-                                        rdf = c_en.result_set_into_data_frame(
+                                        c_en.result_set_to_disk_file(
                                             c_en.class_ln.logger, stats,
                                             dict__child__parent__grand_parent)
-                                        c_en.store_result_set_to_disk(
-                                            c_en.class_ln.logger, rdf, crt_session)
                         c_en.close_cursor(c_en.class_ln.logger, cursor)
                     c_en.close_connection(c_en.class_ln.logger)
     # just final message
