@@ -40,7 +40,7 @@ class CommandLineArgumentsManagement:
             # we build the parameter feedback considering "option_description"
             # and replacing %s with parameter value
             feedback = self.locale.gettext(attributes['option_description']) \
-                .replace('%s', value_to_consider)
+                .replace('%s', str(value_to_consider))
             # we finally write the feedback to logger
             in_logger.info(feedback)
         in_logger.info('~' * 50)
