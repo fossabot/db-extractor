@@ -99,7 +99,7 @@
                         "extract-overwrite-condition":                  "inherit-from-grand-parent",
                         "output-file": [
                             {
-                                "field-delimiter":                      ";",
+                                "field delimiter":                      "|",
                                 "format":                               "csv",
                                 "name":                                 "mysql-test-utf8mb4.csv"
                             },
@@ -172,7 +172,7 @@
                         ],
                         "extract-behaviour":                            "skip-if-output-file-exists",
                         "output-file": {
-                            "field-delimiter":                          ";",
+                            "field delimiter":                          ";",
                             "format":                                   "csv",
                             "name":                                     "hana-test.csv"
                         },
