@@ -35,8 +35,8 @@ if __name__ == '__main__':
                     c_en.class_ln.logger, c_en.timer, crt_sequence, seq_idx,
                     c_en.source_systems, c_en.user_credentials)
             if c_en.class_bn.fn_evaluate_dict_values(can_proceed):
-                c_en.class_dbt.connect_to_database(c_en.class_ln.logger, c_en.timer,
-                                                   c_en.class_bnfe.connection_details)
+                c_en.class_dbt.connect_to_database(
+                        c_en.class_ln.logger, c_en.timer, c_en.class_bnfe.connection_details)
                 if c_en.class_dbt.connection is not None:
                     # instantiate DB connection handler
                     cursor = c_en.class_dbt.connection.cursor()
@@ -59,8 +59,8 @@ if __name__ == '__main__':
                                         c_en.set_default_parameter_rules(
                                             dict__child__parent__grand_parent)
                                 can_proceed_ses = \
-                                    c_en.class_bnfe.validate_query_session(c_en.class_ln.logger,
-                                                                           crt_session)
+                                    c_en.class_bnfe.validate_query_session(
+                                            c_en.class_ln.logger, crt_session)
                                 crt_session['extract-behaviour'] = \
                                     c_en.class_bnfe.fn_set_extract_behaviour(crt_session)
                                 dict__child__parent__grand_parent = c_en.pack_three_levels(

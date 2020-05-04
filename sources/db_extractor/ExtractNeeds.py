@@ -44,8 +44,8 @@ class ExtractNeeds:
         self.script = destination_script
         current_file_basename = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_file_basename + '_Locale')
-        self.locale = gettext.translation(current_file_basename, lang_folder,
-                                          languages=[default_language])
+        self.locale = gettext.translation(
+                current_file_basename, lang_folder, languages=[default_language])
         # instantiate Basic Needs class
         self.class_bn = BasicNeeds(default_language)
         # instantiate Extractor Specific Needs class
@@ -156,8 +156,9 @@ class ExtractNeeds:
                           .replace('%s',
                                    self.class_bn.fn_multi_line_string_to_single(simulated_query)))
         # actual execution of the query
-        in_cursor = self.class_dbt.execute_query(local_logger, self.timer, in_cursor, this_query,
-                                                 expected_no_of_parameters, tuple_parameters)
+        in_cursor = self.class_dbt.execute_query(
+                local_logger, self.timer, in_cursor, this_query,
+                expected_no_of_parameters, tuple_parameters)
         # bringing the information from server (data transfer)
         dict_to_return = {
             'rows_counted': 0
@@ -165,8 +166,8 @@ class ExtractNeeds:
         if in_cursor is not None:
             dict_to_return = {
                 'columns': self.class_dbt.get_column_names(local_logger, self.timer, in_cursor),
-                'result_set': self.class_dbt.fetch_executed_query(local_logger, self.timer,
-                                                                  in_cursor),
+                'result_set': self.class_dbt.fetch_executed_query(
+                        local_logger, self.timer, in_cursor),
                 'rows_counted': in_cursor.rowcount,
             }
         return dict_to_return
@@ -200,19 +201,18 @@ class ExtractNeeds:
             'Configuration file name with extracting sequence(es) has been loaded'))
         self.timer.stop()
         # store file statistics
-        self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
-                                               self.parameters.input_extracting_sequence_file,
-                                               self.locale.gettext('Configuration file name with '
-                                                                   + 'extracting sequence(es)'))
+        self.class_fo.fn_store_file_statistics(
+                self.class_ln.logger, self.timer, self.parameters.input_extracting_sequence_file,
+                self.locale.gettext('Configuration file name with extracting sequence(es)'))
         # get the source system details from provided file
         self.timer.start()
         self.source_systems = self.class_fo.fn_open_file_and_get_content(
             self.parameters.input_source_system_file, 'json')['Systems']
         self.class_ln.logger.info(self.locale.gettext('Source Systems file name has been loaded'))
         self.timer.stop()
-        self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
-                                               self.parameters.input_source_system_file,
-                                               self.locale.gettext('Source Systems file name'))
+        self.class_fo.fn_store_file_statistics(
+                self.class_ln.logger, self.timer, self.parameters.input_source_system_file,
+                self.locale.gettext('Source Systems file name'))
         # get the source system details from provided file
         self.timer.start()
         self.user_credentials = self.class_fo.fn_open_file_and_get_content(
@@ -220,10 +220,9 @@ class ExtractNeeds:
         self.class_ln.logger.info(self.locale.gettext(
             'Configuration file name with credentials has been loaded'))
         self.timer.stop()
-        self.class_fo.fn_store_file_statistics(self.class_ln.logger, self.timer,
-                                               self.parameters.input_credentials_file,
-                                               self.locale.gettext(
-                                                   'Configuration file name with credentials'))
+        self.class_fo.fn_store_file_statistics(
+                self.class_ln.logger, self.timer, self.parameters.input_credentials_file,
+                self.locale.gettext('Configuration file name with credentials'))
 
     def load_query(self, crt_query):
         self.timer.start()
@@ -288,14 +287,15 @@ class ExtractNeeds:
     def store_result_set_to_disk(self, local_logger, in_data_frame, crt_session):
         output_file_setting_type = type(crt_session['output-file'])
         if output_file_setting_type == dict:
-            self.class_dio.fn_store_data_frame_to_file(local_logger, self.timer, in_data_frame,
-                                                       crt_session['output-file'])
-            self.class_fo.fn_store_file_statistics(local_logger, self.timer,
-                                                   crt_session['output-file']['name'],
-                                                   self.locale.gettext('Output file name'))
+            self.class_dio.fn_store_data_frame_to_file(
+                    local_logger, self.timer, in_data_frame, crt_session['output-file'])
+            self.class_fo.fn_store_file_statistics(
+                    local_logger, self.timer, crt_session['output-file']['name'],
+                    self.locale.gettext('Output file name'))
         elif output_file_setting_type == list:
             for crt_output in crt_session['output-file']:
-                self.class_dio.fn_store_data_frame_to_file(local_logger, self.timer,
-                                                           in_data_frame, crt_output)
-                self.class_fo.fn_store_file_statistics(local_logger, self.timer, crt_output['name'],
-                                                       self.locale.gettext('Output file name'))
+                self.class_dio.fn_store_data_frame_to_file(
+                        local_logger, self.timer, in_data_frame, crt_output)
+                self.class_fo.fn_store_file_statistics(
+                        local_logger, self.timer, crt_output['name'],
+                        self.locale.gettext('Output file name'))
