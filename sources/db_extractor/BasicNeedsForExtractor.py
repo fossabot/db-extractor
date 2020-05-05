@@ -166,14 +166,13 @@ class BasicNeedsForExtractor:
         is_valid = True
         if type(in_extract_sequence) != list:
             local_logger.error(self.locale.gettext(
-                'Extraction sequence file name is not a LIST and must be, '
-                + 'therefore cannot be used'))
+                'JSON extraction sequence is not a LIST and must be, therefore cannot be used'))
             is_valid = False
         elif len(in_extract_sequence) < 1:
             local_logger.error(self.locale.gettext(
-                    'Extraction sequence file name is a LIST '
-                    + 'but does not contain at least 1 extraction sequence, '
-                    + 'therefore cannot be used'))
+                'Extraction sequence file name is a LIST '
+                + 'but does not contain at least 1 extraction sequence, '
+                + 'therefore cannot be used'))
             is_valid = False
         return is_valid
 

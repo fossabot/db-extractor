@@ -26,9 +26,6 @@ msgstr "Interogazione di estrazione"
 msgid "Extraction Sequence"
 msgstr "Sequenza di estrazione"
 
-msgid "Extraction sequence file name is not a LIST and must be, therefore cannot be used"
-msgstr "Il nome del file di sequenza di estrazione non è una LISTA e deve esserlo, quindi non può essere utilizzato"
-
 msgid "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
 msgstr "Il nome del file di sequenza di estrazione è un LIST ma non contiene almeno 1 sequenza di estrazione, quindi non può essere utilizzato"
 
@@ -49,6 +46,9 @@ msgstr "Per {str_user_secrets} la proprietà \"Nome utente\" ha il valore predef
 
 msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
 msgstr "Per il numero di sequenza {sequence_number} sono stati verificati i dettagli rilevanti per la connessione al database"
+
+msgid "JSON extraction sequence is not a LIST and must be, therefore cannot be used"
+msgstr "La sequenza di estrazione JSON non è un ELENCO e deve essere, pertanto non può essere utilizzata"
 
 msgid "Query Session"
 msgstr "Sessione di interogazione"

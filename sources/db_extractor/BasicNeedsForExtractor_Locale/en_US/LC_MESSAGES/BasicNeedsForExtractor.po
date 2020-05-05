@@ -26,9 +26,6 @@ msgstr "Extraction Query"
 msgid "Extraction Sequence"
 msgstr "Extraction Sequence"
 
-msgid "Extraction sequence file name is not a LIST and must be, therefore cannot be used"
-msgstr "Extraction sequence file name is not a LIST and must be, therefore cannot be used"
-
 msgid "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
 msgstr "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
 
@@ -49,6 +46,9 @@ msgstr "For {str_user_secrets} your \"Username\" property has the default value:
 
 msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
 msgstr "For the sequence number {sequence_number} the relevant details for database connection have been verified"
+
+msgid "JSON extraction sequence is not a LIST and must be, therefore cannot be used"
+msgstr "JSON extraction sequence is not a LIST and must be, therefore cannot be used"
 
 msgid "Query Session"
 msgstr "Query Session"

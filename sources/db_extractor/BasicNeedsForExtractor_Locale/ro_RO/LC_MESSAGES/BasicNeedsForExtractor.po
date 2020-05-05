@@ -26,9 +26,6 @@ msgstr "Interogare de extragere"
 msgid "Extraction Sequence"
 msgstr "Secvență de extragere"
 
-msgid "Extraction sequence file name is not a LIST and must be, therefore cannot be used"
-msgstr "Numele fișierului secvenței de extragere nu este o LISTA și, prin urmare, nu poate fi utilizat"
-
 msgid "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
 msgstr "Numele fișierului secvenței de extragere este un LIST, dar nu conține cel puțin o secvență de extragere, prin urmare nu poate fi utilizat"
 
@@ -49,6 +46,9 @@ msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Username\" are valoarea im
 
 msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
 msgstr "Pentru secvența de extragere cu numărul {sequence_number} detaliile relevante pentru conexiunea la baza de date au fost verificate"
+
+msgid "JSON extraction sequence is not a LIST and must be, therefore cannot be used"
+msgstr "Secvența de extracție JSON nu este o LISTA și, prin urmare, nu poate fi utilizată"
 
 msgid "Query Session"
 msgstr "Sesiunea de interogare"
