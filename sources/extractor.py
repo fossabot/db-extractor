@@ -5,8 +5,10 @@ Facilitates moving files from a specified directory and matching pattern to a de
 import locale
 # package to facilitate operating system operations
 import os
+
 # Custom classes specific to this package
 from db_extractor.ExtractNeeds import ExtractNeeds
+
 # get current script name
 SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
 SCRIPT_LANGUAGE = locale.getdefaultlocale('LC_ALL')[0]
