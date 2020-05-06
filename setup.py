@@ -20,7 +20,7 @@ setup(
     author='Daniel Popiniuc',
     author_email='danielpopiniuc@gmail.com',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
@@ -30,6 +30,8 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: SQL',
+        'Topic :: Database :: Database Engines/Servers',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
     cmdclass={
@@ -39,7 +41,7 @@ setup(
     description='Wrapper to ease data management into Tableau Hyper format from CSV files',
     include_package_data=True,
     install_requires=[
-        'babel>=2.8.0,<3.0',
+        'Babel>=2.8.0,<3.0',
         'codetiming>=1.1,<2.0',
         'datedelta>=1.3,<2.0',
         'hdbcli>=2.4.171,<2.5',
@@ -69,5 +71,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='0.6.3',
+    version='1.0.0',
 )
