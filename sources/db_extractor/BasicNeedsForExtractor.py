@@ -22,11 +22,11 @@ class BasicNeedsForExtractor:
     str_ss = None
     srv = None
 
-    def __init__(self, default_language='en_US'):
-        self.class_bn = BasicNeeds(default_language)
+    def __init__(self, in_language='en_US'):
+        self.class_bn = BasicNeeds(in_language)
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
+        self.locale = gettext.translation(current_script, lang_folder, languages=[in_language])
 
     def fn_check_inputs_specific(self, in_parameters):
         self.class_bn.fn_validate_single_value(in_parameters.input_source_system_file, 'file')

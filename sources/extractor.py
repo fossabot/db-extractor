@@ -11,12 +11,22 @@ from db_extractor.ExtractNeeds import ExtractNeeds
 
 # get current script name
 SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
+# getting default language used region from operating system (not the interface language)
 SCRIPT_LANGUAGE = locale.getdefaultlocale('LC_ALL')[0]
 
 # main execution logic
 if __name__ == '__main__':
+    locale_implemented = [
+        'en_US',
+        'it_IT',
+        'ro_RO',
+    ]
+    if SCRIPT_LANGUAGE not in locale_implemented:
+        language_to_use = locale_implemented[0]
+    else:
+        language_to_use = SCRIPT_LANGUAGE
     # instantiate Logger class
-    c_en = ExtractNeeds(SCRIPT_NAME, SCRIPT_LANGUAGE)
+    c_en = ExtractNeeds(SCRIPT_NAME, language_to_use)
     # load script configuration
     c_en.load_configuration()
     # initiate Logging sequence

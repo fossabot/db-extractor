@@ -12,8 +12,8 @@ from common.BasicNeeds import BasicNeeds
 class DataManipulatorForTimeSeries:
     class_bn = None
 
-    def __init__(self, default_language='en_US'):
-        self.class_bn = BasicNeeds(default_language)
+    def __init__(self, in_language='en_US'):
+        self.class_bn = BasicNeeds(in_language)
 
     @staticmethod
     def fn_add_days_within_column_to_data_frame(input_data_frame, dict_expression):

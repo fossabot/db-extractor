@@ -40,30 +40,30 @@ class ExtractNeeds:
     timer = None
     user_credentials = None
 
-    def __init__(self, destination_script, default_language='en_US'):
+    def __init__(self, destination_script, in_language='en_US'):
         self.script = destination_script
         current_file_basename = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_file_basename + '_Locale')
         self.locale = gettext.translation(
-            current_file_basename, lang_folder, languages=[default_language])
+            current_file_basename, lang_folder, languages=[in_language])
         # instantiate Basic Needs class
-        self.class_bn = BasicNeeds(default_language)
+        self.class_bn = BasicNeeds(in_language)
         # instantiate Extractor Specific Needs class
-        self.class_bnfe = BasicNeedsForExtractor(default_language)
+        self.class_bnfe = BasicNeedsForExtractor(in_language)
         # instantiate File Operations class
-        self.class_fo = FileOperations(default_language)
+        self.class_fo = FileOperations(in_language)
         # instantiate File Operations class
-        self.class_dbt = DatabaseTalker(default_language)
+        self.class_dbt = DatabaseTalker(in_language)
         # instantiate Data Manipulator class, useful to manipulate data frames
-        self.class_dio = DataInputOutput(default_language)
+        self.class_dio = DataInputOutput(in_language)
         # instantiate Data Manipulator class, useful to manipulate data frames
-        self.class_dm = DataManipulator(default_language)
+        self.class_dm = DataManipulator(in_language)
         # instantiate Command Line Arguments class
-        self.class_clam = CommandLineArgumentsManagement(default_language)
+        self.class_clam = CommandLineArgumentsManagement(in_language)
         # instantiate Logger class
         self.class_ln = LoggingNeeds()
         # instantiate Parameter Handling class
-        self.class_ph = ParameterHandling(default_language)
+        self.class_ph = ParameterHandling(in_language)
 
     def close_connection(self, local_logger):
         self.timer.start()

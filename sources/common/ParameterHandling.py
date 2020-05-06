@@ -36,10 +36,10 @@ class ParameterHandling:
     }
     locale = None
 
-    def __init__(self, default_language='en_US'):
+    def __init__(self, in_language='en_US'):
         current_script = os.path.basename(__file__).replace('.py', '')
         lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.locale = gettext.translation(current_script, lang_folder, languages=[default_language])
+        self.locale = gettext.translation(current_script, lang_folder, languages=[in_language])
 
     def build_parameters(self, local_logger, query_session_parameters, in_parameter_rules
                          , in_start_iso_weekday):
