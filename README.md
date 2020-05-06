@@ -42,30 +42,33 @@ Installation can be completed in few steps as follows:
 >> For Windows you can do so from [Git for Windows](https://github.com/git-for-windows/git/releases/);
 * Download this project from Github:
 ```
-    $ git clone https://github.com/danielgp/tableau-hyper-management <local_folder_on_your_computer>
+    $ git clone https://github.com/danielgp/db-extractor <local_path_of_this_package>
 ```
 > conventions used:
 >> <content_within_html_tags> = variables to be replaced with user values relevant strings
 * Create a Python Virtual Environment using following command executed from project root folder:
 ```
-    $ python -m venv virtual_environment/
+    $ python(.exe) -m venv <local_folder_on_your_computer_for_this_package>/virtual_environment/
 ```
 * Upgrade pip (PIP is a package manager for Python packages) and SetupTools using following command executed from newly created virtual environment and Scripts sub-folder:
 ```
-    $ python -m pip install --upgrade pip
-    $ pip install --upgrade setuptools
+    $ <local_path_of_this_package>/virtual_environment/Scripts/python(.exe) -m pip install --upgrade pip
+    $ <local_path_of_this_package>/virtual_environment/Scripts/pip(.exe) install --upgrade setuptools
 ```
 * Install project prerequisites using following command executed from project root folder:
 ```
-    $ python setup.py install
+    $ <local_path_of_this_package>/virtual_environment/Scripts/python(.exe) <local_path_of_this_package>/setup.py install
 ```
-
+* Ensure all localization source files are compile properly in order for the package to work properly
+```
+    $ <local_path_of_this_package>/virtual_environment/Scripts/python(.exe) <local_path_of_this_package>/sources/localizations_compile.py
+```
 
 ## Maintaining local package up-to-date
 
 Once the package is installed is quite important to keep up with latest releases as such are addressing important code improvements and potential security issues, and this can be achieved by following command:
 ```
-    $ git --work-tree=<local_folder_on_your_computer> --git-dir=<local_folder_on_your_computer>/.git/ --no-pager pull origin master
+    $ git --work-tree=<local_path_of_this_package> --git-dir=<local_path_of_this_package>/.git/ --no-pager pull origin master
 ```
 - conventions used:
     - <content_within_html_tags> = variables to be replaced with user values relevant strings

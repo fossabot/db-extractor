@@ -63,9 +63,13 @@ compiler_binary = os.path.join(
     'python.exe')
 if localisation_compilation_is_required:
     for current_domain_to_compile in domains_to_compile:
-        os.system(compiler_binary + ' ' + os.path.join(project_root, 'localizations_setup.py')
+        os.system(compiler_binary + ' '
+                  + os.path.join(os.path.dirname(__file__), 'localizations_setup.py')
                   + ' compile_catalog'
                   + ' --input-file=' + current_domain_to_compile['input-file']
                   + ' --output-file=' + current_domain_to_compile['output-file']
                   + ' --locale ' + current_domain_to_compile['locale']
                   + ' --statistics')
+else:
+    print('For all Localization source files there is a pair of compiled localization file '
+          + 'which has same date or newer, so no compiling is necessary!')
