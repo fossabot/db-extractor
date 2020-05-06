@@ -1,5 +1,9 @@
 # db-extractor
 
+## Code quality analysis and Build Status
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/build-status/master)
+
 ## What is this repository for?
 
 Extract information from databases (MySQL, MariaDB, SAP HANA to start with, other will be implemented later) using a combination of:
@@ -17,9 +21,9 @@ Extract information from databases (MySQL, MariaDB, SAP HANA to start with, othe
 
 ## Supported File Types/Formats
 
-* Comma Separated Values
-* Excel 2013+
-* Pickle (compression algorythms: bz2, gzip, xz, zip)
+* Comma Separated Values (custom separator aware)
+* Excel 2013+ (default "xlsx" format)
+* Pickle (compression algorithms: bz2, gzip, xz, zip to choose from)
 
 ## Who do I talk to?
 
@@ -89,8 +93,6 @@ Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 
 * Implement ability to store extracted result-set into HTML format file;
 * Implement ability to store extracted result-set into JSON file;
-* Implement ability to store extracted result-set into Parquet format file (popular among data scientists);
-* Implement ability to store extracted result-set into Pickle format file (popular among data scientists);
 
 ## Features to request template
 
@@ -99,9 +101,3 @@ Use [feature_request.md](.github/ISSUE_TEMPLATE/feature_request.md)
 ## Bug report template
 
 Use [bug_report.md](.github/ISSUE_TEMPLATE/bug_report.md)
-
-## Code quality analysis
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/?branch=master)
-
-## Build Status
-[![Build Status](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/build-status/master)
