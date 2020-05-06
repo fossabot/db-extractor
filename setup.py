@@ -9,7 +9,7 @@ import os
 # facilitate dependencies management
 from setuptools import setup, find_packages
 # facilitate internationalization
-from babel.messages import frontend as babel
+from babel.messages import frontend
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as fh:
     long_description_readme = fh.read()
@@ -35,8 +35,8 @@ setup(
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
     cmdclass={
-        'compile_catalog': babel.compile_catalog,
-        'update_catalog': babel.update_catalog
+        'compile_catalog': frontend.compile_catalog,
+        'update_catalog': frontend.update_catalog
     },
     description='Wrapper to ease data management into Tableau Hyper format from CSV files',
     include_package_data=True,
@@ -71,5 +71,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='1.0.0',
+    version='1.0.1',
 )
