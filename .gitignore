@@ -53,7 +53,7 @@ coverage.xml
 
 # Translations
 *.mo
-*.pot
+#*.pot
 
 # Django stuff:
 *.log
@@ -137,4 +137,11 @@ dmypy.json
 *.log.*
 
 # Result set files
+*.bz2
 *.csv
+*.gz
+*.pickle
+*.xlsx
+*.xlsm
+*.xz
+*.zip

@@ -1,9 +1,30 @@
 # db-extractor
 
+## Code quality analysis and Build Status
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/build-status/master)
 
 ## What is this repository for?
 
-Extract information from databases (MySQL, SAP HANA to start with, other will be implemented later)
+Extract information from databases (MySQL, MariaDB, SAP HANA to start with, other will be implemented later) using a combination of:
+* extraction sequences file (JSON format) that is easy enough to create and maintain but also provide very complex features to be set;
+* source system file (JSON format) to keep a central list of servers and/or databases to connect to that can be shared between people;
+* user settings file (JSON format) to keep a central list of credentials that is not to be shared with anyone or maybe with a small group of people; 
+
+## Features implemented
+
+* Ability to extract from a single source system or multiple using 1 JSON extraction sequence file;
+* Ability to extract a single or multiple query for each source system using same JSON extraction sequence file;
+* Ability to extract a single or multiple files using sessions for each query where parameters can be specified (currently on CSV and Excel file format are supported, other will follow);
+* Multi-language (English, Italian, Romanian);
+* Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given, as this is very useful when extracting large amount of data over VPN in small pieces and VPN drops (could mean already extracted pieces would be already skipped as not older than threshold imposed);
+
+## Supported File Types/Formats
+
+* Comma Separated Values (custom separator aware)
+* Excel 2013+ (default "xlsx" format)
+* JSON (compression algorithms: bz2, gzip, xz, zip to choose from)
+* Pickle (compression algorithms: bz2, gzip, xz, zip to choose from)
 
 ## Who do I talk to?
 
@@ -69,6 +90,10 @@ Once the package is installed is quite important to keep up with latest releases
 
 Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 
+## Features already raised
+
+* Implement ability to store extracted result-set into HTML format file;
+
 ## Features to request template
 
 Use [feature_request.md](.github/ISSUE_TEMPLATE/feature_request.md)
@@ -76,11 +101,3 @@ Use [feature_request.md](.github/ISSUE_TEMPLATE/feature_request.md)
 ## Bug report template
 
 Use [bug_report.md](.github/ISSUE_TEMPLATE/bug_report.md)
-
-## Code quality analysis
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/?branch=master)
-
-## Build Status
-[![Build Status](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/build-status/master)
-
-

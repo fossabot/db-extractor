@@ -1,0 +1,78 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the BasicNeedsForExtractor package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: BasicNeedsForExtractor\n"
+"POT-Creation-Date: 2020-04-29 12:29+0200\n"
+"PO-Revision-Date: 2020-04-29 01:53+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+
+msgid "{who} does not contain \"{current_property}\" which is mandatory, therefore extraction sequence will be ignored"
+msgstr "{who} nu conține \"{current_property}\" care este obligatoriu, prin urmare secvența de extracție va fi ignorată"
+
+msgid "Extract behaviour is set to {extract_behaviour}"
+msgstr "Comportamentul de extragere este setat ca și {extract_behaviour}"
+
+msgid "Extraction Query"
+msgstr "Interogare de extragere"
+
+msgid "Extraction Sequence"
+msgstr "Secvență de extragere"
+
+msgid "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
+msgstr "Numele fișierului secvenței de extragere este un LIST, dar nu conține cel puțin o secvență de extragere, prin urmare nu poate fi utilizat"
+
+msgid "File {file_name} already exists, so database extraction will not be performed"
+msgstr "Fișierul {file_name} există deja, astfel încât extragerea din baza de date nu va fi efectuată"
+
+msgid "File {file_name} does not exist, so database extraction has to be performed"
+msgstr "Fișierul {file_name} nu există, deci trebuie efectuată extragerea bazei de date"
+
+msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
+msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Name\" are valoarea implicită: \"{default_name_value}\" ceea ce este neobișnuit"
+
+msgid "For {str_user_secrets} your \"Password\" property has the default value: \"{default_password_value}\" which is unusual"
+msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Password\" are valoarea implicită: \"{default_password_value}\" ceea ce este neobișnuit"
+
+msgid "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
+msgstr "Pentru {str_user_secrets} proprietatea dvs. \"Username\" are valoarea implicită: \"{default_username_value}\" ceea ce este neobișnuit"
+
+msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
+msgstr "Pentru secvența de extragere cu numărul {sequence_number} detaliile relevante pentru conexiunea la baza de date au fost verificate"
+
+msgid "JSON extraction sequence is not a LIST and must be, therefore cannot be used"
+msgstr "Secvența de extracție JSON nu este o LISTA și, prin urmare, nu poate fi utilizată"
+
+msgid "Query Session"
+msgstr "Sesiunea de interogare"
+
+msgid "Query extraction probably should be performed (other checks might be required)"
+msgstr "Probabil că interogarea de extragerea ar trebui să fie efectuată (posibil ca alte verificări să fie necesare)"
+
+msgid "Relevant JSON files are valid"
+msgstr "Fișierele JSON relevante sunt valide"
+
+msgid "Source System"
+msgstr "Sistemul sursă"
+
+msgid "Source Systems"
+msgstr "Sisteme sursă"
+
+msgid "User Secrets"
+msgstr "Secretele utilizatorului"
+
+msgid "credentials file"
+msgstr "fișier cu credențiale (secrete)"
+
+msgid "extracting sequence file"
+msgstr "fișierul cu secvențe de extragere"
+
+msgid "source system file"
+msgstr "fișier cu sisteme sursă"

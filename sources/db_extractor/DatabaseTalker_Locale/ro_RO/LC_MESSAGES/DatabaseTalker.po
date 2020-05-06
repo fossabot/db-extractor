@@ -1,0 +1,51 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the DatabaseTalker package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: DatabaseTalker\n"
+"POT-Creation-Date: 2020-04-26 15:45+0200\n"
+"PO-Revision-Date: 2020-04-26 16:06+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+
+msgid "Additional {additional_columns_counted} column added to Pandas Data Frame"
+msgid_plural "Additional {additional_columns_counted} columns added to Pandas Data Frame"
+msgstr[0] "Coloana suplimentară {additional_columns_counted} adăugată la Pandas Dataframe"
+msgstr[1] "Coloane suplimentare {additional_columns_counted} adăugate la Pandas Dataframe"
+msgstr[2] "Coloane suplimentare {additional_columns_counted} adăugate la Pandas Dataframe"
+
+msgid "Connection problem encountered: "
+msgstr "Problemă de conexiune întâlnită"
+
+msgid "Connection to {server_vendor_and_type} server, layer {server_layer} which means (server {server_name}, port {server_port}) using the username {username} ({name_of_user})"
+msgstr "Conexiunea la serverul {server_vendor_and_type}, strat {server_layer} care înseamnă (server {server_name}, port {server_port}) folosind numele de utilizator {username} ({nume_of_user})"
+
+msgid "Connection to {server_vendor_and_type} server completed"
+msgstr "S-a realizat conexiunea la {server_vendor_and_type}"
+
+msgid "Error connecting to {server_vendor_and_type} server with details"
+msgstr "Eroare la conectarea la serverul {server_vendor_and_type} cu detalii"
+
+msgid "Error running the query:"
+msgstr "Eroare la executarea interogării"
+
+msgid "Query executed successfully"
+msgstr "Interogarea a fost executată cu succes"
+
+msgid "Query executed successfully having a server processing time of {processing_time}"
+msgstr "Interogare executată cu succes având un timp de procesare a serverului de {processing_time}"
+
+msgid "Result-set column name determination completed: {columns_name}"
+msgstr "Determinarea numelor de coloane din setul de rezultate încheiată: {columns_name}"
+
+msgid "Result-set has been completely fetched and contains {rows_counted} rows"
+msgstr "Setul de rezultate a fost complet preluat și conține {rows_counted} rânduri"
+
+msgid "Result-set has been loaded into Pandas Data Frame"
+msgstr "Setul de rezultate a fost încărcat în Structura de Date Pandas"

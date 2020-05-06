@@ -1,0 +1,50 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the DatabaseTalker package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: DatabaseTalker\n"
+"POT-Creation-Date: 2020-04-26 15:45+0200\n"
+"PO-Revision-Date: 2020-04-26 16:06+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Additional {additional_columns_counted} column added to Pandas Data Frame"
+msgid_plural "Additional {additional_columns_counted} columns added to Pandas Data Frame"
+msgstr[0] "Aggiunta di una colonna aggiuntiva {additional_columns_counted} alla Strutura di Dati Pandas"
+msgstr[1] "Aggiunte colonne aggiuntive {additional_columns_counted} alla Strutura di Dati Pandas"
+
+msgid "Connection problem encountered: "
+msgstr "Problema di connessione riscontrato: "
+
+msgid "Connection to {server_vendor_and_type} server, layer {server_layer} which means (server {server_name}, port {server_port}) using the username {username} ({name_of_user})"
+msgstr "Connessione al server {server_vendor_and_type}, layer {server_layer} che significa (server {server_name}, porta {server_port}) usando il nome utente {username} ({name_of_user})"
+
+msgid "Connection to {server_vendor_and_type} server completed"
+msgstr "Connessione al server {server_vendor_and_type} completata"
+
+msgid "Error connecting to {server_vendor_and_type} server with details"
+msgstr "Errore di connessione al server {server_vendor_and_type} con dettagli"
+
+msgid "Error running the query:"
+msgstr "Errore nell'esecuzione dell' interogazionne:"
+
+msgid "Query executed successfully"
+msgstr "Interrogazione eseguita con successo"
+
+msgid "Query executed successfully having a server processing time of {processing_time}"
+msgstr "Query eseguita con successo avendo un tempo di elaborazione del server di {processing_time}."
+
+msgid "Result-set column name determination completed: {columns_name}"
+msgstr "Determinazione del nome della colonna del risultato completata: {columns_name}"
+
+msgid "Result-set has been completely fetched and contains {rows_counted} rows"
+msgstr "Il set di risultati è stato completamente recuperato e contiene {rows_counted} righe"
+
+msgid "Result-set has been loaded into Pandas Data Frame"
+msgstr "Il set di risultati è stato caricato in Strutura di Dati Pandas"

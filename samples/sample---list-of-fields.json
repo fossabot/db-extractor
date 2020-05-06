@@ -1,7 +1,7 @@
 [
     {
-        "server-vendor":                                                "Oracle",
-        "server-type":                                                  "MySQL",
+        "server-vendor":                                                "MariaDB Foundation",
+        "server-type":                                                  "MariaDB",
         "server-group":                                                 "Your Company Server Group Name",
         "server-layer":                                                 "Local",
         "account-label":                                                "Default",
@@ -10,17 +10,19 @@
                 "input-query-file":                                     "generic_query.sql",
                 "sessions": [
                     {
-                        "additional-columns": [
-                            {
-                                "name":                                 "Calculated Timestamp [UTC]",
-                                "value":                                "utcnow"
-                            }
-                        ],
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
-                        "output-csv-file":                              "mysql-test.csv",
-                        "output-csv-separator":                         "|",
+                        "extract-overwrite-condition":  {
+                            "file-datetime":                            "last_modified",
+                            "reference-expression":                     "CalculatedDate_CYCMCDCH_-1",
+                            "rule":                                     "older"
+                        },
+                        "output-file": {
+                            "format":                                   "csv",
+                            "name":                                     "mariadb-test.csv",
+                            "field-delimiter":                          ","
+                        },
                         "parameters": {
-                            "Select Fields":                            [
+                            "Select Fields": [
                                 "*"
                             ],
                             "From":                                     "information_schema.COLLATIONS",
@@ -37,6 +39,115 @@
                             "list-values-prefix":                       "",
                             "list-values-suffix":                       ""
                         }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "server-vendor":                                                "Oracle",
+        "server-type":                                                  "MySQL",
+        "server-group":                                                 "Your Company Server Group Name",
+        "server-layer":                                                 "Local",
+        "account-label":                                                "Default",
+        "extract-overwrite-condition":  {
+            "file-datetime":                                            "last_modified",
+            "reference-expression":                                     "CalculatedDate_CYCMCDCH",
+            "rule":                                                     "older"
+        },
+        "parameters-handling-rules": {
+            "dict-values-glue":                                         "', '",
+            "dict-values-prefix":                                       "IN ('",
+            "dict-values-suffix":                                       "')",
+            "list-values-glue":                                         ", ",
+            "list-values-prefix":                                       "",
+            "list-values-suffix":                                       ""
+        },
+        "queries": [
+            {
+                "additional-columns": [
+                    {
+                        "name":                                         "Calculated Timestamp [UTC]",
+                        "value":                                        "utcnow"
+                    }
+                ],
+                "input-query-file":                                     "generic_query.sql",
+                "sessions": [
+                    {
+                        "additional-columns":                           "inherit-from-parent",
+                        "extract-behaviour":                            "skip-if-output-file-exists",
+                        "extract-overwrite-condition":                  "inherit-from-grand-parent",
+                        "output-file": {
+                                "format":                               "excel",
+                                "name":                                 "mysql-test-utf8.xlsx"
+                        },
+                        "parameters": {
+                            "Select Fields": [
+                                "*"
+                            ],
+                            "From":                                     "information_schema.COLLATIONS",
+                            "Filter Field":                             "CHARACTER_SET_NAME",
+                            "Filter Values": {
+                                "UTF-8 Unicode":                        "utf8"
+                            }
+                        },
+                        "parameters-handling-rules":                    "inherit-from-grand-parent"
+                    },
+                    {
+                        "additional-columns":                           "inherit-from-parent",
+                        "extract-behaviour":                            "overwrite-if-output-file-exists",
+                        "extract-overwrite-condition":                  "inherit-from-grand-parent",
+                        "output-file": [
+                            {
+                                "field delimiter":                      "|",
+                                "format":                               "csv",
+                                "name":                                 "mysql-test-utf8mb4.csv"
+                            },
+                            {
+                                "format":                               "excel",
+                                "name":                                 "mysql-test-utf8mb4.xlsx"
+                            },
+                            {
+                                "format":                               "json",
+                                "name":                                 "mysql-test-utf8mb4.json"
+                            },
+                            {
+                                "compression":                          "bz2",
+                                "format":                               "pickle",
+                                "name":                                 "mysql-test-utf8mb4-pickle.bz2"
+                            },
+                            {
+                                "compression":                          "gzip",
+                                "format":                               "pickle",
+                                "name":                                 "mysql-test-utf8mb4-pickle.gz"
+                            },
+                            {
+                                "compression":                          "infer",
+                                "format":                               "pickle",
+                                "name":                                 "mysql-test-utf8mb4.pickle"
+                            },
+                            {
+                                "compression":                          "xz",
+                                "format":                               "pickle",
+                                "name":                                 "mysql-test-utf8mb4-pickle.xz"
+                            },
+                            {
+                                "compression":                          "zip",
+                                "format":                               "pickle",
+                                "name":                                 "mysql-test-utf8mb4-pickle.zip"
+                            }
+                        ],
+                        "parameters": {
+                            "Select Fields": [
+                                "*"
+                            ],
+                            "From":                                     "information_schema.COLLATIONS",
+                            "Filter Field":                             "CHARACTER_SET_NAME",
+                            "Filter Values": {
+                                "UTF-8 Unicode":                        "utf8mb4"
+                            }
+                        },
+                        "parameters-handling-rules":                    "inherit-from-grand-parent"
                     }
                 ]
             }
@@ -64,10 +175,13 @@
                             }
                         ],
                         "extract-behaviour":                            "skip-if-output-file-exists",
-                        "output-csv-file":                              "list-of-fields.csv",
-                        "output-csv-separator":                         ";",
+                        "output-file": {
+                            "field delimiter":                          ";",
+                            "format":                                   "csv",
+                            "name":                                     "hana-test.csv"
+                        },
                         "parameters": {
-                            "Select Fields":                            [
+                            "Select Fields": [
                                 "\"TABLE_NAME\"",
                                 "\"SCHEMA\""
                             ],

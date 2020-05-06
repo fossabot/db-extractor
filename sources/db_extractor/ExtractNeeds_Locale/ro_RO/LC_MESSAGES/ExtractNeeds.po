@@ -1,0 +1,78 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the extractor package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extractor\n"
+"POT-Creation-Date: 2020-04-26 14:29+0200\n"
+"PO-Revision-Date: 2020-04-29 00:15+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: Romanian\n"
+"Language: ro\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;\n"
+
+msgid "Additional evaluation took place and new verdict is: {new_verdict}"
+msgstr "A avut loc o evaluare suplimentară, iar un nou verdict este: {new_verdict}"
+
+msgid "Closing DB completed"
+msgstr "Închiderea conexiunii la Baza de Date a fost finalizată"
+
+msgid "Closing DB connection"
+msgstr "Închiderea conexiunii la Baza de Date în curs"
+
+msgid "Configuration file name with credentials"
+msgstr "Numele fișierului de configurare cu datele de acreditare"
+
+msgid "Configuration file name with credentials has been loaded"
+msgstr "Numele fișierului de configurare cu datele de acreditare a fost încărcat"
+
+msgid "Configuration file name with extracting sequence(es)"
+msgstr "Numele fișierului de configurare cu secvențe de extragere"
+
+msgid "Configuration file name with extracting sequence(es) has been loaded"
+msgstr "Numele fișierului de configurare cu secvențele de extragere a fost încărcat"
+
+msgid "Connection attempt done"
+msgstr "Încercare de conectare făcută"
+
+msgid "Free DB result-set completed"
+msgstr "Set de rezultate din Baza de Date s-a eliberat"
+
+msgid "Free DB result-set started"
+msgstr "Golirea memoriei cu setul de rezultate din Baza de Date DB a început"
+
+msgid "Generic query is: %s"
+msgstr "Interogarea generică este: %s"
+
+msgid "Output file name"
+msgstr "Numele fișierului de ieșire"
+
+msgid "Overall new verdict after considering multiple files is: {overall_verdict}"
+msgstr "În general, un nou verdict după luarea în considerare a mai multor fișiere este: {overall_verdict}"
+
+msgid "Preparing connection details has been completed"
+msgstr "Pregătirea detaliilor conexiunii a fost finalizată"
+
+msgid "Query with parameters interpreted is: %s"
+msgstr "Interogarea cu parametrii interpretați este: %s"
+
+msgid "Source Systems file name"
+msgstr "Numele fișierului Sistemelor Sursă"
+
+msgid "Source Systems file name has been loaded"
+msgstr "Fișierului cu Sistemele Sursă a fost încărcat"
+
+msgid "Time spent is {seconds}"
+msgstr "Timpul petrecut este de {seconds}"
+
+msgid "Validation of the 3 JSON files involved (Extraction Sequence, Source systems and User Secrets) has been completed"
+msgstr "Validarea celor 3 fișiere JSON implicate (secvență de extracție, sisteme sursă și secrete de utilizator) a fost finalizată"
+
+msgid "not required"
+msgstr "nu este necesar"
+
+msgid "required"
+msgstr "necesar"

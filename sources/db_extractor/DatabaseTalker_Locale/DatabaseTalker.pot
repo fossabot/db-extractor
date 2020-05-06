@@ -1,0 +1,49 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the PACKAGE package.
+#
+#,fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: DatabaseTalker\n"
+"POT-Creation-Date: 2020-04-26 15:45+0200\n"
+"PO-Revision-Date: 2020-04-26 16:04+0200\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Additional {additional_columns_counted} column added to Pandas Data Frame"
+msgid_plural "Additional {additional_columns_counted} columns added to Pandas Data Frame"
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Connection problem encountered: "
+msgstr ""
+
+msgid "Connection to {server_vendor_and_type} server, layer {server_layer} which means (server {server_name}, port {server_port}) using the username {username} ({name_of_user})"
+msgstr ""
+
+msgid "Connection to {server_vendor_and_type} server completed"
+msgstr ""
+
+msgid "Error connecting to {server_vendor_and_type} server with details"
+msgstr ""
+
+msgid "Error running the query:"
+msgstr ""
+
+msgid "Query executed successfully"
+msgstr ""
+
+msgid "Query executed successfully having a server processing time of {processing_time}"
+msgstr ""
+
+msgid "Result-set column name determination completed: {columns_name}"
+msgstr ""
+
+msgid "Result-set has been completely fetched and contains {rows_counted} rows"
+msgstr ""
+
+msgid "Result-set has been loaded into Pandas Data Frame"
+msgstr ""

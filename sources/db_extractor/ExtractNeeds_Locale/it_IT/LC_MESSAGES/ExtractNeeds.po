@@ -1,0 +1,78 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the extractor package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: extractor\n"
+"POT-Creation-Date: 2020-04-26 14:29+0200\n"
+"PO-Revision-Date: 2020-04-29 00:15+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Additional evaluation took place and new verdict is: {new_verdict}"
+msgstr "Ulteriore valutazione ha avuto luogo e il nuovo verdetto è: {new_verdict}"
+
+msgid "Closing DB completed"
+msgstr "Chiusura DataBase completata"
+
+msgid "Closing DB connection"
+msgstr "Chiusura del collegamento DB"
+
+msgid "Configuration file name with credentials"
+msgstr "Nome del file di configurazione con le credenziali"
+
+msgid "Configuration file name with credentials has been loaded"
+msgstr "È stato caricato il nome del file di configurazione con le credenziali"
+
+msgid "Configuration file name with extracting sequence(es)"
+msgstr "Nome del file di configurazione con sequenza(e) di estrazione"
+
+msgid "Configuration file name with extracting sequence(es) has been loaded"
+msgstr "Il nome del file di configurazione con le sequenze di estrazione è stato caricato"
+
+msgid "Connection attempt done"
+msgstr "Tentativo di connessione effettuato"
+
+msgid "Free DB result-set completed"
+msgstr "Completato il set di risultati del DataBase liberato"
+
+msgid "Free DB result-set started"
+msgstr "Inizio della serie di risultati del DataBase iniziato"
+
+msgid "Generic query is: %s"
+msgstr "L'interrogazione generica è: %s"
+
+msgid "Output file name"
+msgstr "Nome del file di output"
+
+msgid "Overall new verdict after considering multiple files is: {overall_verdict}"
+msgstr "Il nuovo verdetto complessivo dopo aver considerato più file è: {overall_verdict}"
+
+msgid "Preparing connection details has been completed"
+msgstr "La preparazione dei dettagli di collegamento è stata completata"
+
+msgid "Query with parameters interpreted is: %s"
+msgstr "La query con i parametri interpretati è: %s"
+
+msgid "Source Systems file name"
+msgstr "Nome del file Sistemi Sorgente"
+
+msgid "Source Systems file name has been loaded"
+msgstr "È stato caricato il nome del file del Sistemi Sorgente"
+
+msgid "Time spent is {seconds}"
+msgstr "Il tempo trascorso è di {seconds}"
+
+msgid "Validation of the 3 JSON files involved (Extraction Sequence, Source systems and User Secrets) has been completed"
+msgstr "La validazione dei 3 file JSON coinvolti (Sequenza di estrazione, sistemi sorgente e segreti utente) è stata completata"
+
+msgid "not required"
+msgstr "non necessario"
+
+msgid "required"
+msgstr "necessario"

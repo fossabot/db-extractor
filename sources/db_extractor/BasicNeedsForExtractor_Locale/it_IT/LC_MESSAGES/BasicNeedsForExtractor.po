@@ -1,0 +1,78 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the BasicNeedsForExtractor package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: BasicNeedsForExtractor\n"
+"POT-Creation-Date: 2020-04-29 12:29+0200\n"
+"PO-Revision-Date: 2020-04-29 01:53+0300\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "{who} does not contain \"{current_property}\" which is mandatory, therefore extraction sequence will be ignored"
+msgstr "{who} non contiene la \"{current_property}\" che è obbligatoria, quindi la sequenza di estrazione sarà ignorata"
+
+msgid "Extract behaviour is set to {extract_behaviour}"
+msgstr "Il comportamento dell'estratto è impostato a {extract_behaviour}."
+
+msgid "Extraction Query"
+msgstr "Interogazione di estrazione"
+
+msgid "Extraction Sequence"
+msgstr "Sequenza di estrazione"
+
+msgid "Extraction sequence file name is a LIST but does not contain at least 1 extraction sequence, therefore cannot be used"
+msgstr "Il nome del file di sequenza di estrazione è un LIST ma non contiene almeno 1 sequenza di estrazione, quindi non può essere utilizzato"
+
+msgid "File {file_name} already exists, so database extraction will not be performed"
+msgstr "Il file {file_name} esiste già, quindi l'estrazione del database non verrà eseguita"
+
+msgid "File {file_name} does not exist, so database extraction has to be performed"
+msgstr "Il file {file_name} non esiste, quindi è necessario eseguire l'estrazione del database"
+
+msgid "For {str_user_secrets} your \"Name\" property has the default value: \"{default_name_value}\" which is unusual"
+msgstr "Per {str_user_secrets} la proprietà \"Name\" ha il valore predefinito: \"{default_name_value}\" che è insolito"
+
+msgid "For {str_user_secrets} your \"Password\" property has the default value: \"{default_password_value}\" which is unusual"
+msgstr "Per {str_user_secrets} la proprietà \"Password\" ha il valore predefinito: \"{default_password_value}\" che è insolito"
+
+msgid "For {str_user_secrets} your \"Username\" property has the default value: \"{default_username_value}\" which is unusual"
+msgstr "Per {str_user_secrets} la proprietà \"Nome utente\" ha il valore predefinito: \"{default_username_value}\" che è insolito"
+
+msgid "For the sequence number {sequence_number} the relevant details for database connection have been verified"
+msgstr "Per il numero di sequenza {sequence_number} sono stati verificati i dettagli rilevanti per la connessione al database"
+
+msgid "JSON extraction sequence is not a LIST and must be, therefore cannot be used"
+msgstr "La sequenza di estrazione JSON non è un ELENCO e deve essere, pertanto non può essere utilizzata"
+
+msgid "Query Session"
+msgstr "Sessione di interogazione"
+
+msgid "Query extraction probably should be performed (other checks might be required)"
+msgstr "Probabilmente dovrebbe essere eseguita l'estrazione della query (potrebbero essere necessari altri controlli)"
+
+msgid "Relevant JSON files are valid"
+msgstr "I file JSON pertinenti sono validi"
+
+msgid "Source System"
+msgstr "Sistema sorgente"
+
+msgid "Source Systems"
+msgstr "Sistemi sorgente"
+
+msgid "User Secrets"
+msgstr "I segreti degli utenti"
+
+msgid "credentials file"
+msgstr "file delle credenziali"
+
+msgid "extracting sequence file"
+msgstr "file con sequenze di estrazione"
+
+msgid "source system file"
+msgstr "file dei sistemi sorgente"

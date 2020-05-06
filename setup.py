@@ -5,7 +5,7 @@ This file is ensuring proper package setup is performed to ensure all prerequisi
 and correct execution is possible
 """
 # package to handle files/folders and related metadata/operations
-import os.path
+import os
 # facilitate dependencies management
 from setuptools import setup, find_packages
 
@@ -18,7 +18,7 @@ setup(
     author='Daniel Popiniuc',
     author_email='danielpopiniuc@gmail.com',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: Information Technology',
@@ -28,16 +28,21 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: SQL',
+        'Topic :: Database :: Database Engines/Servers',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
     description='Wrapper to ease data management into Tableau Hyper format from CSV files',
     include_package_data=True,
     install_requires=[
-        'codetiming>=1.1,<=2.0',
-        'datedelta>=1.3,<=2.0',
-        'hdbcli>=2.4.171,<=2.5',
-        'mysql-connector-python>=8.0.11,<=8.1',
-        'pandas>=0.25.3,<=1.1'
+        'Babel>=2.8.0,<3.0',
+        'codetiming>=1.1,<2.0',
+        'datedelta>=1.3,<2.0',
+        'hdbcli>=2.4.171,<2.5',
+        'mysql-connector-python>=8.0.11,<8.1',
+        'pandas>=0.25.3,<1.1',
+        'xlrd>=1,<2.0',
+        'xlsxwriter>=1,<1.3'
     ],
     keywords=[
         'csv'
@@ -46,7 +51,7 @@ setup(
     long_description=long_description_readme,
     long_description_content_type='text/markdown',
     name='db-extractor',
-    packages=find_packages('db_extractor'),
+    packages=find_packages('common', 'db_extractor'),
     package_data={
         'db_extractor': [
             '*.json'
@@ -60,5 +65,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='0.6.1',
+    version='1.0.3',
 )

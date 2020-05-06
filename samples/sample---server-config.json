@@ -6,13 +6,13 @@
                     "Your Company Server Group Name": {
                         "Local": {
                             "FriendlyName": "Local Oracle MySQL",
-                            "ServerName":   "localost",
+                            "ServerName":   "localhost",
                             "ServerPort":   "3306"
                         }
                     }
                 }
             }
-        }
+        },
         "SAP": {
             "HANA": {
                 "Server": {

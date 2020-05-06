@@ -1,167 +1,99 @@
 """
 Facilitates moving files from a specified directory and matching pattern to a destination directory
 """
-# useful methods to measure time performance by small pieces of code
-from codetiming import Timer
+# package to facilitate operating system locale detection
+import locale
 # package to facilitate operating system operations
 import os
+
 # Custom classes specific to this package
-from db_extractor.BasicNeedsForExtractor import BasicNeeds, BasicNeedsForExtractor
-from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
-from db_extractor.LoggingNeeds import LoggingNeeds
-from db_extractor.DatabaseTalker import DatabaseTalker
-from db_extractor.ParameterHandling import ParameterHandling
-from db_extractor.DataManipulator import DataManipulator
+from db_extractor.ExtractNeeds import ExtractNeeds
 
 # get current script name
-current_script_name = os.path.basename(__file__).replace('.py', '')
+SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
+# getting default language used region from operating system (not the interface language)
+SCRIPT_LANGUAGE = locale.getdefaultlocale('LC_ALL')[0]
 
 # main execution logic
 if __name__ == '__main__':
-    # instantiate Basic Needs class
-    c_bn = BasicNeeds()
-    # load application configuration (inputs are defined into a json file)
-    c_bn.fn_load_configuration()
-    # instantiate Command Line Arguments class
-    c_clam = CommandLineArgumentsManagement()
-    parameters_in = c_clam.parse_arguments(c_bn.cfg_dtls['input_options']['db_extractor'])
-    # checking inputs, if anything is invalid an exit(1) will take place
-    c_bn.fn_check_inputs(parameters_in, current_script_name)
-    # instantiate Extractor Specific Needs class
-    c_bnfe = BasicNeedsForExtractor()
-    # checking inputs, if anything is invalid an exit(1) will take place
-    c_bnfe.fn_check_inputs_specific(parameters_in)
+    locale_implemented = [
+        'en_US',
+        'it_IT',
+        'ro_RO',
+    ]
+    if SCRIPT_LANGUAGE not in locale_implemented:
+        language_to_use = locale_implemented[0]
+    else:
+        language_to_use = SCRIPT_LANGUAGE
     # instantiate Logger class
-    c_ln = LoggingNeeds()
-    # initiate logger
-    c_ln.initiate_logger(parameters_in.output_log_file, 'db_extractor')
-    # define global timer to use
-    t = Timer('db_extractor', text='Time spent is {seconds} ', logger=c_ln.logger.debug)
+    c_en = ExtractNeeds(SCRIPT_NAME, language_to_use)
+    # load script configuration
+    c_en.load_configuration()
+    # initiate Logging sequence
+    c_en.initiate_logger_and_timer()
     # reflect title and input parameters given values in the log
-    c_clam.listing_parameter_values(c_ln.logger, t, 'Data extractor',
-                                    c_bn.cfg_dtls['input_options']['db_extractor'],
-                                    parameters_in)
+    c_en.class_clam.listing_parameter_values(
+        c_en.class_ln.logger, c_en.timer, 'Database Extractor',
+        c_en.config['input_options'][SCRIPT_NAME], c_en.parameters)
     # loading extracting sequence details
-    t.start()
-    extracting_sequences = c_bn.fn_open_file_and_get_content(
-        parameters_in.input_extracting_sequence_file, 'json')
-    c_ln.logger.info('Configuration file name with extracting sequence(es) has been loaded')
-    t.stop()
-    c_bn.fn_store_file_statistics(c_ln.logger, t, parameters_in.input_extracting_sequence_file,
-                                  'Configuration file name with extracting sequence(es)')
-    # get the source system details from provided file
-    t.start()
-    source_systems = c_bn.fn_open_file_and_get_content(
-        parameters_in.input_source_system_file, 'json')['Systems']
-    c_ln.logger.info('Source Systems file name has been loaded')
-    t.stop()
-    c_bn.fn_store_file_statistics(c_ln.logger, t, parameters_in.input_source_system_file,
-                                  'SourceSystems file name')
-    # get the source system details from provided file
-    t.start()
-    configured_secrets = c_bn.fn_open_file_and_get_content(
-        parameters_in.input_credentials_file, 'json')['Credentials']
-    c_ln.logger.info('Configuration file name with credentials has been loaded')
-    t.stop()
-    c_bn.fn_store_file_statistics(c_ln.logger, t, parameters_in.input_source_system_file,
-                                  'SourceSystems file name')
-    # instantiate Parameter Handling class
-    c_ph = ParameterHandling()
-    # instantiate Data Manipulator class, useful to manipulate data frames
-    c_dm = DataManipulator()
-    # instantiate Database Talker class
-    c_dbtkr = DatabaseTalker()
-    # cycling through the configurations
-    for current_extracting_sequence in extracting_sequences:
-        t.start()
-        # just few values that's going to be used a lot
-        srv = {
-            'vdr': current_extracting_sequence['server-vendor'],
-            'typ': current_extracting_sequence['server-type'],
-            'grp': current_extracting_sequence['server-group'],
-            'lyr': current_extracting_sequence['server-layer']
-        }
-        usr_lbl = current_extracting_sequence['account-label']
-        # variable for source server details
-        src_server = source_systems[srv['vdr']][srv['typ']]['Server'][srv['grp']][srv['lyr']]
-        # variable with credentials for source server
-        usr_dtl = configured_secrets[srv['vdr']][srv['typ']][srv['grp']][srv['lyr']][usr_lbl]
-        c_ln.logger.info('Preparing connection details has been completed')
-        t.stop()
-        server_vendor_and_type = srv['vdr'] + ' ' + srv['typ']
-        if server_vendor_and_type in ('Oracle MySQL', 'SAP HANA'):
-            c_dbtkr.connect_to_database(c_ln.logger, t, {
-                'server-vendor-and-type': server_vendor_and_type,
-                'server-layer': srv['lyr'],
-                'ServerName': src_server['ServerName'],
-                'ServerPort': int(src_server['ServerPort']),
-                'Username': usr_dtl['Username'],
-                'Name': usr_dtl['Name'],
-                'Password': usr_dtl['Password'],
-            })
-        c_ln.logger.debug('Connection attempt done')
-        if c_dbtkr.conn is not None:
-            # instantiate DB connection handler
-            cursor = c_dbtkr.conn.cursor()
-            for current_query in current_extracting_sequence['queries']:
-                t.start()
-                initial_query = c_bn.fn_open_file_and_get_content(
-                    current_query['input-query-file'], 'raw')
-                c_ln.logger.info('Generic query is: '
-                                 + c_bn.fn_multi_line_string_to_single_line(initial_query))
-                t.stop()
-                for current_session in current_query['sessions']:
-                    current_session['output-csv-file'] = \
-                        c_ph.special_case_string(c_ln.logger, current_session['output-csv-file'])
-                    extraction_required = c_bnfe.fn_is_extraction_neccesary(c_ln.logger, {
-                        'extract-behaviour': current_session['extract-behaviour'],
-                        'output-csv-file': current_session['output-csv-file'],
-                    })
-                    if extraction_required:
-                        # get query parameters into a tuple
-                        tuple_parameters = c_ph.handle_query_parameters(c_ln.logger,
-                                                                        current_session)
-                        # measure expected number of parameters
-                        parameters_expected = initial_query.count('%s')
-                        # simulate final query to log (useful for debugging purposes)
-                        c_ph.simulate_final_query(c_ln.logger, t, initial_query,
-                                                  parameters_expected, tuple_parameters)
-                        # actual execution of the query
-                        cursor = c_dbtkr.execute_query(c_ln.logger, t, cursor, initial_query,
-                                                       parameters_expected, tuple_parameters)
-                        # bringing the information from server (data transfer)
-                        result_set = c_dbtkr.fetch_executed_query(c_ln.logger, t, cursor)
-                        # detecting the column named from result set
-                        stats = {
-                            'columns': c_dbtkr.get_column_names(c_ln.logger, t, cursor),
-                            'rows_count': cursor.rowcount,
-                        }
-                        t.start()
-                        c_ln.logger.info('Free DB result-set started')
-                        cursor.close()
-                        c_ln.logger.info('Free DB result-set completed')
-                        t.stop()
-                        if stats['rows_count'] > 0:
-                            # put result set into a data frame
-                            result_data_frame = c_dbtkr.result_set_to_data_frame(c_ln.logger, t,
-                                                                                 stats['columns'],
-                                                                                 result_set)
-                            rdf = c_dbtkr.append_additional_columns_to_data_frame(c_ln.logger, t,
-                                                                                  result_data_frame,
-                                                                                  current_session)
-                            # store data frame to a specified output file
-                            c_dm.fn_store_data_frame_to_file(c_ln.logger, t, rdf,
-                                                             current_session['output-csv-file'],
-                                                             current_session['output-csv-separator']
-                                                             )
-                            c_bn.fn_store_file_statistics(c_ln.logger, t,
-                                                          current_session['output-csv-file'],
-                                                          'Output file name')
-            t.start()
-            c_ln.logger.info('Closing DB connection')
-            c_dbtkr.conn.close()
-            c_ln.logger.info('Closing DB completed')
-            t.stop()
+    c_en.load_extraction_sequence_and_dependencies()
+    # validation of the extraction sequence file
+    if c_en.class_bnfe.validate_all_json_files(
+            c_en.class_ln.logger, c_en.timer, c_en.file_extract_sequence):
+        # cycling through the configurations
+        for seq_idx, crt_sequence in enumerate(c_en.file_extract_sequence):
+            can_proceed = \
+                c_en.class_bnfe.validate_all_json_files_current(
+                    c_en.class_ln.logger, c_en.timer, crt_sequence, seq_idx,
+                    c_en.source_systems, c_en.user_credentials)
+            if c_en.class_bn.fn_evaluate_dict_values(can_proceed):
+                c_en.class_dbt.connect_to_database(
+                    c_en.class_ln.logger, c_en.timer, c_en.class_bnfe.connection_details)
+                if c_en.class_dbt.connection is not None:
+                    # instantiate DB connection handler
+                    cursor = c_en.class_dbt.connection.cursor()
+                    for crt_query in crt_sequence['queries']:
+                        can_proceed_q = \
+                            c_en.class_bnfe.validate_extraction_query(
+                                c_en.class_ln.logger, c_en.timer, crt_query)
+                        if can_proceed_q:
+                            the_query = c_en.load_query(crt_query)
+                            for crt_session in crt_query['sessions']:
+                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    crt_session, crt_query, crt_sequence)
+                                crt_session['start-iso-weekday'] = \
+                                    c_en.set_default_starting_weekday(
+                                        dict__child__parent__grand_parent)
+                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    crt_session, crt_query, crt_sequence)
+                                if 'parameters' in crt_session:
+                                    crt_session['parameters-handling-rules'] = \
+                                        c_en.set_default_parameter_rules(
+                                            dict__child__parent__grand_parent)
+                                can_proceed_ses = \
+                                    c_en.class_bnfe.validate_query_session(
+                                        c_en.class_ln.logger, crt_session)
+                                crt_session['extract-behaviour'] = \
+                                    c_en.class_bnfe.fn_set_extract_behaviour(crt_session)
+                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    crt_session, crt_query, crt_sequence)
+                                extraction_required = c_en.evaluate_if_extraction_is_required(
+                                    dict__child__parent__grand_parent)
+                                if can_proceed_ses and extraction_required:
+                                    dict_prepared = {
+                                        'query': the_query,
+                                        'session': crt_session,
+                                    }
+                                    stats = c_en.extract_query_to_result_set(
+                                        c_en.class_ln.logger, cursor, dict_prepared)
+                                    if stats['rows_counted'] > 0:
+                                        dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                            crt_session, crt_query, crt_sequence)
+                                        c_en.result_set_to_disk_file(
+                                            c_en.class_ln.logger, stats,
+                                            dict__child__parent__grand_parent)
+                        c_en.close_cursor(c_en.class_ln.logger, cursor)
+                    c_en.close_connection(c_en.class_ln.logger)
     # just final message
-    c_bn.fn_final_message(c_ln.logger, parameters_in.output_log_file,
-                          t.timers.total('db_extractor'))
+    c_en.class_bn.fn_final_message(c_en.class_ln.logger, c_en.parameters.output_log_file,
+                                   c_en.timer.timers.total(SCRIPT_NAME))

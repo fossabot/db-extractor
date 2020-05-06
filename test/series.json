@@ -1,0 +1,38 @@
+[
+    {
+        "Parameters": {
+            "Deviation": 1,
+            "Direction": "down",
+            "Empty Values Replacement": "-",
+            "New Column": "Column_New",
+            "Original Column": "Column_A"
+        },
+        "Given": {
+            "Column_A": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+            "Column_Z": ["Z", "Y", "X", "W", "V", "U", "T", "S", "R"]
+        },
+        "Expected": {
+            "Column_A": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+            "Column_Z": ["Z", "Y", "X", "W", "V", "U", "T", "S", "R"],
+            "Column_New": ["-", "A", "B", "C", "D", "E", "F", "G", "H"]
+        }
+    },
+    {
+        "Parameters": {
+            "Deviation": 1,
+            "Direction": "up",
+            "Empty Values Replacement": "-",
+            "New Column": "Column_New",
+            "Original Column": "Column_A"
+        },
+        "Given": {
+            "Column_A": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+            "Column_Z": ["Z", "Y", "X", "W", "V", "U", "T", "S", "R"]
+        },
+        "Expected": {
+            "Column_A": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+            "Column_Z": ["Z", "Y", "X", "W", "V", "U", "T", "S", "R"],
+            "Column_New": ["B", "C", "D", "E", "F", "G", "H", "I", "-"]
+        }
+    }
+]

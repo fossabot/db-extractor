@@ -1,0 +1,77 @@
+# Copyright (C) 2020 Daniel Popiniuc
+# This file is distributed under the same license as the PACKAGE package.
+#
+#,fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: ExtractNeeds\n"
+"POT-Creation-Date: 2020-04-26 14:29+0200\n"
+"PO-Revision-Date: 2020-04-26 15:20+0200\n"
+"Last-Translator: danielppiniuc@gmail.com\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Additional evaluation took place and new verdict is: {new_verdict}"
+msgstr ""
+
+msgid "Closing DB completed"
+msgstr ""
+
+msgid "Closing DB connection"
+msgstr ""
+
+msgid "Configuration file name with credentials"
+msgstr ""
+
+msgid "Configuration file name with credentials has been loaded"
+msgstr ""
+
+msgid "Configuration file name with extracting sequence(es)"
+msgstr ""
+
+msgid "Configuration file name with extracting sequence(es) has been loaded"
+msgstr ""
+
+msgid "Connection attempt done"
+msgstr ""
+
+msgid "Free DB result-set completed"
+msgstr ""
+
+msgid "Free DB result-set started"
+msgstr ""
+
+msgid "Generic query is: %s"
+msgstr ""
+
+msgid "Output file name"
+msgstr ""
+
+msgid "Overall new verdict after considering multiple files is: {overall_verdict}"
+msgstr ""
+
+msgid "Preparing connection details has been completed"
+msgstr ""
+
+msgid "Query with parameters interpreted is: %s"
+msgstr ""
+
+msgid "Source Systems file name"
+msgstr ""
+
+msgid "Source Systems file name has been loaded"
+msgstr ""
+
+msgid "Time spent is {seconds}"
+msgstr ""
+
+msgid "Validation of the 3 JSON files involved (Extraction Sequence, Source systems and User Secrets) has been completed"
+msgstr ""
+
+msgid "not required"
+msgstr ""
+
+msgid "required"
+msgstr ""
