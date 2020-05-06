@@ -1,3 +1,6 @@
+"""
+localization_setup - facilitates localization file compilation (from .po to .mo)
+"""
 import glob
 import os
 import pathlib
