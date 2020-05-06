@@ -142,5 +142,6 @@ dmypy.json
 *.gz
 *.pickle
 *.xlsx
+*.xlsm
 *.xz
 *.zip

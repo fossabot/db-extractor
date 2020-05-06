@@ -104,8 +104,12 @@
                                 "name":                                 "mysql-test-utf8mb4.csv"
                             },
                             {
-                                    "format":                           "excel",
-                                    "name":                             "mysql-test-utf8mb4.xlsx"
+                                "format":                               "excel",
+                                "name":                                 "mysql-test-utf8mb4.xlsx"
+                            },
+                            {
+                                "format":                               "json",
+                                "name":                                 "mysql-test-utf8mb4.json"
                             },
                             {
                                 "compression":                          "bz2",

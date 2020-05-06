@@ -23,6 +23,7 @@ Extract information from databases (MySQL, MariaDB, SAP HANA to start with, othe
 
 * Comma Separated Values (custom separator aware)
 * Excel 2013+ (default "xlsx" format)
+* JSON (compression algorithms: bz2, gzip, xz, zip to choose from)
 * Pickle (compression algorithms: bz2, gzip, xz, zip to choose from)
 
 ## Who do I talk to?
@@ -92,7 +93,6 @@ Use [CODE_OF_CONDUCT.md](.github/CODE_OF_CONDUCT.md)
 ## Features already raised
 
 * Implement ability to store extracted result-set into HTML format file;
-* Implement ability to store extracted result-set into JSON file;
 
 ## Features to request template
 
