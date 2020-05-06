@@ -8,6 +8,8 @@ and correct execution is possible
 import os
 # facilitate dependencies management
 from setuptools import setup, find_packages
+# facilitate internationalization
+from babel.messages import frontend as babel
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as fh:
     long_description_readme = fh.read()
@@ -30,9 +32,14 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
+    cmdclass={
+        'compile_catalog': babel.compile_catalog,
+        'update_catalog': babel.update_catalog
+    },
     description='Wrapper to ease data management into Tableau Hyper format from CSV files',
     include_package_data=True,
     install_requires=[
+        'babel>=2.8.0,<3.0',
         'codetiming>=1.1,<2.0',
         'datedelta>=1.3,<2.0',
         'hdbcli>=2.4.171,<2.5',
