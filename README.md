@@ -15,6 +15,11 @@ Extract information from databases (MySQL, MariaDB, SAP HANA to start with, othe
 * Multi-language (English, Italian, Romanian);
 * Enhance behaviour choices so that besides existing 'skip-if-output-file-exists' and 'overwrite-if-output-file-exists' to have the option to specify to overwrite but only if the file is older than any choice of a CalculatedDate expression is given, as this is very useful when extracting large amount of data over VPN in small pieces and VPN drops (could mean already extracted pieces would be already skipped as not older than threshold imposed);
 
+## Supported File Types/Formats
+
+* Comma Separated Values
+* Excel 2013+
+* Pickle (compression algorythms: bz2, gzip, xz, zip)
 
 ## Who do I talk to?
 
