@@ -60,7 +60,7 @@ compiler_binary = os.path.join(
     'python.exe')
 if localisation_compilation_is_required:
     for current_domain_to_compile in domains_to_compile:
-        os.system(compiler_binary + ' ' + os.path.join(project_root, 'setup.py')
+        os.system(compiler_binary + ' ' + os.path.join(project_root, 'localizations_setup.py')
                   + ' compile_catalog'
                   + ' --input-file=' + current_domain_to_compile['input-file']
                   + ' --output-file=' + current_domain_to_compile['output-file']
