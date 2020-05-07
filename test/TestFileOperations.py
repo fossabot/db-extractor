@@ -1,22 +1,29 @@
+from datetime import datetime
 import os
-from sources.common.FileOperations import FileOperations
+from db_extractor.FileOperations import FileOperations
+import unittest
 # package to facilitate multiple operation system operations
 import platform
-import unittest
 
 
 class TestFileOperations(unittest.TestCase):
 
-    def test_file_statistics(self):
-        parent_folder = os.path.abspath(os.pardir) + '/' + '/'.join([
-            'virtual_environment',
-            'Scripts'
-        ])
-        relevant_file = 'pip'
+    def setUp(self) -> None:
+        python_binary = 'python'
         if platform.system() == 'Windows':
-            relevant_file += '.exe'
-        file_to_evaluate = os.path.join(parent_folder, relevant_file)
-        fo = FileOperations()
-        value_to_assert = fo.fn_get_file_statistics(file_to_evaluate)['size [bytes]']
-        value_to_compare_with = os.path.getsize(file_to_evaluate)
+            python_binary += '.exe'
+        os.system(python_binary + ' '
+                  + os.path.join(os.path.normpath(os.path.dirname(__file__))
+                                 .replace('test', 'sources'), 'localizations_compile.py'))
+
+    def test_file_statistics(self):
+        class_fo = FileOperations()
+        value_to_assert = class_fo.fn_get_file_statistics(__file__)['size [bytes]']
+        value_to_compare_with = os.path.getsize(__file__)
+        self.assertEqual(value_to_assert, value_to_compare_with)
+
+    def test_file_dates(self):
+        class_fo = FileOperations()
+        value_to_assert = class_fo.fn_get_file_dates(__file__)['created']
+        value_to_compare_with = datetime.fromtimestamp(os.path.getctime(__file__))
         self.assertEqual(value_to_assert, value_to_compare_with)

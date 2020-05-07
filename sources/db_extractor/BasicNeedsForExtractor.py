@@ -12,7 +12,7 @@ import os
 # package to facilitate working with directories and files
 from pathlib import Path
 # package to facilitate common operations
-from common.BasicNeeds import BasicNeeds
+from db_extractor.BasicNeeds import BasicNeeds
 
 
 class BasicNeedsForExtractor:

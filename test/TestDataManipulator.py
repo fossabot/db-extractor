@@ -2,9 +2,9 @@
 from codetiming import Timer
 # package facilitating Data Frames manipulation
 import pandas
-from sources.common.FileOperations import FileOperations
-from common.LoggingNeeds import LoggingNeeds
-from common.DataManipulator import DataManipulator
+from db_extractor.FileOperations import FileOperations
+from db_extractor.LoggingNeeds import LoggingNeeds
+from db_extractor.DataManipulator import DataManipulator
 import unittest
 import re
 

@@ -1,10 +1,10 @@
 # useful methods to measure time performance by small pieces of code
 from codetiming import Timer
 # Custom package specific to this project
-from common.BasicNeeds import BasicNeeds
-from common.LoggingNeeds import LoggingNeeds
-from common.FileOperations import datetime, os, FileOperations
-from common.ParameterHandling import ParameterHandling
+from db_extractor.BasicNeeds import BasicNeeds
+from db_extractor.LoggingNeeds import LoggingNeeds
+from db_extractor.FileOperations import datetime, os, FileOperations
+from db_extractor.ParameterHandling import ParameterHandling
 # get current script name
 CURRENT_SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
 SCRIPT_LANGUAGE = 'ro_RO'
