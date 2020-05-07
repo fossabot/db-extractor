@@ -6,7 +6,7 @@ from datetime import timedelta
 # package facilitating Data Frames manipulation
 import pandas
 # custom classes
-from common.BasicNeeds import BasicNeeds
+from db_extractor.BasicNeeds import BasicNeeds
 
 
 class DataManipulatorForTimeSeries:

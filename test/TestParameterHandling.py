@@ -3,8 +3,8 @@ Testing key methods from Parameter Handling class
 """
 from datetime import datetime
 import os
-from common.FileOperations import FileOperations
-from common.ParameterHandling import ParameterHandling
+from db_extractor.FileOperations import FileOperations
+from db_extractor.ParameterHandling import ParameterHandling
 from db_extractor.ExtractNeeds import ExtractNeeds
 import unittest
 

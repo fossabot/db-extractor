@@ -10,13 +10,13 @@ import gettext
 # package to facilitate working with directories and files
 from pathlib import Path
 # custom classes specific to this project
-from common.BasicNeeds import BasicNeeds
-from common.CommandLineArgumentsManagement import CommandLineArgumentsManagement
-from common.DataInputOutput import DataInputOutput
-from common.DataManipulator import DataManipulator
-from common.FileOperations import FileOperations
-from common.LoggingNeeds import LoggingNeeds
-from common.ParameterHandling import ParameterHandling
+from db_extractor.BasicNeeds import BasicNeeds
+from db_extractor.CommandLineArgumentsManagement import CommandLineArgumentsManagement
+from db_extractor.DataInputOutput import DataInputOutput
+from db_extractor.DataManipulator import DataManipulator
+from db_extractor.FileOperations import FileOperations
+from db_extractor.LoggingNeeds import LoggingNeeds
+from db_extractor.ParameterHandling import ParameterHandling
 from db_extractor.BasicNeedsForExtractor import BasicNeedsForExtractor
 from db_extractor.DatabaseTalker import DatabaseTalker
 

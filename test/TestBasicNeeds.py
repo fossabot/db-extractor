@@ -1,6 +1,5 @@
-import os
-from sources.common.BasicNeeds import BasicNeeds
-from sources.common.FileOperations import FileOperations
+from db_extractor.BasicNeeds import BasicNeeds
+from db_extractor.FileOperations import FileOperations
 # package to facilitate multiple operation system operations
 import unittest
 

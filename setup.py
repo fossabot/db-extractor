@@ -51,7 +51,7 @@ setup(
     long_description=long_description_readme,
     long_description_content_type='text/markdown',
     name='db-extractor',
-    packages=find_packages('common', 'db_extractor'),
+    packages=find_packages('db_extractor'),
     package_data={
         'db_extractor': [
             '*.json'
@@ -65,5 +65,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='1.0.3',
+    version='1.0.5',
 )

@@ -1,10 +1,7 @@
-include locale/*.mo
-include locale/*.pot
-include locale/*.po
-include samples/*.json
-include sources/common/*.py
-include sources/config/*.json
-include sources/db_extractor/*.py
-include sources/*.py
-include test/*.json
-include test/*.py
+include *.md
+include *.cfg
+include LICENSE
+recursive-include sources *.json
+recursive-include sources *.py
+recursive-include sources *.po
+recursive-include sources *.pot

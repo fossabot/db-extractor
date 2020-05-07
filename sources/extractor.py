@@ -5,26 +5,35 @@ Facilitates moving files from a specified directory and matching pattern to a de
 import locale
 # package to facilitate operating system operations
 import os
+# package to facilitate multiple operation system operations
+import platform
 
 # Custom classes specific to this package
 from db_extractor.ExtractNeeds import ExtractNeeds
 
 # get current script name
 SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
-# getting default language used region from operating system (not the interface language)
-SCRIPT_LANGUAGE = locale.getdefaultlocale('LC_ALL')[0]
 
 # main execution logic
 if __name__ == '__main__':
+    python_binary = 'python'
+    if platform.system() == 'Windows':
+        python_binary += '.exe'
+    os.system(python_binary + ' ' + os.path.join(os.path.normpath(os.path.dirname(__file__)),
+                                                 'localizations_compile.py'))
     locale_implemented = [
         'en_US',
         'it_IT',
         'ro_RO',
     ]
-    if SCRIPT_LANGUAGE not in locale_implemented:
+    try:
+        region_language = locale.getdefaultlocale('LC_ALL')
+        if region_language[0] not in locale_implemented:
+            language_to_use = locale_implemented[0]
+        else:
+            language_to_use = region_language[0]
+    except ValueError as err:
         language_to_use = locale_implemented[0]
-    else:
-        language_to_use = SCRIPT_LANGUAGE
     # instantiate Logger class
     c_en = ExtractNeeds(SCRIPT_NAME, language_to_use)
     # load script configuration
