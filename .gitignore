@@ -145,3 +145,5 @@ dmypy.json
 *.xlsm
 *.xz
 *.zip
+
+results/
