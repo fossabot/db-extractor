@@ -24,9 +24,13 @@ class BasicNeedsForExtractor:
 
     def __init__(self, in_language='en_US'):
         self.class_bn = BasicNeeds(in_language)
-        current_script = os.path.basename(__file__).replace('.py', '')
-        lang_folder = os.path.join(os.path.dirname(__file__), current_script + '_Locale')
-        self.locale = gettext.translation(current_script, lang_folder, languages=[in_language])
+        file_parts = os.path.normpath(os.path.abspath(__file__)).replace('\\', os.path.altsep)\
+            .split(os.path.altsep)
+        locale_domain = file_parts[(len(file_parts)-1)].replace('.py', '')
+        locale_folder = os.path.normpath(os.path.join(
+            os.path.join(os.path.altsep.join(file_parts[:-2]), 'project_locale'), locale_domain))
+        self.locale = gettext.translation(locale_domain, localedir=locale_folder,
+                                          languages=[in_language], fallback=True)
 
     def fn_check_inputs_specific(self, in_parameters):
         self.class_bn.fn_validate_single_value(in_parameters.input_source_system_file, 'file')
