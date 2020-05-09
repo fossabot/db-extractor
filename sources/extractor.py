@@ -9,6 +9,7 @@ import os
 import platform
 
 # Custom classes specific to this package
+from project_locale.localizations_common import LocalizationsCommon
 from db_extractor.ExtractNeeds import ExtractNeeds
 
 # get current script name
@@ -16,24 +17,12 @@ SCRIPT_NAME = os.path.basename(__file__).replace('.py', '')
 
 # main execution logic
 if __name__ == '__main__':
-    python_binary = 'python'
-    if platform.system() == 'Windows':
-        python_binary += '.exe'
-    os.system(python_binary + ' ' + os.path.join(os.path.normpath(os.path.dirname(__file__)),
-                                                 'localizations_compile.py'))
-    locale_implemented = [
-        'en_US',
-        'it_IT',
-        'ro_RO',
-    ]
-    try:
-        region_language = locale.getdefaultlocale('LC_ALL')
-        if region_language[0] not in locale_implemented:
-            language_to_use = locale_implemented[0]
-        else:
-            language_to_use = region_language[0]
-    except ValueError as err:
-        language_to_use = locale_implemented[0]
+    # instantiate Localizations Common class
+    class_lc = LocalizationsCommon()
+    # ensure all compiled localization files are in place (as needed for localized messages later)
+    class_lc.run_localization_compile()
+    # establish localization language to use
+    language_to_use = class_lc.get_region_language_to_use_from_operating_system()
     # instantiate Logger class
     c_en = ExtractNeeds(SCRIPT_NAME, language_to_use)
     # load script configuration
