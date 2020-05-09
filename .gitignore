@@ -133,7 +133,6 @@ dmypy.json
 .idea/
 
 # Log files
-*.log
 *.log.*
 
 # Result set files
@@ -147,3 +146,4 @@ dmypy.json
 *.zip
 
 results/
+*.pypirc
