@@ -34,18 +34,12 @@ class LocalizationsMaintainSources(LocalizationsCommon):
                     'destination operation name': 'update',
                 }
                 operation_check_result, file_situation_verdict = self.check_file_pairs(fn_dict)
-                operation_to_execute = ''
-                operation_final_flags = ''
-                if 'missing' in file_situation_verdict:
-                    operation_to_execute = 'init_catalog'
-                elif 'newer' in file_situation_verdict:
-                    operation_to_execute = 'update_catalog'
-                    operation_final_flags = ' --previous'
+                operation, operation_final_flags = self.operations_dict(file_situation_verdict)
                 if operation_check_result:
                     domains_locale_to_update.append(compiling_files_counter)
                     domains_locale_to_update[compiling_files_counter] = {
                         'input-file': fn_dict['source'],
-                        'operation': operation_to_execute,
+                        'operation': operation,
                         'operation final flags': operation_final_flags,
                         'output-file': fn_dict['destination'],
                         'locale': fn_dict['locale'],
@@ -54,6 +48,17 @@ class LocalizationsMaintainSources(LocalizationsCommon):
             file_counter += 1
             file_list_paring_complete = self.file_counter_limit(file_counter, list_size)
         return domains_locale_to_update
+
+    @staticmethod
+    def operations_dict(file_situation_verdict):
+        operation_to_execute = ''
+        operation_final_flags = ''
+        if 'missing' in file_situation_verdict:
+            operation_to_execute = 'init_catalog'
+        elif 'newer' in file_situation_verdict:
+            operation_to_execute = 'update_catalog'
+            operation_final_flags = ' --previous'
+        return operation_to_execute, operation_final_flags
 
 
 my_class = LocalizationsMaintainSources()
