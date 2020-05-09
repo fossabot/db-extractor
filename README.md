@@ -104,3 +104,11 @@ Use [feature_request.md](.github/ISSUE_TEMPLATE/feature_request.md)
 ## Bug report template
 
 Use [bug_report.md](.github/ISSUE_TEMPLATE/bug_report.md)
+
+## Required software/drivers/configurations
+
+see [readme_software.md](readme_software.md)
+
+## Used references
+
+see [readme_reference.md](readme_reference.md)
