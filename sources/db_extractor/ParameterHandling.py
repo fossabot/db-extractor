@@ -90,7 +90,7 @@ class ParameterHandling:
                 'A known expression "{expression_parts}" has to be interpreted')
                                .replace('{expression_parts}', str_expression))
             final_string = self.interpret_known_expression(
-                    datetime.utcnow(), expression_parts, in_start_iso_weekday)
+                    datetime.now(), expression_parts, in_start_iso_weekday)
             local_logger.debug(self.locale.gettext(
                 'Known expression "{expression_parts}" has been interpreted as {final_string}')
                                .replace('{expression_parts}', str_expression)
