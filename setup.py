@@ -42,7 +42,8 @@ setup(
         'mysql-connector-python>=8.0.11,<8.1',
         'pandas>=0.25.3,<2.0',
         'xlrd>=1,<2.0',
-        'xlsxwriter>=1,<1.3'
+        'xlsxwriter>=1,<1.3',
+        'wheel>=0.34.2,<1.0'
     ],
     keywords=[
         'csv'
@@ -65,5 +66,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='1.0.10',
+    version='1.0.11',
 )
