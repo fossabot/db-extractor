@@ -21,9 +21,9 @@ Extract information from databases (MySQL, MariaDB, SAP HANA to start with, othe
 
 ## Supported File Types/Formats
 
-* Comma Separated Values (custom separator aware)
-* Excel 2013+ (default "xlsx" format)
-* JSON (compression algorithms: bz2, gzip, xz, zip to choose from)
+* Comma Separated Values (with ability to specify a custom separator of your preference)
+* Excel 2013+
+* JSON
 * Pickle (compression algorithms: bz2, gzip, xz, zip to choose from)
 
 ## Who do I talk to?
