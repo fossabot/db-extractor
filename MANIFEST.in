@@ -1,7 +1,8 @@
-include *.md
 include *.cfg
 include LICENSE
-recursive-include sources *.json
+recursive-include *.md
 recursive-include sources *.py
-recursive-include sources *.po
-recursive-include sources *.pot
+recursive-include samples *.json
+recursive-include sources/config *.json
+recursive-include sources/project_locale *.po
+recursive-include sources/project_locale *.pot
