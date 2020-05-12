@@ -24,7 +24,8 @@ Extract information from databases (MySQL, MariaDB, SAP HANA to start with, othe
 * Comma Separated Values (with ability to specify a custom separator of your preference)
 * Excel 2013+
 * JSON
-* Pickle (with compression algorithms: bz2, gzip, uncompressed, xz, zip to choose from with as special value as "infer" to detect automatically the correct one from provided file extension)
+* Parquet (with compression algorithms: brotli, gzip, snappy and none to choose from)
+* Pickle (with compression algorithms: bz2, gzip, xz, zip and none to choose from with as special value as "infer" to detect automatically the correct one from provided file extension)
 
 ## Who do I talk to?
 

@@ -139,6 +139,7 @@ dmypy.json
 *.bz2
 *.csv
 *.gz
+*.parquet
 *.pickle
 *.xlsx
 *.xlsm

@@ -112,6 +112,26 @@
                                 "name":                                 "mysql-test-utf8mb4.json"
                             },
                             {
+                                "compression":                          "snappy",
+                                "format":                               "parquet",
+                                "name":                                 "mysql-test-utf8mb4-parquet-snappy.parquet"
+                            },
+                            {
+                                "compression":                          "gzip",
+                                "format":                               "parquet",
+                                "name":                                 "mysql-test-utf8mb4-parquet-gzip.parquet"
+                            },
+                            {
+                                "compression":                          "brotli",
+                                "format":                               "parquet",
+                                "name":                                 "mysql-test-utf8mb4-parquet-brotli.parquet"
+                            },
+                            {
+                                "compression":                          "none",
+                                "format":                               "parquet",
+                                "name":                                 "mysql-test-utf8mb4-parquet-no-compression.parquet"
+                            },
+                            {
                                 "compression":                          "bz2",
                                 "format":                               "pickle",
                                 "name":                                 "mysql-test-utf8mb4-pickle.bz2"
@@ -122,7 +142,7 @@
                                 "name":                                 "mysql-test-utf8mb4-pickle.gz"
                             },
                             {
-                                "compression":                          "infer",
+                                "compression":                          "none",
                                 "format":                               "pickle",
                                 "name":                                 "mysql-test-utf8mb4.pickle"
                             },
@@ -135,6 +155,11 @@
                                 "compression":                          "zip",
                                 "format":                               "pickle",
                                 "name":                                 "mysql-test-utf8mb4-pickle.zip"
+                            },
+                            {
+                                "compression":                          "infer",
+                                "format":                               "pickle",
+                                "name":                                 "mysql-test-utf8mb4-pickle-infer.xz"
                             }
                         ],
                         "parameters": {

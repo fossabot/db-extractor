@@ -1,7 +1,6 @@
 """
 localization_compile - facilitates localization file compilation (from .po to .mo)
 """
-import os
 import pathlib
 
 # specific to this project
