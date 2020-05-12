@@ -40,7 +40,7 @@ setup(
         'datedelta>=1.3,<2.0',
         'hdbcli>=2.4.171,<2.5',
         'mysql-connector-python>=8.0.11,<8.1',
-        'pandas>=0.25.3,<2.0',
+        'pandas>=1.0,<2.0',
         'pyarrow>=0.17,<1.0',
         'xlrd>=1,<2.0',
         'xlsxwriter>=1,<1.3',
@@ -67,5 +67,5 @@ setup(
     },
     python_requires='>=3.6',
     url=this_package_website + '/releases',  # project home page, if any
-    version='1.1.1',
+    version='1.1.2',
 )
