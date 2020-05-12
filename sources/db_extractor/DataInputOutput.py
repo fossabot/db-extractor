@@ -5,11 +5,13 @@ Data Input Output class
 import gettext
 # package to handle files/folders and related metadata/operations
 import os
-# package facilitating Data Frames manipulation
-import pandas
+
+# local packages
+from .DataOutput import DataOutput
+from .DataInput import DataInput
 
 
-class DataInputOutput:
+class DataInputOutput(DataInput, DataOutput):
     locale = None
 
     def __init__(self, in_language = 'en_US'):
@@ -81,133 +83,6 @@ class DataInputOutput:
             self.fn_file_operation_logger(in_logger, in_dict)
         timer.stop()
         return in_dict['out data frame']
-
-    @staticmethod
-    def fn_internal_load_csv_file_into_data_frame(in_dict):
-        if in_dict['format'].lower() == 'csv':
-            try:
-                in_dict['out data frame'] = pandas.concat(
-                        [pandas.read_csv(filepath_or_buffer = crt_file,
-                                         delimiter = in_dict['field delimiter'],
-                                         cache_dates = True,
-                                         index_col = None,
-                                         memory_map = True,
-                                         low_memory = False,
-                                         encoding = 'utf-8',
-                                         ) for crt_file in in_dict['files list']],
-                        sort = False)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_load_excel_file_into_data_frame(in_dict):
-        if in_dict['format'].lower() == 'excel':
-            try:
-                in_dict['out data frame'] = pandas.concat(
-                        [pandas.read_excel(io = crt_file,
-                                           verbose = True,
-                                           ) for crt_file in in_dict['files list']],
-                        sort = False)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_load_json_file_into_data_frame(in_dict):
-        if in_dict['format'].lower() == 'json':
-            try:
-                in_dict['out data frame'] = pandas.concat(
-                        [pandas.read_json(path_or_buf = crt_file,
-                                          compression = in_dict['compression'],
-                                          ) for crt_file in in_dict['files list']],
-                        sort = False)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_load_parquet_file_into_data_frame(in_dict):
-        if in_dict['format'].lower() == 'parquet':
-            try:
-                in_dict['out data frame'] = pandas.concat(
-                        [pandas.read_parquet(path = crt_file,
-                                             ) for crt_file in in_dict['files list']],
-                        sort = False)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_load_pickle_file_into_data_frame(in_dict):
-        if in_dict['format'].lower() == 'pickle':
-            try:
-                in_dict['out data frame'] = pandas.concat(
-                        [pandas.read_pickle(path = crt_file,
-                                            compression = in_dict['compression'],
-                                            ) for crt_file in in_dict['files list']],
-                        sort = False)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_store_data_frame_to_csv_file(in_dict):
-        if in_dict['format'].lower() == 'csv':
-            try:
-                in_dict['in data frame'].to_csv(path_or_buf = in_dict['name'],
-                                                sep = in_dict['field delimiter'],
-                                                header = True,
-                                                index = False,
-                                                encoding = 'utf-8')
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_store_data_frame_to_excel_file(in_dict):
-        if in_dict['format'].lower() == 'excel':
-            try:
-                in_dict['in data frame'].to_excel(excel_writer = in_dict['name'],
-                                                  engine = 'xlsxwriter',
-                                                  freeze_panes = (1, 1),
-                                                  encoding = 'utf-8',
-                                                  index = False,
-                                                  verbose = True)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_store_data_frame_to_json_file(in_dict):
-        if in_dict['format'].lower() == 'json':
-            try:
-                in_dict['in data frame'].to_json(path_or_buf = in_dict['name'],
-                                                 compression = in_dict['compression'])
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_store_data_frame_to_parquet_file(in_dict):
-        if in_dict['format'].lower() == 'parquet':
-            try:
-                in_dict['in data frame'].to_parquet(path = in_dict['name'],
-                                                    compression = in_dict['compression'],
-                                                    use_deprecated_int96_timestamps = True)
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
-
-    @staticmethod
-    def fn_internal_store_data_frame_to_pickle_file(in_dict):
-        if in_dict['format'].lower() == 'pickle':
-            try:
-                in_dict['in data frame'].to_pickle(path = in_dict['name'],
-                                                   compression = in_dict['compression'])
-            except Exception as err:
-                in_dict['error details'] = err
-        return in_dict
 
     @staticmethod
     def fn_pack_dict_message(in_dict, in_file_list):
