@@ -1,12 +1,8 @@
 """
 Facilitates moving files from a specified directory and matching pattern to a destination directory
 """
-# package to facilitate operating system locale detection
-import locale
 # package to facilitate operating system operations
 import os
-# package to facilitate multiple operation system operations
-import platform
 
 # Custom classes specific to this package
 from project_locale.localizations_common import LocalizationsCommon
@@ -40,10 +36,9 @@ if __name__ == '__main__':
             c_en.class_ln.logger, c_en.timer, c_en.file_extract_sequence):
         # cycling through the configurations
         for seq_idx, crt_sequence in enumerate(c_en.file_extract_sequence):
-            can_proceed = \
-                c_en.class_bnfe.validate_all_json_files_current(
-                    c_en.class_ln.logger, c_en.timer, crt_sequence, seq_idx,
-                    c_en.source_systems, c_en.user_credentials)
+            can_proceed = c_en.class_bnfe.validate_all_json_files_current(
+                c_en.class_ln.logger, c_en.timer, crt_sequence, seq_idx,
+                c_en.source_systems, c_en.user_credentials)
             if c_en.class_bn.fn_evaluate_dict_values(can_proceed):
                 c_en.class_dbt.connect_to_database(
                     c_en.class_ln.logger, c_en.timer, c_en.class_bnfe.connection_details)
@@ -51,9 +46,8 @@ if __name__ == '__main__':
                     # instantiate DB connection handler
                     cursor = c_en.class_dbt.connection.cursor()
                     for crt_query in crt_sequence['queries']:
-                        can_proceed_q = \
-                            c_en.class_bnfe.validate_extraction_query(
-                                c_en.class_ln.logger, c_en.timer, crt_query)
+                        can_proceed_q = c_en.class_bnfe.validate_extraction_query(
+                            c_en.class_ln.logger, c_en.timer, crt_query)
                         if can_proceed_q:
                             the_query = c_en.load_query(crt_query)
                             for crt_session in crt_query['sessions']:
