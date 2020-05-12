@@ -5,7 +5,7 @@ DataOutput - class to handle disk file storage
 import pandas
 
 
-class DataOutput:
+class DataDiskRead:
 
     @staticmethod
     def fn_internal_load_csv_file_into_data_frame(in_dict):
@@ -68,7 +68,7 @@ class DataOutput:
         if in_dict['format'].lower() == 'pickle':
             try:
                 in_dict['out data frame'] = pandas.concat(
-                        [pandas.read_pickle(path = crt_file,
+                        [pandas.read_pickle(filepath_or_buffer = crt_file,
                                             compression = in_dict['compression'],
                                             ) for crt_file in in_dict['files list']],
                         sort = False)

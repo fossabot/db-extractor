@@ -7,14 +7,14 @@ import gettext
 import os
 
 # local packages
-from .DataOutput import DataOutput
-from .DataInput import DataInput
+from .DataDiskRead import DataDiskRead
+from .DataDiskWrite import DataDiskWrite
 
 
-class DataInputOutput(DataInput, DataOutput):
+class DataInputOutput(DataDiskRead, DataDiskWrite):
     locale = None
 
-    def __init__(self, in_language = 'en_US'):
+    def __init__(self, in_language):
         file_parts = os.path.normpath(os.path.abspath(__file__)).replace('\\', os.path.altsep) \
             .split(os.path.altsep)
         locale_domain = file_parts[(len(file_parts) - 1)].replace('.py', '')
