@@ -4,6 +4,7 @@ DataInput - class to handle data storing to disk (from Pandas Data Frame
 
 
 class DataDiskWrite:
+    implemented_disk_write_file_types = ['csv', 'excel', 'json', 'parquet', 'pickle']
 
     @staticmethod
     def fn_internal_store_data_frame_to_csv_file(in_dict):
