@@ -289,14 +289,11 @@ class ExtractNeeds:
 
     def store_result_set_to_disk(self, local_logger, in_data_frame, crt_session):
         output_file_setting_type = type(crt_session['output-file'])
-        if output_file_setting_type == dict:
-            self.class_dio.fn_store_data_frame_to_file(
-                local_logger, self.timer, in_data_frame, crt_session['output-file'])
-            self.class_fo.fn_store_file_statistics(
-                local_logger, self.timer, crt_session['output-file']['name'],
-                self.locale.gettext('Output file name'))
-        elif output_file_setting_type == list:
-            for crt_output in crt_session['output-file']:
+        if output_file_setting_type in (dict, list):
+            output_list = crt_session['output-file']
+            if output_file_setting_type == dict:
+                output_list = [crt_session['output-file']]
+            for crt_output in output_list:
                 self.class_dio.fn_store_data_frame_to_file(
                     local_logger, self.timer, in_data_frame, crt_output)
                 self.class_fo.fn_store_file_statistics(
