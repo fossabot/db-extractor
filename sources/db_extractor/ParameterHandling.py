@@ -18,6 +18,8 @@ import re
 class ParameterHandling:
     known_expressions = {
         'year': ['CY', 'CurrentYear'],
+        'fiscal_period': ['CYCFP', 'CurrentYearCurrentFiscalPeriod'],
+        'just_fiscal_period': ['CFP', 'FiscalPeriod'],
         'month': ['CYCM', 'CurrentYearCurrentMonth'],
         'just_month': ['CM', 'CurrentMonth'],
         'week': ['CYCW', 'CurrentYearCurrentWeek'],
@@ -28,6 +30,8 @@ class ParameterHandling:
     }
     output_standard_formats = {
         'year': '%Y',
+        'fiscal_period': '%Y0%m',
+        'just_fiscal_period': '0%m',
         'month': '%Y%m',
         'just_month': '%m',
         'day': '%Y%m%d',
@@ -74,6 +78,7 @@ class ParameterHandling:
             expression_parts[2] = 0
         final_dates = {
             'year': in_date + datedelta.datedelta(years=int(expression_parts[2])),
+            'fiscal_period': in_date + datedelta.datedelta(months=int(expression_parts[2])),
             'month': in_date + datedelta.datedelta(months=int(expression_parts[2])),
             'week': in_date + timedelta(weeks=int(expression_parts[2])),
             'day': in_date + timedelta(days=int(expression_parts[2])),
