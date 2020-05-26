@@ -31,6 +31,70 @@
             "expected_value": "2019"
         }
     ],
+    "semester": [
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CYCS",
+            "expected_value": "2020H1"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CYCS_1",
+            "expected_value": "2020H2"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CYCS_-1",
+            "expected_value": "2019H2"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentSemester",
+            "expected_value": "2020H1"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentSemester_1",
+            "expected_value": "2020H2"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentSemester_-1",
+            "expected_value": "2019H2"
+        }
+    ],
+    "quarter": [
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CYCQ",
+            "expected_value": "2020Q1"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CYCQ_1",
+            "expected_value": "2020Q2"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CYCQ_-1",
+            "expected_value": "2019Q4"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentQuarter",
+            "expected_value": "2020Q1"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentQuarter_1",
+            "expected_value": "2020Q2"
+        },
+        {
+            "reference_value": "2020-01-31",
+            "expression": "CalculatedDate_CurrentYearCurrentQuarter_-1",
+            "expected_value": "2019Q4"
+        }
+    ],
     "month": [
         {
             "reference_value": "2020-01-31",

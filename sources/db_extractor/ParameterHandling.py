@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 import datedelta
 # package to add support for multi-language (i18n)
 import gettext
+# package to perform mathematical operations
+import math
 # package to handle files/folders and related metadata/operations
 import os
 # package regular expressions
@@ -18,6 +20,12 @@ import re
 class ParameterHandling:
     known_expressions = {
         'year': ['CY', 'CurrentYear'],
+        'semester': ['CYCS', 'CurrentYearCurrentSemester'],
+        'semester_week': ['CYCSCW', 'CurrentYearCurrentSemesterCurrentWeek'],
+        'just_semester': ['CS', 'CurrentSemester'],
+        'quarter': ['CYCQ', 'CurrentYearCurrentQuarter'],
+        'quarter_week': ['CYCQCW', 'CurrentYearCurrentQuarterCurrentWeek'],
+        'just_quarter': ['CQ', 'CurrentQuarter'],
         'fiscal_period': ['CYCFP', 'CurrentYearCurrentFiscalPeriod'],
         'just_fiscal_period': ['CFP', 'FiscalPeriod'],
         'month': ['CYCM', 'CurrentYearCurrentMonth'],
@@ -78,6 +86,10 @@ class ParameterHandling:
             expression_parts[2] = 0
         final_dates = {
             'year': in_date + datedelta.datedelta(years=int(expression_parts[2])),
+            'semester': in_date + datedelta.datedelta(months=int(expression_parts[2])*6),
+            'semester_week': in_date + timedelta(weeks=int(expression_parts[2])),
+            'quarter': in_date + datedelta.datedelta(months=int(expression_parts[2])*3),
+            'quarter_week': in_date + timedelta(weeks=int(expression_parts[2])),
             'fiscal_period': in_date + datedelta.datedelta(months=int(expression_parts[2])),
             'month': in_date + datedelta.datedelta(months=int(expression_parts[2])),
             'week': in_date + timedelta(weeks=int(expression_parts[2])),
@@ -164,31 +176,52 @@ class ParameterHandling:
         finalized_date = ref_date
         if len(expression_parts) > 2:
             finalized_date = self.calculate_date_deviation(ref_date, deviation, expression_parts)
-        year_number_string, week_number_string = self.get_week_number_as_two_digits_string(
-                finalized_date, in_start_iso_weekday)
-        if deviation_original == 'week':
-            final_string = year_number_string + week_number_string
-        elif deviation_original == 'just_week':
-            final_string = week_number_string
+        if deviation_original in ('just_semester', 'just_quarter', 'just_week',
+                                  'semester', 'semester_week', 'quarter', 'quarter_week', 'week'):
+            year_number_string, week_number_string = self.get_week_number_as_two_digits_string(
+                    finalized_date, in_start_iso_weekday)
+            # to ensure less than 4 days within last week of year r reported to next year (ISO)
+            semester_year_string = str(min(int(week_number_string),
+                                           math.ceil(
+                                               int(datetime.strftime(finalized_date, '%m')) / 6)))
+            quarter_string = str(min(int(week_number_string),
+                                     math.ceil(int(datetime.strftime(finalized_date, '%m')) / 3)))
+            # values pre-calculated
+            values_to_pick = {
+                'just_semester': 'H' \
+                                 + str(math.ceil(int(datetime.strftime(finalized_date, '%m')) / 6)),
+                'just_quarter': 'Q' \
+                                + str(math.ceil(int(datetime.strftime(finalized_date, '%m')) / 3)),
+                'just_week': week_number_string,
+                'semester': str(datetime.strftime(finalized_date, '%Y')) + 'H' \
+                            + str(math.ceil(int(datetime.strftime(finalized_date, '%m')) / 6)),
+                'semester_week': year_number_string + 'H' + semester_year_string
+                                 + 'wk' + week_number_string,
+                'quarter': str(datetime.strftime(finalized_date, '%Y')) + 'Q' \
+                           + str(math.ceil(int(datetime.strftime(finalized_date, '%m')) / 3)),
+                'quarter_week': year_number_string + 'Q' + quarter_string
+                                + 'wk' + week_number_string,
+                'week': year_number_string + week_number_string,
+            }
+            final_string = values_to_pick.get(deviation_original)
         else:
             final_string = datetime.strftime(
                     finalized_date, self.output_standard_formats.get(deviation_original))
         return final_string
 
-    def manage_parameter_value(self, local_logger, given_prefix, given_parameter,
-                               given_parameter_rules):
+    def manage_parameter_value(self, in_logger, in_prefix, in_parameter, in_parameter_rules):
         element_to_join = ''
-        if given_prefix == 'dict':
-            element_to_join = given_parameter.values()
-        elif given_prefix == 'list':
-            element_to_join = given_parameter
-        local_logger.debug(self.locale.gettext(
+        if in_prefix == 'dict':
+            element_to_join = in_parameter.values()
+        elif in_prefix == 'list':
+            element_to_join = in_parameter
+        in_logger.debug(self.locale.gettext(
             'Current Parameter is {parameter_type} and has the value: "{str_value}"')
-                           .replace('{parameter_type}', self.locale.gettext(given_prefix.upper()))
-                           .replace('{str_value}', str(element_to_join)))
-        return given_parameter_rules[given_prefix + '-values-prefix'] \
-            + given_parameter_rules[given_prefix + '-values-glue'].join(element_to_join) \
-            + given_parameter_rules[given_prefix + '-values-suffix']
+                        .replace('{parameter_type}', self.locale.gettext(in_prefix.upper()))
+                        .replace('{str_value}', str(element_to_join)))
+        return in_parameter_rules[in_prefix + '-values-prefix'] \
+               + in_parameter_rules[in_prefix + '-values-glue'].join(element_to_join) \
+               + in_parameter_rules[in_prefix + '-values-suffix']
 
     def simulate_final_query(self, local_logger, timer, in_query, in_parameters_number, in_tp):
         timer.start()
