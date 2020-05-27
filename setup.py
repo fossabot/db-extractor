@@ -32,7 +32,7 @@ setup(
         'Topic :: Database :: Database Engines/Servers',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
-    description='Wrapper to ease data management into Tableau Hyper format from CSV files',
+    description='Extract information from databases to files, multiple formats supported, from a various SQL based servers',
     include_package_data=True,
     install_requires=[
         'Babel>=2.8.0,<3.0',
