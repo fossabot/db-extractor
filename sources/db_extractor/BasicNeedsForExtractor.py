@@ -83,10 +83,10 @@ class BasicNeedsForExtractor:
             local_logger, ref_expr, in_dict['session']['start-iso-weekday'])
         child_parent_expressions = c_ph.get_child_parent_expressions()
         deviation_original = child_parent_expressions.get(ref_expr.split('_')[1])
-        r_dt = datetime.strptime(reference_datetime,
-                                 c_ph.output_standard_formats.get(deviation_original))
+        r_dt = datetime.strptime(
+            reference_datetime, c_ph.output_standard_formats.get(deviation_original))
         return c_fo.fn_get_file_datetime_verdict(
-            local_logger, in_dict['file']['name'], 'last modified', r_dt)
+            local_logger, in_dict['file']['name'], 'last modified', datetime.timestamp(r_dt))
 
     @staticmethod
     def fn_set_extract_behaviour(in_session):
