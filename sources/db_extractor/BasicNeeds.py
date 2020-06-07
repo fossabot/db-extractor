@@ -80,8 +80,10 @@ class BasicNeeds:
         return list_with_values
 
     def fn_check_inputs(self, input_parameters):
-        if input_parameters.output_log_file is not None:
+        if input_parameters.output_log_file not in (None, 'None'):
             # checking log folder first as there's all further messages will be stored
+            self.fn_timestamped_print(self.locale.gettext(
+                'Checking if provided folder for the log file is valid'))
             self.fn_validate_single_value(
                     os.path.dirname(input_parameters.output_log_file), 'folder')
 
