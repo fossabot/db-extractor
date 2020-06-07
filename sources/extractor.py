@@ -51,26 +51,24 @@ if __name__ == '__main__':
                         if can_proceed_q:
                             the_query = c_en.load_query(crt_query)
                             for crt_session in crt_query['sessions']:
-                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                dict__hierarchy = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 crt_session['start-iso-weekday'] = \
-                                    c_en.set_default_starting_weekday(
-                                        dict__child__parent__grand_parent)
-                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                    c_en.set_default_starting_weekday(dict__hierarchy)
+                                dict__hierarchy = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 if 'parameters' in crt_session:
                                     crt_session['parameters-handling-rules'] = \
-                                        c_en.set_default_parameter_rules(
-                                            dict__child__parent__grand_parent)
+                                        c_en.set_default_parameter_rules(dict__hierarchy)
                                 can_proceed_ses = \
                                     c_en.class_bnfe.validate_query_session(
                                         c_en.class_ln.logger, crt_session)
                                 crt_session['extract-behaviour'] = \
                                     c_en.class_bnfe.fn_set_extract_behaviour(crt_session)
-                                dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                dict__hierarchy = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
-                                extraction_required = c_en.evaluate_if_extraction_is_required(
-                                    dict__child__parent__grand_parent)
+                                extraction_required = \
+                                    c_en.evaluate_if_extraction_is_required(dict__hierarchy)
                                 if can_proceed_ses and extraction_required:
                                     dict_prepared = {
                                         'query': the_query,
@@ -79,11 +77,10 @@ if __name__ == '__main__':
                                     stats = c_en.extract_query_to_result_set(
                                         c_en.class_ln.logger, cursor, dict_prepared)
                                     if stats['rows_counted'] > 0:
-                                        dict__child__parent__grand_parent = c_en.pack_three_levels(
+                                        dict__hierarchy = c_en.pack_three_levels(
                                             crt_session, crt_query, crt_sequence)
                                         c_en.result_set_to_disk_file(
-                                            c_en.class_ln.logger, stats,
-                                            dict__child__parent__grand_parent)
+                                            c_en.class_ln.logger, stats, dict__hierarchy)
                         c_en.close_cursor(c_en.class_ln.logger, cursor)
                     c_en.close_connection(c_en.class_ln.logger)
     # just final message

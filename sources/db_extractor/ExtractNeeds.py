@@ -68,6 +68,18 @@ class ExtractNeeds:
         # instantiate Parameter Handling class
         self.class_ph = ParameterHandling(in_language)
 
+    def build_dict_for_storage_file(self, crt_output):
+        fn_dict = {
+            'file list': crt_output['name'],
+            'name': crt_output['name'],
+            'format': crt_output['format'],
+        }
+        if 'compression' in crt_output:
+            fn_dict['compression'] = crt_output['compression']
+        if 'field delimiter' in crt_output:
+            fn_dict['field delimiter'] = crt_output['field delimiter']
+        return fn_dict
+
     def close_connection(self, local_logger):
         self.timer.start()
         local_logger.info(self.locale.gettext('Closing DB connection'))
@@ -204,18 +216,27 @@ class ExtractNeeds:
             'Configuration file name with extracting sequence(es) has been loaded'))
         self.timer.stop()
         # store file statistics
-        self.class_fo.fn_store_file_statistics(
-            self.class_ln.logger, self.timer, self.parameters.input_extracting_sequence_file,
-            self.locale.gettext('Configuration file name with extracting sequence(es)'))
+        self.class_fo.fn_store_file_statistics({
+            'checksum included': self.parameters.include_checksum_in_files_statistics,
+            'file list': self.parameters.input_extracting_sequence_file,
+            'file meaning': self.locale.gettext(
+                'Configuration file name with extracting sequence(es)'),
+            'logger': self.class_ln.logger,
+            'timer': self.timer,
+        })
         # get the source system details from provided file
         self.timer.start()
         self.source_systems = self.class_fo.fn_open_file_and_get_content(
             self.parameters.input_source_system_file, 'json')['Systems']
         self.class_ln.logger.info(self.locale.gettext('Source Systems file name has been loaded'))
         self.timer.stop()
-        self.class_fo.fn_store_file_statistics(
-            self.class_ln.logger, self.timer, self.parameters.input_source_system_file,
-            self.locale.gettext('Source Systems file name'))
+        self.class_fo.fn_store_file_statistics({
+            'checksum included': self.parameters.include_checksum_in_files_statistics,
+            'file list': self.parameters.input_source_system_file,
+            'file meaning': self.locale.gettext('Source Systems file name'),
+            'logger': self.class_ln.logger,
+            'timer': self.timer,
+        })
         # get the source system details from provided file
         self.timer.start()
         self.user_credentials = self.class_fo.fn_open_file_and_get_content(
@@ -223,9 +244,13 @@ class ExtractNeeds:
         self.class_ln.logger.info(self.locale.gettext(
             'Configuration file name with credentials has been loaded'))
         self.timer.stop()
-        self.class_fo.fn_store_file_statistics(
-            self.class_ln.logger, self.timer, self.parameters.input_credentials_file,
-            self.locale.gettext('Configuration file name with credentials'))
+        self.class_fo.fn_store_file_statistics({
+            'checksum included': self.parameters.include_checksum_in_files_statistics,
+            'file list': self.parameters.input_credentials_file,
+            'file meaning': self.locale.gettext('Configuration file name with credentials'),
+            'logger': self.class_ln.logger,
+            'timer': self.timer,
+        })
 
     def load_query(self, crt_query):
         self.timer.start()
@@ -294,8 +319,13 @@ class ExtractNeeds:
             if output_file_setting_type == dict:
                 output_list = [crt_session['output-file']]
             for crt_output in output_list:
+                fn_dict = self.build_dict_for_storage_file(crt_output)
                 self.class_dio.fn_store_data_frame_to_file(
-                    local_logger, self.timer, in_data_frame, crt_output)
-                self.class_fo.fn_store_file_statistics(
-                    local_logger, self.timer, crt_output['name'],
-                    self.locale.gettext('Output file name'))
+                    local_logger, self.timer, in_data_frame, fn_dict)
+                self.class_fo.fn_store_file_statistics({
+                    'checksum included': self.parameters.include_checksum_in_files_statistics,
+                    'file list': crt_output['name'],
+                    'file meaning': self.locale.gettext('Output file name'),
+                    'logger': self.class_ln.logger,
+                    'timer': self.timer,
+                })
