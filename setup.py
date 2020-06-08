@@ -42,6 +42,7 @@ setup(
         'mysql-connector-python>=8.0.11,<8.1',
         'pandas>=1.0,<2.0',
         'pyarrow>=0.17,<1.0',
+        'twine>3,<4',
         'xlrd>=1,<2.0',
         'xlsxwriter>=1,<1.3',
         'wheel>=0.34.2,<1.0'
