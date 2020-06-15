@@ -30,7 +30,7 @@ class TestParameterHandling(unittest.TestCase):
                 reference_format = current_pair['reference_format']
             reference_date = datetime.strptime(current_pair['reference_value'], reference_format)
             expression_parts = current_pair['expression'].split('_')
-            current_pair['start-iso-weekday'] = class_en.set_default_starting_weekday({
+            current_pair['start-iso-weekday'] = class_ph.set_default_starting_weekday({
                 'session': current_pair,
                 'query': current_pair,
                 'sequence': current_pair,

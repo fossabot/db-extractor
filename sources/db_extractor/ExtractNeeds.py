@@ -282,17 +282,6 @@ class ExtractNeeds:
         self.store_result_set_to_disk(self.class_ln.logger, result_df, in_dict['session'])
 
     @staticmethod
-    def set_default_starting_weekday(in_dict):
-        week_starts_with_iso_weekday = 1
-        if 'start-iso-weekday' in in_dict['session']:
-            if in_dict['session']['start-iso-weekday'] == 'inherit-from-parent':
-                in_dict['session']['start-iso-weekday'] = in_dict['query']['start-iso-weekday']
-            elif in_dict['session']['start-iso-weekday'] == 'inherit-from-grand-parent':
-                in_dict['session']['start-iso-weekday'] = in_dict['sequence']['start-iso-weekday']
-            week_starts_with_iso_weekday = in_dict['session']['start-iso-weekday']
-        return week_starts_with_iso_weekday
-
-    @staticmethod
     def set_default_parameter_rules(in_dict):
         # assumption is for either DICT or LIST values are numeric
         # in case text is given different rules have to be specified

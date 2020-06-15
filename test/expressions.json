@@ -306,5 +306,35 @@
             "expression": "CalculatedDate_CYCMCDCH_-3",
             "expected_value": "20200131160000000000"
         }
+    ],
+    "semester_week": [
+        {
+            "reference_format": "%Y-%m-%d %H:%M:%S",
+            "reference_value": "2020-06-21 13:00:00",
+            "expression": "CalculatedDate_CYCSCW",
+            "expected_value": "2020H1wk26",
+            "start-iso-weekday": 7
+        },
+        {
+            "reference_format": "%Y-%m-%d %H:%M:%S",
+            "reference_value": "2020-06-27 19:00:00",
+            "expression": "CalculatedDate_CYCSCW",
+            "expected_value": "2020H1wk26",
+            "start-iso-weekday": 7
+        },
+        {
+            "reference_format": "%Y-%m-%d %H:%M:%S",
+            "reference_value": "2020-06-28 19:00:00",
+            "expression": "CalculatedDate_CYCSCW",
+            "expected_value": "2020H2wk27",
+            "start-iso-weekday": 7
+        },
+        {
+            "reference_format": "%Y-%m-%d %H:%M:%S",
+            "reference_value": "2020-07-04 19:00:00",
+            "expression": "CalculatedDate_CYCSCW",
+            "expected_value": "2020H2wk27",
+            "start-iso-weekday": 7
+        }
     ]
 }

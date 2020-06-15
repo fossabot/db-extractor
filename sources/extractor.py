@@ -54,7 +54,7 @@ if __name__ == '__main__':
                                 dict__hierarchy = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 crt_session['start-iso-weekday'] = \
-                                    c_en.set_default_starting_weekday(dict__hierarchy)
+                                    c_en.class_ph.set_default_starting_weekday(dict__hierarchy)
                                 dict__hierarchy = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 if 'parameters' in crt_session:
