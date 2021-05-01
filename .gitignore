@@ -153,3 +153,4 @@ results/
 /virtual_environment_3.8.x/
 /virtual_environment_3.9.x/
 test/try.py
+sources/mysql-test*.json
