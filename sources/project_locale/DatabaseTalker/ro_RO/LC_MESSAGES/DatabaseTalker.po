@@ -24,7 +24,7 @@ msgid "Connection problem encountered: "
 msgstr "Problemă de conexiune întâlnită"
 
 msgid "Connection to {server_vendor_and_type} server, layer {server_layer} which means (server {server_name}, port {server_port}) using the username {username} ({name_of_user})"
-msgstr "Conexiunea la serverul {server_vendor_and_type}, strat {server_layer} care înseamnă (server {server_name}, port {server_port}) folosind numele de utilizator {username} ({nume_of_user})"
+msgstr "Conexiunea la serverul {server_vendor_and_type}, strat {server_layer} care înseamnă (server {server_name}, port {server_port}) folosind numele de utilizator {username} ({name_of_user})"
 
 msgid "Connection to {server_vendor_and_type} server completed"
 msgstr "S-a realizat conexiunea la {server_vendor_and_type}"
