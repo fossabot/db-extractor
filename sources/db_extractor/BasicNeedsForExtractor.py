@@ -229,14 +229,14 @@ class BasicNeedsForExtractor:
             item_checked = in_source_systems[in_seq['vdr']][in_seq['typ']]['Server']
             can_proceed_s2 = self.fn_validate_mandatory_properties(
                     in_logger, self.locale.gettext('Source Systems') + ' "' + in_seq['vdr']
-                               + '", "' + in_seq['typ'] + '", "Server" ',
+                    + '", "' + in_seq['typ'] + '", "Server" ',
                     item_checked, [in_seq['grp']])
         can_proceed_s3 = False
         if can_proceed_s2:
             item_checked = in_source_systems[in_seq['vdr']][in_seq['typ']]['Server'][in_seq['grp']]
             can_proceed_s3 = self.fn_validate_mandatory_properties(
                     in_logger, self.locale.gettext('Source Systems') + ' "' + in_seq['vdr']
-                               + '", "' + in_seq['typ'] + '", "' + in_seq['grp'] + '", "Server" ',
+                    + '", "' + in_seq['typ'] + '", "' + in_seq['grp'] + '", "Server" ',
                     item_checked, [in_seq['lyr']])
         return can_proceed_s and can_proceed_s1 and can_proceed_s2 and can_proceed_s3
 
@@ -305,14 +305,13 @@ class BasicNeedsForExtractor:
             item_checked = in_user_secrets[in_seq['vdr']][in_seq['typ']]
             can_proceed_u2 = self.fn_validate_mandatory_properties(
                     local_logger, self.locale.gettext('User Secrets') + ' "' + in_seq['vdr']
-                                  + '", "' + in_seq['typ'] + '", "Server" ',
+                    + '", "' + in_seq['typ'] + '", "Server" ',
                     item_checked, [in_seq['grp']])
         can_proceed_u3 = False
         if can_proceed_u2:
             item_checked = in_user_secrets[in_seq['vdr']][in_seq['typ']][in_seq['grp']]
             can_proceed_u3 = self.fn_validate_mandatory_properties(
                     local_logger, self.locale.gettext('User Secrets') + ' "' + in_seq['vdr']
-                                  + '", "' + in_seq['typ'] + '", "'
-                                  + in_seq['grp'] + '", "Server" ',
+                    + '", "' + in_seq['typ'] + '", "' + in_seq['grp'] + '", "Server" ',
                     item_checked, [in_seq['lyr']])
         return can_proceed_u and can_proceed_u1 and can_proceed_u2 and can_proceed_u3
