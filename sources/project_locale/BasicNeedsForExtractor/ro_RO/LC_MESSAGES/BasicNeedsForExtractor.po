@@ -17,6 +17,9 @@ msgstr ""
 msgid "{who} does not contain \"{current_property}\" which is mandatory, therefore extraction sequence will be ignored"
 msgstr "{who} nu conține \"{current_property}\" care este obligatoriu, prin urmare secvența de extracție va fi ignorată"
 
+msgid "As {current_key} has been set to be an \"environment variable\", value will be read using {environment_variable_name}"
+msgstr "După cum {current_key} a fost setată ca și \"environment variable\", valoarea va fi citită folosind {environment_variable_name}"
+
 msgid "Extract behaviour is set to {extract_behaviour}"
 msgstr "Comportamentul de extragere este setat ca și {extract_behaviour}"
 

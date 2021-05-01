@@ -245,6 +245,21 @@ class BasicNeedsForExtractor:
         if in_dc['Source System Properties'] and in_dc['User Secrets']:
             # variable with credentials for source server
             u = in_user[in_dc['vdr']][in_dc['typ']][in_dc['grp']][in_dc['lyr']][in_dc['ac']]
+            if 'Storage' in u:
+                known_account_keys = ['Name', 'Password', 'Username']
+                for current_key in known_account_keys:
+                    if current_key in u['Storage']:
+                        if u['Storage'][current_key] == 'environment variable':  # handling special value
+                            local_logger.debug(self.locale.gettext(
+                                'As {current_key} has been set to be an "environment variable"'
+                                + ', value will be read using {environment_variable_name}')
+                                              .replace('{current_key}', current_key)
+                                              .replace('{environment_variable_name}', u[current_key]))
+                            env_var_value = os.getenv(u[current_key])
+                            if env_var_value is None:
+                                local_logger.error('No such {environment_variable_name} has been found')
+                            else:
+                                u[current_key] = env_var_value
             is_valid = self.validate_user_secrets(local_logger, u)
             self.connection_details = {
                 'server-vendor-and-type': in_dc['vdtp'],

@@ -14,8 +14,13 @@
                 "Your Company Server Group Name": {
                     "Local": {
                         "Default": {
+                            "Storage": {
+                                "Name": "file",
+                                "Username": "file",
+                                "Password": "environment variable",
+                            },
                             "Name": "Your Full Name Here",
-                            "Password": "your_password_goes_here",
+                            "Password": "PYTHON_MYSQL_PASSWORD",
                             "Username": "your_username_goes_here"
                         }
                     }
