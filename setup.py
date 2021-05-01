@@ -28,24 +28,26 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: SQL',
         'Topic :: Database :: Database Engines/Servers',
         'Topic :: Scientific/Engineering :: Information Analysis'
     ],
-    description='Extract information from databases to files, multiple formats supported, from a various SQL based servers',
+    description='Extract information from databases to files, '
+                'multiple formats supported, from a various SQL based servers',
     include_package_data=True,
     install_requires=[
-        'Babel>=2.8.0,<3.0',
+        'Babel>=2.8,<3.0',
         'codetiming>=1.1,<2.0',
-        'datedelta>=1.3,<2.0',
-        'hdbcli>=2.4.171,<2.5',
+        'datedelta>=1.3,<2',
+        'hdbcli>=2,<3',
         'mysql-connector-python>=8.0.11,<8.1',
-        'pandas>=1.0,<2.0',
-        'pyarrow>=0.17,<1.0',
+        'pandas>=1,<2',
+        'pyarrow>=1,<=4',
         'twine>3,<4',
-        'xlrd>=1,<2.0',
-        'xlsxwriter>=1,<1.3',
-        'wheel>=0.34.2,<1.0'
+        'xlrd>=1,<=2',
+        'XlsxWriter>=1,<=2',
+        'wheel>=0.34.2,<1'
     ],
     keywords=[
         'csv'
