@@ -102,22 +102,26 @@ class BasicNeedsForExtractor:
             value_to_return = in_session['extract-behaviour']
         return value_to_return
 
+    def fn_manage_individual_user_settings(self, local_logger, u, current_key):
+        if current_key in u['Storage']:
+            if u['Storage'][current_key] == 'environment variable':  # handling special value
+                local_logger.debug(self.locale.gettext(
+                    'As {current_key} has been set to be an "environment variable"'
+                    + ', value will be read using {environment_variable_name}')
+                                   .replace('{current_key}', current_key)
+                                   .replace('{environment_variable_name}', u[current_key]))
+                env_var_value = os.getenv(u[current_key])
+                if env_var_value is None:
+                    local_logger.error('No such {environment_variable_name} has been found')
+                else:
+                    u[current_key] = env_var_value
+        return u
+
     def fn_manage_user_settings(self, local_logger, u):
         if 'Storage' in u:
             known_account_keys = ['Name', 'Password', 'Username']
             for current_key in known_account_keys:
-                if current_key in u['Storage']:
-                    if u['Storage'][current_key] == 'environment variable':  # handling special value
-                        local_logger.debug(self.locale.gettext(
-                            'As {current_key} has been set to be an "environment variable"'
-                            + ', value will be read using {environment_variable_name}')
-                                           .replace('{current_key}', current_key)
-                                           .replace('{environment_variable_name}', u[current_key]))
-                        env_var_value = os.getenv(u[current_key])
-                        if env_var_value is None:
-                            local_logger.error('No such {environment_variable_name} has been found')
-                        else:
-                            u[current_key] = env_var_value
+                u = self.fn_manage_individual_user_settings(local_logger, u, current_key)
         return u
 
     def validate_all_json_files(self, local_logger, timer, extracting_sequences):
