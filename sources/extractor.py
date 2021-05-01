@@ -6,6 +6,7 @@ import os
 
 # Custom classes specific to this package
 from project_locale.localizations_common import LocalizationsCommon
+from db_extractor.ManageSettings import ManageSettings
 from db_extractor.ExtractNeeds import ExtractNeeds
 
 # get current script name
@@ -19,6 +20,8 @@ if __name__ == '__main__':
     class_lc.run_localization_compile()
     # establish localization language to use
     language_to_use = class_lc.get_region_language_to_use_from_operating_system()
+    # instantiate Manage Settings class
+    c_ms = ManageSettings()
     # instantiate Logger class
     c_en = ExtractNeeds(SCRIPT_NAME, language_to_use)
     # load script configuration
@@ -64,7 +67,7 @@ if __name__ == '__main__':
                                     c_en.class_bnfe.validate_query_session(
                                         c_en.class_ln.logger, crt_session)
                                 crt_session['extract-behaviour'] = \
-                                    c_en.class_bnfe.fn_set_extract_behaviour(crt_session)
+                                    c_ms.fn_set_extract_behaviour(crt_session)
                                 dict__hierarchy = c_en.pack_three_levels(
                                     crt_session, crt_query, crt_sequence)
                                 extraction_required = \
