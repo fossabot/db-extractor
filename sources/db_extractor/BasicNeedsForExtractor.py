@@ -267,36 +267,44 @@ class BasicNeedsForExtractor:
         return is_valid
 
     def validate_user_secrets(self, local_logger, in_user_secrets):
-        mandatory_properties = [
-            'Name',
-            'Username',
-            'Password',
-        ]
+        mandatory_properties_dict = {
+            'Name': {
+                'tuple': ['login', 'Your Full Name Here'],
+                'variable': {
+                    'name': 'default_name_value',
+                    'value': in_user_secrets['Name']
+                }
+            },
+            'Username': {
+                'tuple': ['usrnme', 'your_username_goes_here'],
+                'variable': {
+                    'name': 'default_username_value',
+                    'value': in_user_secrets['Username']
+                }
+            },
+            'Password': {
+                'tuple': ['pwd', 'your_password_goes_here'],
+                'variable': {
+                    'name': 'default_password_value',
+                    'value': in_user_secrets['Password']
+                }
+            }
+        }
+        mandatory_properties = list(mandatory_properties_dict.keys())
         is_valid = self.fn_validate_mandatory_properties(local_logger,
                                                          self.locale.gettext('User Secrets')
                                                          + ' ' + self.str_ss,
                                                          in_user_secrets, mandatory_properties)
-        if in_user_secrets['Name'] in ('login', 'Your Full Name Here'):
-            local_logger.warning(
-                    self.locale.gettext('For {str_user_secrets} your "Name" property '
-                                        + 'has the default value: "{default_name_value}" '
-                                        + 'which is unusual')
+        for current_property in mandatory_properties_dict:
+            if in_user_secrets[current_property] in tuple(mandatory_properties_dict[current_property]['tuple']):
+                local_logger.warning(
+                    self.locale.gettext('For {str_user_secrets} your "' + current_property + '" property '
+                                        + 'has the default value: "{'
+                                        + mandatory_properties_dict[current_property]['variable']['name']
+                                        + '}" which is unusual')
                         .replace('{str_user_secrets}', self.str_ss)
-                        .replace('{default_name_value}', in_user_secrets['Name']))
-        if in_user_secrets['Username'] in ('usrnme', 'your_username_goes_here'):
-            local_logger.warning(
-                    self.locale.gettext('For {str_user_secrets} your "Username" property '
-                                        + 'has the default value: "{default_username_value}" '
-                                        + 'which is unusual')
-                        .replace('{str_user_secrets}', self.str_ss)
-                        .replace('{default_username_value}', in_user_secrets['Username']))
-        if in_user_secrets['Password'] in ('pwd', 'your_password_goes_here'):
-            local_logger.warning(
-                    self.locale.gettext('For {str_user_secrets} your "Password" property '
-                                        + 'has the default value: "{default_password_value}" '
-                                        + 'which is unusual')
-                        .replace('{str_user_secrets}', self.str_ss)
-                        .replace('{default_password_value}', in_user_secrets['Password']))
+                        .replace(mandatory_properties_dict[current_property]['variable']['name']
+                                 , mandatory_properties_dict[current_property]['variable']['value']))
         return is_valid
 
     def validate_user_secrets_file(self, local_logger, in_seq, in_user_secrets):
