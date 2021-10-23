@@ -12,12 +12,13 @@ from setuptools import setup, find_packages
 with open(os.path.join(os.path.dirname(__file__), 'README.md'), 'r') as fh:
     long_description_readme = fh.read()
 
-this_package_website = 'https://github.com/danielgp/data-extractor'
+this_package_website = 'https://github.com/danielgp/db-extractor'
 
 setup(
     author='Daniel Popiniuc',
     author_email='danielpopiniuc@gmail.com',
     classifiers=[
+
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
         'Intended Audience :: Developers',
@@ -43,10 +44,10 @@ setup(
         'hdbcli>=2,<3',
         'mysql-connector-python>=8.0.11,<8.1',
         'pandas>=1,<2',
-        'pyarrow>=1,<=4',
+        'pyarrow>=1,<=5',
         'twine>3,<4',
-        'xlrd>=1,<=2',
-        'XlsxWriter>=1,<=2',
+        'xlrd3>=1,<=2',
+        'XlsxWriter>=1,<=4',
         'wheel>=0.34.2,<1'
     ],
     keywords=[
@@ -69,6 +70,6 @@ setup(
         'Source Code': this_package_website
     },
     python_requires='>=3.6',
-    url=this_package_website + '/releases',  # project home page, if any
-    version='1.1.8',
+    url=this_package_website + '/tags',  # project home page, if any
+    version='1.2.4',
 )
