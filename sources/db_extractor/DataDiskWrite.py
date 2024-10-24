@@ -1,6 +1,7 @@
 """
 DataInput - class to handle data storing to disk (from Pandas Data Frame
 """
+import pandas as pd
 
 
 class DataDiskWrite:
@@ -21,9 +22,9 @@ class DataDiskWrite:
     def fn_internal_store_data_frame_to_excel_file(in_dict):
         if in_dict['format'].lower() == 'excel':
             try:
-                in_dict['in data frame'].to_excel(
-                    excel_writer=in_dict['name'], engine='xlsxwriter',
-                    freeze_panes=(1, 1), encoding='utf-8', index=False, verbose=False)
+                with pd.ExcelWriter(in_dict['name'], engine='xlsxwriter') as writer:
+                    in_dict['in data frame'].to_excel(writer, sheet_name='Sheet_name_1',
+                                                      freeze_panes=(1, 1), index=False)
             except Exception as err:
                 in_dict['error details'] = err
         return in_dict

@@ -7,7 +7,7 @@
         "account-label":                                                "Default",
         "queries": [
             {
-                "input-query-file":                                     "generic_query.sql",
+                "input-query-file":                                     "sources/generic_query.sql",
                 "sessions": [
                     {
                         "extract-behaviour":                            "overwrite-if-output-file-exists",
@@ -71,7 +71,7 @@
                         "value":                                        "utcnow"
                     }
                 ],
-                "input-query-file":                                     "generic_query.sql",
+                "input-query-file":                                     "sources/generic_query.sql",
                 "sessions": [
                     {
                         "additional-columns":                           "inherit-from-parent",
@@ -186,7 +186,7 @@
         "account-label":                                                "Default",
         "queries": [
             {
-                "input-query-file":                                     "generic_query.sql",
+                "input-query-file":                                     "sources/generic_query.sql",
                 "sessions": [
                     {
                         "additional-columns": [

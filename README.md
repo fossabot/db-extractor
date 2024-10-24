@@ -58,11 +58,11 @@ Installation can be completed in few steps as follows:
 ```
 * Install project prerequisites using following command executed from project root folder:
 ```
-    $ <local_path_of_this_package>/virtual_environment/Scripts/python(.exe) <local_path_of_this_package>/setup.py install
+    $ <local_path_of_this_package>pip install -r requirements.txt
 ```
 * Ensure all localization source files are compile properly in order for the package to work properly
 ```
-    $ <local_path_of_this_package>/virtual_environment/Scripts/python(.exe) <local_path_of_this_package>/sources/localizations_compile.py
+    $ <local_path_of_this_package>/virtual_environment/Scripts/python(.exe) <local_path_of_this_package>/sources/project_locale/localizations_compile.py
 ```
 
 ## Maintaining local package up-to-date

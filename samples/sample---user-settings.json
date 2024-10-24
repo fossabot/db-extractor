@@ -17,7 +17,7 @@
                             "Storage": {
                                 "Name": "file",
                                 "Username": "file",
-                                "Password": "environment variable",
+                                "Password": "environment variable"
                             },
                             "Name": "Your Full Name Here",
                             "Password": "PYTHON_MYSQL_PASSWORD",

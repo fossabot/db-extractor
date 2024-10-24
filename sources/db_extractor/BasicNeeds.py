@@ -11,6 +11,8 @@ import gettext
 import os
 # package regular expressions
 import re
+# package to provide timezone support
+import pytz
 
 
 class BasicNeeds:
@@ -156,7 +158,7 @@ class BasicNeeds:
 
     @staticmethod
     def fn_timestamped_print(string_to_print):
-        print(datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f %Z") + '- ' + string_to_print)
+        print(datetime.now(pytz.UTC).strftime("%Y-%m-%d %H:%M:%S.%f %Z") + '- ' + string_to_print)
 
     def fn_validate_one_value(self, value_to_validate, validation_type):
         is_invalid = False
