@@ -3,6 +3,7 @@
 ## Code quality analysis and Build Status
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/danielgp/db-extractor/badges/build.png?b=master)](https://scrutinizer-ci.com/g/danielgp/db-extractor/build-status/master)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdanielgp%2Fdb-extractor.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdanielgp%2Fdb-extractor?ref=badge_shield)
 
 ## What is this repository for?
 
@@ -112,3 +113,7 @@ see [readme_software.md](readme_software.md)
 ## Used references
 
 see [readme_reference.md](readme_reference.md)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fdanielgp%2Fdb-extractor.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fdanielgp%2Fdb-extractor?ref=badge_large)
